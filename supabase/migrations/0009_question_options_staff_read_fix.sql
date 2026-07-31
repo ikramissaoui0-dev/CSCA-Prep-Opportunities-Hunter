@@ -1,0 +1,14 @@
+-- Fix found while building Phase 5's question editor: 0002_content_schema.sql
+-- revoked SELECT on question_options from `authenticated` entirely, intending
+-- to force students through question_options_public (which hides
+-- is_correct). But `authenticated` is also the Postgres role staff connect
+-- as — the revoke blocked admin/content_manager from ever reading
+-- is_correct too, even though "question_options_staff_all" already grants
+-- them full row access via RLS.
+--
+-- RLS alone already provides the intended protection here: no
+-- student-facing policy exists on this table (only the staff-only one),
+-- and RLS default-denies any row a policy doesn't explicitly allow — so
+-- restoring the table-level grant still leaves a student's direct query
+-- returning zero rows, while staff correctly see everything.
+grant select on public.question_options to authenticated;

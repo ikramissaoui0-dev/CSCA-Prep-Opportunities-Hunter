@@ -1,0 +1,121 @@
+import type { Metadata } from "next";
+import Link from "next/link";
+import { requireRole } from "@/lib/auth/session";
+import { getPublishedCuratedExams, getSubjectsForPractice, getInProgressSessions } from "@/server/queries/exam-picker";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { StartCuratedExamButton, StartSubjectPracticeForm, StartDifficultyPracticeForm } from "./start-controls";
+
+export const metadata: Metadata = { title: "Take an exam — CSCA Prep" };
+
+const MODE_LABEL: Record<string, string> = {
+  full_mock: "Full simulation",
+  subject_practice: "Subject practice",
+  difficulty_practice: "Difficulty practice",
+  daily_challenge: "Daily challenge",
+};
+
+export default async function ExamPickerPage() {
+  const user = await requireRole("student", "admin");
+
+  const [{ fullMocks, dailyChallenge }, subjects, inProgress] = await Promise.all([
+    getPublishedCuratedExams(user.id, user.role),
+    getSubjectsForPractice(user.id, user.role),
+    getInProgressSessions(user.id, user.role),
+  ]);
+
+  return (
+    <div className="space-y-6">
+      <div>
+        <h1 className="text-2xl font-semibold tracking-tight">Take an exam</h1>
+        <p className="text-muted-foreground">Choose a full simulation, practice by subject or difficulty, or the daily challenge.</p>
+      </div>
+
+      {inProgress.length > 0 && (
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-base">Continue where you left off</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-2">
+            {inProgress.map((s) => (
+              <div key={s.id} className="flex items-center justify-between gap-4 rounded-lg border p-3">
+                <div className="space-y-0.5">
+                  <p className="text-sm font-medium">{s.examTitle ?? "Practice session"}</p>
+                  <Badge variant="secondary" className="font-normal">
+                    {MODE_LABEL[s.mode] ?? s.mode}
+                  </Badge>
+                </div>
+                <Button size="sm" nativeButton={false} render={<Link href={`/exam/${s.id}`}>Resume</Link>} />
+              </div>
+            ))}
+          </CardContent>
+        </Card>
+      )}
+
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-base">Full CSCA simulation</CardTitle>
+          <CardDescription>A complete, timed mock exam.</CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-3">
+          {fullMocks.length === 0 ? (
+            <p className="text-sm text-muted-foreground">No full simulations are published yet.</p>
+          ) : (
+            fullMocks.map((exam) => (
+              <div key={exam.id} className="flex items-center justify-between gap-4 rounded-lg border p-3">
+                <div>
+                  <p className="text-sm font-medium">{exam.title}</p>
+                  {exam.description && <p className="text-sm text-muted-foreground">{exam.description}</p>}
+                  <p className="text-xs text-muted-foreground">{Math.round(exam.timeLimitSeconds / 60)} minutes</p>
+                </div>
+                <StartCuratedExamButton examId={exam.id} mode="full_mock" />
+              </div>
+            ))
+          )}
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-base">Daily challenge</CardTitle>
+          <CardDescription>A short set of questions, refreshed every day.</CardDescription>
+        </CardHeader>
+        <CardContent>
+          {dailyChallenge ? (
+            <div className="flex items-center justify-between gap-4 rounded-lg border p-3">
+              <div>
+                <p className="text-sm font-medium">{dailyChallenge.title}</p>
+                <p className="text-xs text-muted-foreground">{Math.round(dailyChallenge.timeLimitSeconds / 60)} minutes</p>
+              </div>
+              <StartCuratedExamButton examId={dailyChallenge.id} mode="daily_challenge" />
+            </div>
+          ) : (
+            <p className="text-sm text-muted-foreground">No challenge has been published for today yet.</p>
+          )}
+        </CardContent>
+      </Card>
+
+      <div className="grid gap-4 sm:grid-cols-2">
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-base">Practice by subject</CardTitle>
+            <CardDescription>Focus on one subject at a time.</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <StartSubjectPracticeForm subjects={subjects} />
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-base">Practice by difficulty</CardTitle>
+            <CardDescription>Target easy, medium, or hard questions.</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <StartDifficultyPracticeForm />
+          </CardContent>
+        </Card>
+      </div>
+    </div>
+  );
+}

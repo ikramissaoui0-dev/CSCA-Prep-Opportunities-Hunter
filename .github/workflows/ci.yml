@@ -1,0 +1,66 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+# Matches docs/ARCHITECTURE.md's stated strategy: lint -> typecheck ->
+# unit tests -> Drizzle migration dry-run against a throwaway Postgres ->
+# build. Merging to main is expected to trigger Vercel's own staging
+# deploy separately; production is a manual promotion there, not
+# something this workflow does.
+jobs:
+  lint-typecheck-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - run: npm ci
+      - run: npm run lint
+      - run: npm run typecheck
+      - run: npm test
+
+  migration-dry-run:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      # The local Supabase stack (Postgres + Auth + Storage) is what
+      # `supabase/migrations/*.sql` actually targets — several
+      # migrations reference the `auth` schema and roles that don't
+      # exist on a bare Postgres image, so a plain `postgres:` service
+      # container isn't enough to validate them.
+      - uses: supabase/setup-cli@v1
+        with:
+          version: latest
+      - name: Apply every migration against a fresh local stack
+        working-directory: .
+        run: supabase start
+
+  build:
+    runs-on: ubuntu-latest
+    needs: [lint-typecheck-test]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - run: npm ci
+      - name: Build
+        run: npm run build
+        env:
+          # Build-time only, never real — no page in this app queries
+          # Supabase/Postgres during static generation (every page that
+          # needs a session or the database opts into dynamic rendering
+          # via cookies()/requireUser(), which Next.js excludes from the
+          # static build step). These just satisfy lib/env.ts's schema
+          # so the module doesn't throw on import.
+          NEXT_PUBLIC_SUPABASE_URL: https://build-placeholder.supabase.co
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: build-placeholder-anon-key
+          SUPABASE_SERVICE_ROLE_KEY: build-placeholder-service-role-key
+          DATABASE_URL: postgres://placeholder:placeholder@localhost:5432/placeholder
+          NEXT_PUBLIC_SITE_URL: https://example.com

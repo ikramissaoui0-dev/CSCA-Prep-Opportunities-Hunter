@@ -1,0 +1,55 @@
+import Link from "next/link";
+import { requireUser } from "@/lib/auth/session";
+import { signOut } from "@/app/(auth)/actions";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+
+const ROLE_LABEL: Record<string, string> = {
+  student: "Student",
+  admin: "Admin",
+  content_manager: "Content Manager",
+};
+
+export default async function DashboardLayout({ children }: { children: React.ReactNode }) {
+  const user = await requireUser();
+
+  const studentNav = [
+    { href: "/student", label: "Dashboard" },
+    { href: "/exam", label: "Take an exam" },
+    { href: "/results", label: "Results" },
+    { href: "/student/courses", label: "Courses" },
+    { href: "/student/leaderboard", label: "Leaderboard" },
+    { href: "/student/billing", label: "Billing" },
+  ];
+  const staffNav = [{ href: user.role === "content_manager" ? "/admin/content" : "/admin", label: "Admin" }];
+  const navLinks = user.role === "content_manager" ? staffNav : [...studentNav, ...(user.role === "admin" ? staffNav : [])];
+
+  return (
+    <div className="min-h-svh">
+      <header className="flex flex-wrap items-center justify-between gap-3 border-b px-6 py-3">
+        <div className="flex items-center gap-6">
+          <Link href="/" className="font-semibold tracking-tight">
+            CSCA Prep
+          </Link>
+          <nav className="flex items-center gap-4">
+            {navLinks.map((link) => (
+              <Link key={link.href} href={link.href} className="text-sm text-muted-foreground hover:text-foreground">
+                {link.label}
+              </Link>
+            ))}
+          </nav>
+        </div>
+        <div className="flex items-center gap-3">
+          <span className="text-sm text-muted-foreground">{user.email}</span>
+          <Badge variant="secondary">{ROLE_LABEL[user.role] ?? user.role}</Badge>
+          <form action={signOut}>
+            <Button type="submit" variant="outline" size="sm">
+              Sign out
+            </Button>
+          </form>
+        </div>
+      </header>
+      <main className="mx-auto max-w-5xl px-6 py-10">{children}</main>
+    </div>
+  );
+}
