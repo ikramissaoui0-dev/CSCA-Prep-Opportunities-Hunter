@@ -1,7 +1,7 @@
 import "server-only";
 
 import { eq, and, desc } from "drizzle-orm";
-import { exams, examSessions, subjects } from "@csca/db";
+import { exams, examSessions, subjects, questionCategories } from "@csca/db";
 import type { UserRole } from "@csca/types";
 import { withRlsContext } from "@/lib/db";
 
@@ -45,10 +45,82 @@ export async function getPublishedCuratedExams(
   });
 }
 
-export async function getSubjectsForPractice(userId: string, role: UserRole) {
-  return withRlsContext(userId, role, (tx) =>
-    tx.select({ id: subjects.id, name: subjects.name, slug: subjects.slug }).from(subjects).orderBy(subjects.displayOrder),
-  );
+export type PracticeTopic = {
+  id: string;
+  name: string;
+  // A topic group's own children (e.g. Functions -> Calculus/Sequences/…).
+  // Empty for a standalone topic with no further subdivision (e.g.
+  // Probability & Statistics) — the UI shows a second dropdown only when
+  // this is non-empty.
+  subtopics: { id: string; name: string }[];
+};
+
+export type SubjectWithTopics = {
+  id: string;
+  name: string;
+  slug: string;
+  topics: PracticeTopic[];
+};
+
+// Only "Practice exercises - <topic>" categories are real, randomly
+// practiceable topics — "Mock exams" and "Past exam papers" are curated,
+// composed exams (the `exams` table), not something to pull a random
+// subset of questions from, so they're excluded from this picker.
+const PRACTICE_TOPIC_PREFIX = "Practice exercises - ";
+
+function stripPracticePrefix(name: string): string {
+  return name.startsWith(PRACTICE_TOPIC_PREFIX) ? name.slice(PRACTICE_TOPIC_PREFIX.length) : name;
+}
+
+/**
+ * Each subject's topics (question_categories), one level deep, so
+ * "Practice by subject" can offer "this subject, this topic group, this
+ * specific topic" down to "this subject, every topic" — the two
+ * dropdowns are populated client-side from this, no extra round trip
+ * when the student changes the subject or topic-group select.
+ */
+export async function getSubjectsForPractice(userId: string, role: UserRole): Promise<SubjectWithTopics[]> {
+  return withRlsContext(userId, role, async (tx) => {
+    const rows = await tx
+      .select({
+        subjectId: subjects.id,
+        subjectName: subjects.name,
+        subjectSlug: subjects.slug,
+        categoryId: questionCategories.id,
+        categoryName: questionCategories.name,
+        categoryParentId: questionCategories.parentId,
+      })
+      .from(subjects)
+      .leftJoin(questionCategories, eq(questionCategories.subjectId, subjects.id))
+      .orderBy(subjects.displayOrder, questionCategories.displayOrder);
+
+    const bySubject = new Map<string, SubjectWithTopics>();
+    const topicsById = new Map<string, PracticeTopic>();
+    const childRowsByParentId = new Map<string, { id: string; name: string }[]>();
+
+    for (const row of rows) {
+      const entry = bySubject.get(row.subjectId) ?? { id: row.subjectId, name: row.subjectName, slug: row.subjectSlug, topics: [] };
+      bySubject.set(row.subjectId, entry);
+      if (!row.categoryId || !row.categoryName?.startsWith(PRACTICE_TOPIC_PREFIX)) continue;
+
+      if (row.categoryParentId) {
+        const siblings = childRowsByParentId.get(row.categoryParentId) ?? [];
+        siblings.push({ id: row.categoryId, name: stripPracticePrefix(row.categoryName) });
+        childRowsByParentId.set(row.categoryParentId, siblings);
+      } else {
+        const topic: PracticeTopic = { id: row.categoryId, name: stripPracticePrefix(row.categoryName), subtopics: [] };
+        entry.topics.push(topic);
+        topicsById.set(row.categoryId, topic);
+      }
+    }
+
+    for (const [parentId, children] of childRowsByParentId) {
+      const parent = topicsById.get(parentId);
+      if (parent) parent.subtopics = children;
+    }
+
+    return [...bySubject.values()];
+  });
 }
 
 export type InProgressSession = {

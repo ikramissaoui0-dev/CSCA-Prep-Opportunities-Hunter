@@ -1,4 +1,4 @@
-import { pgTable, pgView, pgEnum, uuid, text, smallint, numeric, boolean, jsonb, timestamp, index, unique } from "drizzle-orm/pg-core";
+import { pgTable, pgView, pgEnum, uuid, text, smallint, numeric, boolean, jsonb, timestamp, index, unique, type AnyPgColumn } from "drizzle-orm/pg-core";
 import { profiles } from "./profiles";
 
 // Mirrors supabase/migrations/0002_content_schema.sql.
@@ -19,6 +19,11 @@ export const questionCategories = pgTable(
   {
     id: uuid("id").primaryKey().defaultRandom(),
     subjectId: uuid("subject_id").notNull().references(() => subjects.id, { onDelete: "cascade" }),
+    // One level of nesting only (a "topic group" like Functions
+    // containing topics like Calculus) — null for both a top-level group
+    // and a standalone topic with no subdivisions; see
+    // 0013_exam_subjects_seed.sql's comment.
+    parentId: uuid("parent_id").references((): AnyPgColumn => questionCategories.id, { onDelete: "cascade" }),
     name: text("name").notNull(),
     slug: text("slug").notNull(),
     description: text("description"),
@@ -26,7 +31,11 @@ export const questionCategories = pgTable(
     createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
     updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
   },
-  (table) => [index("idx_question_categories_subject").on(table.subjectId), unique().on(table.subjectId, table.slug)],
+  (table) => [
+    index("idx_question_categories_subject").on(table.subjectId),
+    index("idx_question_categories_parent").on(table.parentId),
+    unique().on(table.subjectId, table.slug),
+  ],
 );
 
 export const questions = pgTable(

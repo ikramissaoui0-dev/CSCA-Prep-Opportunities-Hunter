@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { requireUser } from "@/lib/auth/session";
 import { signOut } from "@/app/(auth)/actions";
+import { Brand } from "@/components/brand";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 
@@ -17,6 +18,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
     { href: "/student", label: "Dashboard" },
     { href: "/exam", label: "Take an exam" },
     { href: "/results", label: "Results" },
+    { href: "/exam-guide", label: "Exam guide" },
     { href: "/student/courses", label: "Courses" },
     { href: "/student/leaderboard", label: "Leaderboard" },
     { href: "/student/billing", label: "Billing" },
@@ -28,9 +30,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
     <div className="min-h-svh">
       <header className="flex flex-wrap items-center justify-between gap-3 border-b px-6 py-3">
         <div className="flex items-center gap-6">
-          <Link href="/" className="font-semibold tracking-tight">
-            CSCA Prep
-          </Link>
+          <Brand />
           <nav className="flex items-center gap-4">
             {navLinks.map((link) => (
               <Link key={link.href} href={link.href} className="text-sm text-muted-foreground hover:text-foreground">

@@ -6,6 +6,10 @@ export const startExamSchema = z.discriminatedUnion("mode", [
   z.object({
     mode: z.literal("subject_practice"),
     subjectId: z.string().uuid(),
+    // Optional — narrows practice to one topic within the subject.
+    // Omitted (or undefined) means "every topic in this subject", the
+    // original behavior.
+    categoryId: z.string().uuid().optional(),
     questionCount: z.number().int().min(5).max(50),
   }),
   z.object({

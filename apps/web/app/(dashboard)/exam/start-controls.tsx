@@ -50,13 +50,39 @@ export function StartCuratedExamButton({
   );
 }
 
-export function StartSubjectPracticeForm({ subjects }: { subjects: { id: string; name: string }[] }) {
+type PracticeTopic = { id: string; name: string; subtopics: { id: string; name: string }[] };
+
+export function StartSubjectPracticeForm({
+  subjects,
+}: {
+  subjects: { id: string; name: string; topics: PracticeTopic[] }[];
+}) {
   const { run, isPending, error } = useStartExam();
   const [subjectId, setSubjectId] = useState(subjects[0]?.id ?? "");
+  const [topicId, setTopicId] = useState(""); // "" = every topic in the subject
+  const [subtopicId, setSubtopicId] = useState(""); // "" = every subtopic within topicId
   const [questionCount, setQuestionCount] = useState(10);
 
   if (subjects.length === 0) {
     return <p className="text-sm text-muted-foreground">No subjects available yet.</p>;
+  }
+
+  const topics = subjects.find((s) => s.id === subjectId)?.topics ?? [];
+  const subtopics = topics.find((t) => t.id === topicId)?.subtopics ?? [];
+  // The most specific choice wins: a subtopic if one's picked, otherwise
+  // the topic itself (which may be a group with no direct questions of
+  // its own — startExamCore expands a group to all its subtopics).
+  const categoryId = subtopicId || topicId || undefined;
+
+  function handleSubjectChange(nextSubjectId: string) {
+    setSubjectId(nextSubjectId);
+    setTopicId(""); // topic list changed — a previously picked id may not exist here
+    setSubtopicId("");
+  }
+
+  function handleTopicChange(nextTopicId: string) {
+    setTopicId(nextTopicId);
+    setSubtopicId(""); // subtopic list changed along with it
   }
 
   return (
@@ -67,7 +93,7 @@ export function StartSubjectPracticeForm({ subjects }: { subjects: { id: string;
           <select
             id="subject-select"
             value={subjectId}
-            onChange={(e) => setSubjectId(e.target.value)}
+            onChange={(e) => handleSubjectChange(e.target.value)}
             className="h-9 w-full rounded-md border border-input bg-background px-3 text-sm"
           >
             {subjects.map((s) => (
@@ -90,7 +116,46 @@ export function StartSubjectPracticeForm({ subjects }: { subjects: { id: string;
           />
         </div>
       </div>
-      <Button onClick={() => run({ mode: "subject_practice", subjectId, questionCount })} disabled={isPending || !subjectId}>
+      {topics.length > 0 && (
+        <div className="space-y-1.5">
+          <Label htmlFor="topic-select">Topic</Label>
+          <select
+            id="topic-select"
+            value={topicId}
+            onChange={(e) => handleTopicChange(e.target.value)}
+            className="h-9 w-full rounded-md border border-input bg-background px-3 text-sm"
+          >
+            <option value="">All topics</option>
+            {topics.map((t) => (
+              <option key={t.id} value={t.id}>
+                {t.name}
+              </option>
+            ))}
+          </select>
+        </div>
+      )}
+      {subtopics.length > 0 && (
+        <div className="space-y-1.5">
+          <Label htmlFor="subtopic-select">More specifically</Label>
+          <select
+            id="subtopic-select"
+            value={subtopicId}
+            onChange={(e) => setSubtopicId(e.target.value)}
+            className="h-9 w-full rounded-md border border-input bg-background px-3 text-sm"
+          >
+            <option value="">All of {topics.find((t) => t.id === topicId)?.name}</option>
+            {subtopics.map((st) => (
+              <option key={st.id} value={st.id}>
+                {st.name}
+              </option>
+            ))}
+          </select>
+        </div>
+      )}
+      <Button
+        onClick={() => run({ mode: "subject_practice", subjectId, categoryId, questionCount })}
+        disabled={isPending || !subjectId}
+      >
         {isPending ? "Starting…" : "Start practice"}
       </Button>
       {error && (

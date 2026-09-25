@@ -1,6 +1,6 @@
 import { pgTable, pgEnum, uuid, text, smallint, integer, numeric, boolean, date, jsonb, timestamp, primaryKey, index, unique } from "drizzle-orm/pg-core";
 import { profiles } from "./profiles";
-import { subjects, questions, questionOptions } from "./content";
+import { subjects, questions, questionOptions, questionCategories } from "./content";
 
 // Mirrors supabase/migrations/0003_exam_schema.sql.
 export const examModeEnum = pgEnum("exam_mode", ["full_mock", "subject_practice", "difficulty_practice", "daily_challenge"]);
@@ -41,6 +41,7 @@ export const examSessions = pgTable(
     examId: uuid("exam_id").references(() => exams.id, { onDelete: "restrict" }),
     mode: examModeEnum("mode").notNull(),
     subjectId: uuid("subject_id").references(() => subjects.id),
+    categoryId: uuid("category_id").references(() => questionCategories.id),
     difficultyMin: numeric("difficulty_min", { precision: 4, scale: 2, mode: "number" }),
     difficultyMax: numeric("difficulty_max", { precision: 4, scale: 2, mode: "number" }),
     questionCount: smallint("question_count"),

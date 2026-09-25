@@ -1,7 +1,7 @@
 import "server-only";
 
 import { after } from "next/server";
-import { eq, and, or, gte, lte, isNotNull, sql } from "drizzle-orm";
+import { eq, and, or, gte, lte, isNotNull, inArray, sql } from "drizzle-orm";
 import {
   exams,
   examQuestions,
@@ -121,16 +121,45 @@ export async function startExamCore(user: SessionUser, data: StartExamInput): Pr
       return actionFailure(new AppError("NOT_FOUND", "That subject doesn't exist."));
     }
 
+    // A category (topic group or specific topic) must actually belong to
+    // the chosen subject — trusting a client-supplied categoryId without
+    // this check would let someone pair a subject with an unrelated
+    // category's questions. If it turns out to be a group (has
+    // children), practice covers every topic under it, not just
+    // questions tagged to the group row itself (which normally has none
+    // — only leaf topics are ever tagged directly on a question).
+    let categoryIds: string[] | undefined;
+    if (data.categoryId) {
+      const [category] = await db
+        .select({ id: questionCategories.id })
+        .from(questionCategories)
+        .where(and(eq(questionCategories.id, data.categoryId), eq(questionCategories.subjectId, data.subjectId)));
+      if (!category) {
+        return actionFailure(new AppError("VALIDATION_ERROR", "That topic doesn't belong to the selected subject."));
+      }
+      const children = await db.select({ id: questionCategories.id }).from(questionCategories).where(eq(questionCategories.parentId, data.categoryId));
+      categoryIds = [data.categoryId, ...children.map((c) => c.id)];
+    }
+
     const pool = await db
       .select({ id: questions.id })
       .from(questions)
       .innerJoin(questionCategories, eq(questionCategories.id, questions.categoryId))
-      .where(and(eq(questionCategories.subjectId, data.subjectId), eq(questions.isPublished, true), gradeableQuestion))
+      .where(
+        and(
+          eq(questionCategories.subjectId, data.subjectId),
+          categoryIds ? inArray(questions.categoryId, categoryIds) : undefined,
+          eq(questions.isPublished, true),
+          gradeableQuestion,
+        ),
+      )
       .orderBy(sql`random()`)
       .limit(data.questionCount);
 
     if (pool.length === 0) {
-      return actionFailure(new AppError("VALIDATION_ERROR", "No published questions are available for that subject yet."));
+      return actionFailure(
+        new AppError("VALIDATION_ERROR", data.categoryId ? "No published questions are available for that topic yet." : "No published questions are available for that subject yet."),
+      );
     }
 
     const [created] = await db
@@ -139,6 +168,7 @@ export async function startExamCore(user: SessionUser, data: StartExamInput): Pr
         userId: user.id,
         mode: "subject_practice",
         subjectId: data.subjectId,
+        categoryId: data.categoryId ?? null,
         questionCount: pool.length,
         timeLimitSeconds: pool.length * SECONDS_PER_PRACTICE_QUESTION,
         questionOrder: pool.map((p) => p.id),

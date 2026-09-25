@@ -1,8 +1,10 @@
 import Link from "next/link";
+import { Brand } from "@/components/brand";
 import { Button } from "@/components/ui/button";
 
 const NAV_LINKS = [
   { href: "/about", label: "About" },
+  { href: "/exam-guide", label: "Exam guide" },
   { href: "/how-it-works", label: "How it works" },
   { href: "/pricing", label: "Pricing" },
   { href: "/blog", label: "Blog" },
@@ -15,9 +17,7 @@ export default function MarketingLayout({ children }: { children: React.ReactNod
     <div className="flex min-h-svh flex-col">
       <header className="border-b">
         <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-4 px-6 py-4">
-          <Link href="/" className="font-semibold tracking-tight">
-            CSCA Prep
-          </Link>
+          <Brand />
           <nav className="flex flex-wrap items-center gap-5">
             {NAV_LINKS.map((link) => (
               <Link key={link.href} href={link.href} className="text-sm text-muted-foreground hover:text-foreground">

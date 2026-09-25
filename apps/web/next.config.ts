@@ -8,9 +8,15 @@ import type { NextConfig } from "next";
 // unconditional: frame-ancestors/X-Frame-Options blocks clickjacking,
 // object-src blocks legacy plugin content, frame-src is scoped to only
 // the video hosts lesson-viewer.tsx actually embeds.
+//
+// 'unsafe-eval' is added to script-src only outside production — Next's
+// dev-mode HMR/webpack runtime evaluates code via eval(), which a strict
+// CSP blocks, silently breaking client hydration in `next dev` (React
+// renders the initial HTML, then no interaction ever works). Production
+// builds don't need eval, so this never loosens the real deployed policy.
 const CSP = [
   "default-src 'self'",
-  "script-src 'self' 'unsafe-inline'",
+  `script-src 'self' 'unsafe-inline'${process.env.NODE_ENV === "production" ? "" : " 'unsafe-eval'"}`,
   "style-src 'self' 'unsafe-inline'",
   "img-src 'self' data: https:",
   "font-src 'self' data:",
@@ -27,6 +33,15 @@ const nextConfig: NextConfig = {
   // Next needs to run them through its own compiler rather than treating
   // them as pre-built node_modules.
   transpilePackages: ["@csca/types", "@csca/db"],
+
+  // pino's dev-only pretty-printer spawns a worker thread that does its
+  // own runtime require() of the transport target. Webpack bundling that
+  // file (the default for server code) rewrites/moves it in ways the
+  // worker can't resolve, so every log call threw "Cannot find module
+  // .../vendor-chunks/lib/worker.js" and crashed the worker thread —
+  // stalling the request for the deopt/retry cycle. Marking pino and
+  // pino-pretty external leaves them as plain node_modules requires.
+  serverExternalPackages: ["pino", "pino-pretty"],
 
   async headers() {
     return [

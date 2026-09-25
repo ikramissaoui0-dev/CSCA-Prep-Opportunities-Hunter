@@ -57,24 +57,25 @@
   --card-foreground: oklch(0.145 0 0);
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.205 0 0);
+  /* Opportunities Hunter brand blue, sampled from the logo mark. */
+  --primary: oklch(0.537 0.177 255.195);
   --primary-foreground: oklch(0.985 0 0);
   --secondary: oklch(0.97 0 0);
   --secondary-foreground: oklch(0.205 0 0);
   --muted: oklch(0.97 0 0);
   --muted-foreground: oklch(0.556 0 0);
-  --accent: oklch(0.97 0 0);
-  --accent-foreground: oklch(0.205 0 0);
+  --accent: oklch(0.94 0.03 255.195);
+  --accent-foreground: oklch(0.285 0.108 259.727);
   --destructive: oklch(0.577 0.245 27.325);
   --success: #059669;
   --success-foreground: #ffffff;
   --border: oklch(0.922 0 0);
   --input: oklch(0.922 0 0);
-  --ring: oklch(0.708 0 0);
+  --ring: oklch(0.537 0.177 255.195 / 0.5);
   /* Validated categorical palette (dataviz skill, references/palette.md) —
      the shadcn default here was pure grayscale (zero chroma), invisible
      as soon as a chart needs more than one distinguishable series. */
-  --chart-1: #2a78d6;
+  --chart-1: #016bd1;
   --chart-2: #eb6834;
   --chart-3: #1baf7a;
   --chart-4: #eda100;
@@ -82,12 +83,12 @@
   --radius: 0.625rem;
   --sidebar: oklch(0.985 0 0);
   --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: oklch(0.205 0 0);
+  --sidebar-primary: oklch(0.537 0.177 255.195);
   --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.97 0 0);
-  --sidebar-accent-foreground: oklch(0.205 0 0);
+  --sidebar-accent: oklch(0.94 0.03 255.195);
+  --sidebar-accent-foreground: oklch(0.285 0.108 259.727);
   --sidebar-border: oklch(0.922 0 0);
-  --sidebar-ring: oklch(0.708 0 0);
+  --sidebar-ring: oklch(0.537 0.177 255.195 / 0.5);
 }
 
 .dark {
@@ -97,34 +98,35 @@
   --card-foreground: oklch(0.985 0 0);
   --popover: oklch(0.205 0 0);
   --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.922 0 0);
-  --primary-foreground: oklch(0.205 0 0);
+  /* Lightened brand blue for legibility against the dark surface. */
+  --primary: oklch(0.66 0.143 250.89);
+  --primary-foreground: oklch(0.205 0.03 255.195);
   --secondary: oklch(0.269 0 0);
   --secondary-foreground: oklch(0.985 0 0);
   --muted: oklch(0.269 0 0);
   --muted-foreground: oklch(0.708 0 0);
-  --accent: oklch(0.269 0 0);
+  --accent: oklch(0.3 0.08 255.195);
   --accent-foreground: oklch(0.985 0 0);
   --destructive: oklch(0.704 0.191 22.216);
   --success: #34d399;
   --success-foreground: #022c22;
   --border: oklch(1 0 0 / 10%);
   --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.556 0 0);
+  --ring: oklch(0.66 0.143 250.89 / 0.5);
   /* Same eight-hue set, dark-surface steps (references/palette.md). */
-  --chart-1: #3987e5;
+  --chart-1: #4696e6;
   --chart-2: #d95926;
   --chart-3: #199e70;
   --chart-4: #c98500;
   --chart-5: #d55181;
   --sidebar: oklch(0.205 0 0);
   --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.488 0.243 264.376);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.269 0 0);
+  --sidebar-primary: oklch(0.66 0.143 250.89);
+  --sidebar-primary-foreground: oklch(0.205 0.03 255.195);
+  --sidebar-accent: oklch(0.3 0.08 255.195);
   --sidebar-accent-foreground: oklch(0.985 0 0);
   --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.556 0 0);
+  --sidebar-ring: oklch(0.66 0.143 250.89 / 0.5);
 }
 
 @layer base {

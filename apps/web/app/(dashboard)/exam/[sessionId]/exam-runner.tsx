@@ -57,9 +57,12 @@ export function ExamRunner({
   const debounceTimers = useRef<Record<string, ReturnType<typeof setTimeout>>>({});
 
   const deadlineMs = useMemo(() => (timeLimitSeconds === null ? null : startedAtMs + timeLimitSeconds * 1000), [startedAtMs, timeLimitSeconds]);
-  const [remainingSeconds, setRemainingSeconds] = useState(() =>
-    deadlineMs === null ? null : Math.max(0, Math.round((deadlineMs - Date.now()) / 1000)),
-  );
+  // Starts at null on both server and client — the actual reading is
+  // computed from Date.now() only inside the effect below, so the
+  // server-rendered markup never embeds a clock value that could drift
+  // from the client's by the time hydration runs (a few seconds of
+  // network/parse time is enough to produce a mismatched second).
+  const [remainingSeconds, setRemainingSeconds] = useState<number | null>(null);
 
   const doSubmit = useCallback(() => {
     if (hasAutoSubmitted.current) return;
@@ -71,14 +74,17 @@ export function ExamRunner({
   // Countdown — ticks every second; auto-submits exactly once at zero.
   useEffect(() => {
     if (deadlineMs === null) return;
-    const interval = setInterval(() => {
-      const next = Math.max(0, Math.round((deadlineMs - Date.now()) / 1000));
+    const deadline = deadlineMs;
+    function tick() {
+      const next = Math.max(0, Math.round((deadline - Date.now()) / 1000));
       setRemainingSeconds(next);
       if (next <= 0) {
         clearInterval(interval);
         doSubmit();
       }
-    }, 1000);
+    }
+    tick();
+    const interval = setInterval(tick, 1000);
     return () => clearInterval(interval);
   }, [deadlineMs, doSubmit]);
 

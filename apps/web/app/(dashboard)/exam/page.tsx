@@ -29,7 +29,7 @@ export default async function ExamPickerPage() {
     <div className="space-y-6">
       <div>
         <h1 className="text-2xl font-semibold tracking-tight">Take an exam</h1>
-        <p className="text-muted-foreground">Choose a full simulation, practice by subject or difficulty, or the daily challenge.</p>
+        <p className="text-muted-foreground">Real past exam papers, kept separate from everyday practice exercises.</p>
       </div>
 
       {inProgress.length > 0 && (
@@ -53,69 +53,83 @@ export default async function ExamPickerPage() {
         </Card>
       )}
 
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-base">Full CSCA simulation</CardTitle>
-          <CardDescription>A complete, timed mock exam.</CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-3">
-          {fullMocks.length === 0 ? (
-            <p className="text-sm text-muted-foreground">No full simulations are published yet.</p>
-          ) : (
-            fullMocks.map((exam) => (
-              <div key={exam.id} className="flex items-center justify-between gap-4 rounded-lg border p-3">
-                <div>
-                  <p className="text-sm font-medium">{exam.title}</p>
-                  {exam.description && <p className="text-sm text-muted-foreground">{exam.description}</p>}
-                  <p className="text-xs text-muted-foreground">{Math.round(exam.timeLimitSeconds / 60)} minutes</p>
+      <section className="space-y-3">
+        <div>
+          <h2 className="text-lg font-semibold tracking-tight">Past exam papers</h2>
+          <p className="text-sm text-muted-foreground">
+            Real, past CSCA exams — the exact questions from an actual sitting, timed exactly like exam day.
+          </p>
+        </div>
+        <Card>
+          <CardContent className="space-y-3">
+            {fullMocks.length === 0 ? (
+              <p className="text-sm text-muted-foreground">No past exam papers are published yet.</p>
+            ) : (
+              fullMocks.map((exam) => (
+                <div key={exam.id} className="flex items-center justify-between gap-4 rounded-lg border p-3">
+                  <div>
+                    <p className="text-sm font-medium">{exam.title}</p>
+                    {exam.description && <p className="text-sm text-muted-foreground">{exam.description}</p>}
+                    <p className="text-xs text-muted-foreground">{Math.round(exam.timeLimitSeconds / 60)} minutes</p>
+                  </div>
+                  <StartCuratedExamButton examId={exam.id} mode="full_mock" />
                 </div>
-                <StartCuratedExamButton examId={exam.id} mode="full_mock" />
-              </div>
-            ))
-          )}
-        </CardContent>
-      </Card>
-
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-base">Daily challenge</CardTitle>
-          <CardDescription>A short set of questions, refreshed every day.</CardDescription>
-        </CardHeader>
-        <CardContent>
-          {dailyChallenge ? (
-            <div className="flex items-center justify-between gap-4 rounded-lg border p-3">
-              <div>
-                <p className="text-sm font-medium">{dailyChallenge.title}</p>
-                <p className="text-xs text-muted-foreground">{Math.round(dailyChallenge.timeLimitSeconds / 60)} minutes</p>
-              </div>
-              <StartCuratedExamButton examId={dailyChallenge.id} mode="daily_challenge" />
-            </div>
-          ) : (
-            <p className="text-sm text-muted-foreground">No challenge has been published for today yet.</p>
-          )}
-        </CardContent>
-      </Card>
-
-      <div className="grid gap-4 sm:grid-cols-2">
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-base">Practice by subject</CardTitle>
-            <CardDescription>Focus on one subject at a time.</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <StartSubjectPracticeForm subjects={subjects} />
+              ))
+            )}
           </CardContent>
         </Card>
+      </section>
+
+      <section className="space-y-3">
+        <div>
+          <h2 className="text-lg font-semibold tracking-tight">Practice exercises</h2>
+          <p className="text-sm text-muted-foreground">
+            Practice questions organized by subject, topic, and difficulty — separate from the past exam papers, for
+            everyday drilling.
+          </p>
+        </div>
+
         <Card>
           <CardHeader>
-            <CardTitle className="text-base">Practice by difficulty</CardTitle>
-            <CardDescription>Target easy, medium, or hard questions.</CardDescription>
+            <CardTitle className="text-base">Daily challenge</CardTitle>
+            <CardDescription>A short set of questions, refreshed every day.</CardDescription>
           </CardHeader>
           <CardContent>
-            <StartDifficultyPracticeForm />
+            {dailyChallenge ? (
+              <div className="flex items-center justify-between gap-4 rounded-lg border p-3">
+                <div>
+                  <p className="text-sm font-medium">{dailyChallenge.title}</p>
+                  <p className="text-xs text-muted-foreground">{Math.round(dailyChallenge.timeLimitSeconds / 60)} minutes</p>
+                </div>
+                <StartCuratedExamButton examId={dailyChallenge.id} mode="daily_challenge" />
+              </div>
+            ) : (
+              <p className="text-sm text-muted-foreground">No challenge has been published for today yet.</p>
+            )}
           </CardContent>
         </Card>
-      </div>
+
+        <div className="grid gap-4 sm:grid-cols-2">
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-base">Practice by subject</CardTitle>
+              <CardDescription>Focus on one subject at a time.</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <StartSubjectPracticeForm subjects={subjects} />
+            </CardContent>
+          </Card>
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-base">Practice by difficulty</CardTitle>
+              <CardDescription>Target easy, medium, or hard questions.</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <StartDifficultyPracticeForm />
+            </CardContent>
+          </Card>
+        </div>
+      </section>
     </div>
   );
 }
