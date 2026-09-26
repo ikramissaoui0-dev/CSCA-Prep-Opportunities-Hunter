@@ -109,7 +109,7 @@ export default async function BillingPage() {
         </Card>
       </div>
       <p className="text-sm text-muted-foreground">
-        Paid access is granted by our team, not by checkout on this site — reach out and we'll set you up.
+        Paid access is granted by our team, not by checkout on this site — reach out and we&apos;ll set you up.
       </p>
 
       <Card>

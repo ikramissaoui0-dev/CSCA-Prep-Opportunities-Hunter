@@ -15,7 +15,7 @@ export default function PricingPage() {
       <div className="text-center">
         <h1 className="text-3xl font-semibold tracking-tight">Simple, transparent pricing</h1>
         <p className="mx-auto mt-3 max-w-xl text-muted-foreground">
-          Start for free — no credit card required. When you're ready for full access, our team sets it up for you
+          Start for free — no credit card required. When you&apos;re ready for full access, our team sets it up for you
           directly.
         </p>
       </div>

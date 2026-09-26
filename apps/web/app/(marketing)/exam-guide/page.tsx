@@ -71,7 +71,7 @@ export default function ExamGuidePage() {
         <h1 className="text-3xl font-semibold tracking-tight">What the CSCA actually involves</h1>
         <p className="mt-3 text-muted-foreground">
           The China Scholastic Competency Assessment (CSCA) is how Chinese universities screen international
-          applicants for undergraduate admission. It's the same idea as an SAT or A-Level in other systems: a
+          applicants for undergraduate admission. It&apos;s the same idea as an SAT or A-Level in other systems: a
           standardized score universities can compare across very different applicant backgrounds.
         </p>
         <p className="mt-3 text-sm text-muted-foreground">
@@ -86,12 +86,12 @@ export default function ExamGuidePage() {
       </div>
 
       <section className="space-y-4">
-        <h2 className="text-xl font-semibold tracking-tight">What's tested, and how</h2>
+        <h2 className="text-xl font-semibold tracking-tight">What&apos;s tested, and how</h2>
         <p className="text-muted-foreground">
           Mathematics, Physics, and Chemistry are each 48 multiple-choice questions in a 60-minute window, and you can
           sit any of them in either Chinese or English. Professional Chinese runs longer — 80 questions in 90 minutes
           — and is Chinese-only, since testing your Chinese proficiency is the point. Every subject is scored
-          independently on a 0–100 scale, so a weak subject doesn't drag down a strong one.
+          independently on a 0–100 scale, so a weak subject doesn&apos;t drag down a strong one.
         </p>
         <div className="overflow-x-auto rounded-lg border">
           <table className="w-full min-w-[520px] text-left text-sm">
@@ -116,16 +116,16 @@ export default function ExamGuidePage() {
           </table>
         </div>
         <p className="text-sm text-muted-foreground">
-          The exam itself is taken remotely — at home, on a computer, or on paper depending on what's offered for
-          your session and region. It's not a physical test-center exam the way many other admissions tests are.
+          The exam itself is taken remotely — at home, on a computer, or on paper depending on what&apos;s offered for
+          your session and region. It&apos;s not a physical test-center exam the way many other admissions tests are.
         </p>
       </section>
 
       <section className="space-y-4">
-        <h2 className="text-xl font-semibold tracking-tight">If you're sitting more than one subject</h2>
+        <h2 className="text-xl font-semibold tracking-tight">If you&apos;re sitting more than one subject</h2>
         <p className="text-muted-foreground">
-          Multi-subject candidates don't take everything back-to-back — the subjects are spread out across the day so
-          you're not stacking four exams in a row. A typical layout, in Beijing time, looks like this:
+          Multi-subject candidates don&apos;t take everything back-to-back — the subjects are spread out across the day so
+          you&apos;re not stacking four exams in a row. A typical layout, in Beijing time, looks like this:
         </p>
         <div className="overflow-x-auto rounded-lg border">
           <table className="w-full min-w-[360px] text-left text-sm">
@@ -146,7 +146,7 @@ export default function ExamGuidePage() {
           </table>
         </div>
         <p className="text-sm text-muted-foreground">
-          Do the timezone math early — if you're testing from outside China, one of these slots will likely fall late
+          Do the timezone math early — if you&apos;re testing from outside China, one of these slots will likely fall late
           at night or early morning your time. Confirm the actual timing for your session before exam day, since it
           can shift between sessions.
         </p>
@@ -161,7 +161,7 @@ export default function ExamGuidePage() {
             </CardHeader>
             <CardContent className="space-y-2 text-sm text-muted-foreground">
               <p>Roughly five sessions a year — January, March, April, June, and December.</p>
-              <p>Registration opens on csca.cn a few weeks ahead of each one, so it's worth checking back regularly if you don't have a date yet.</p>
+              <p>Registration opens on csca.cn a few weeks ahead of each one, so it&apos;s worth checking back regularly if you don&apos;t have a date yet.</p>
               <p>Results land within about a week for computer-based sittings, or two weeks if you sat on paper.</p>
             </CardContent>
           </Card>
@@ -174,7 +174,7 @@ export default function ExamGuidePage() {
                 <span className="font-medium text-foreground">¥450 CNY</span> for one subject.
               </p>
               <p>
-                <span className="font-medium text-foreground">¥700 CNY</span> flat if you're sitting two or more.
+                <span className="font-medium text-foreground">¥700 CNY</span> flat if you&apos;re sitting two or more.
               </p>
               <p>Alipay, WeChat Pay, and bank transfer are all accepted at registration.</p>
             </CardContent>
@@ -197,13 +197,13 @@ export default function ExamGuidePage() {
           ))}
         </div>
         <p className="text-sm text-muted-foreground">
-          When in doubt, register for the exam that keeps your options widest — dropping a subject you didn't end up
-          needing costs nothing; discovering too late that you're missing one can cost you an admissions cycle.
+          When in doubt, register for the exam that keeps your options widest — dropping a subject you didn&apos;t end up
+          needing costs nothing; discovering too late that you&apos;re missing one can cost you an admissions cycle.
         </p>
       </section>
 
       <section className="space-y-4">
-        <h2 className="text-xl font-semibold tracking-tight">What's actually on each subject</h2>
+        <h2 className="text-xl font-semibold tracking-tight">What&apos;s actually on each subject</h2>
         <div className="grid gap-4 sm:grid-cols-3">
           {SYLLABUS.map((s) => (
             <Card key={s.subject}>
@@ -223,9 +223,9 @@ export default function ExamGuidePage() {
       </section>
 
       <section className="space-y-4">
-        <h2 className="text-xl font-semibold tracking-tight">How we'd approach studying for it</h2>
+        <h2 className="text-xl font-semibold tracking-tight">How we&apos;d approach studying for it</h2>
         <p className="text-muted-foreground">
-          There's no shortage of generic exam advice out there. This is the version we actually built the platform
+          There&apos;s no shortage of generic exam advice out there. This is the version we actually built the platform
           around — each point below maps to something you can do inside CSCA Prep itself.
         </p>
         <div className="grid gap-4 sm:grid-cols-2">
