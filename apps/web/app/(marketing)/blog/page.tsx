@@ -5,7 +5,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 
 export const metadata: Metadata = {
   title: "Blog — CSCA Prep",
-  description: "Guides and tips for preparing for the CSCA exam, from mock-exam strategy to how AI-powered explanations work.",
+  description: "Guides and tips for preparing for the CSCA exam, from mock-exam strategy to how our explanations work.",
   alternates: { canonical: "/blog" },
 };
 

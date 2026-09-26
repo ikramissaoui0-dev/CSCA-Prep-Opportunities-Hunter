@@ -43,14 +43,14 @@ export const blogPosts: BlogPost[] = [
     ],
   },
   {
-    slug: "how-ai-explanations-help-you-learn-faster",
-    title: "How AI-Powered Explanations Help You Learn Faster",
+    slug: "how-explanations-help-you-learn-faster",
+    title: "How Personalized Explanations Help You Learn Faster",
     description: "Why an instant, specific explanation for a wrong answer is worth more than a generic answer key — and how we keep that affordable at scale.",
     publishedAt: "2026-03-10",
     author: "Opportunities Hunter Team",
     content: [
       "A bare answer key tells you what the right answer was. It doesn't tell you why your reasoning went wrong — and that gap is exactly where most students get stuck re-making the same mistake on a different version of the same question.",
-      "When you miss a question in your exam review, our AI tutor generates a short, specific explanation: why the correct answer is right, and briefly why the option you picked wasn't. It reads like a patient tutor sitting next to you, not a wall of text.",
+      "When you miss a question in your exam review, we generate a short, specific explanation: why the correct answer is right, and briefly why the option you picked wasn't. It reads like a patient tutor sitting next to you, not a wall of text.",
       "Every explanation is generated once per question and reused for every student after that — so the same question never needs to be explained twice from scratch. That's what makes it possible to offer this without the cost scaling with how many students are practicing.",
       "Explanations are available after you've completed a session, so you can review with full context — never mid-exam, where it would just be an answer key in disguise.",
     ],

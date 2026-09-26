@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useTransition } from "react";
+import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -50,17 +51,30 @@ export function StartCuratedExamButton({
   );
 }
 
-type PracticeTopic = { id: string; name: string; subtopics: { id: string; name: string }[] };
+type PracticeSubtopic = { id: string; name: string; isFree: boolean };
+type PracticeTopic = { id: string; name: string; isFree: boolean; subtopics: PracticeSubtopic[] };
+
+/** A locked option stays visible (so a free account can see what's out
+ * there) but can't be selected — disabled options can't fire onChange. */
+function optionLabel(name: string, isFree: boolean, isFreeTier: boolean): string {
+  return isFreeTier && !isFree ? `${name} (Premium)` : name;
+}
 
 export function StartSubjectPracticeForm({
   subjects,
+  isFreeTier,
 }: {
   subjects: { id: string; name: string; topics: PracticeTopic[] }[];
+  isFreeTier: boolean;
 }) {
   const { run, isPending, error } = useStartExam();
-  const [subjectId, setSubjectId] = useState(subjects[0]?.id ?? "");
-  const [topicId, setTopicId] = useState(""); // "" = every topic in the subject
-  const [subtopicId, setSubtopicId] = useState(""); // "" = every subtopic within topicId
+  const firstSubject = subjects[0];
+  const [subjectId, setSubjectId] = useState(firstSubject?.id ?? "");
+  // A free account starts on its one free topic for the selected subject
+  // (never on "all topics", which would reach locked ones too); a paid
+  // account starts on "all topics" as before.
+  const [topicId, setTopicId] = useState(() => (isFreeTier ? (firstSubject?.topics.find((t) => t.isFree)?.id ?? "") : ""));
+  const [subtopicId, setSubtopicId] = useState("");
   const [questionCount, setQuestionCount] = useState(10);
 
   if (subjects.length === 0) {
@@ -73,10 +87,19 @@ export function StartSubjectPracticeForm({
   // the topic itself (which may be a group with no direct questions of
   // its own — startExamCore expands a group to all its subtopics).
   const categoryId = subtopicId || topicId || undefined;
+  const selectedIsFree = subtopicId
+    ? subtopics.find((st) => st.id === subtopicId)?.isFree
+    : topicId
+      ? topics.find((t) => t.id === topicId)?.isFree
+      : false; // "All topics" always reaches locked content
+  const blockedByPlan = isFreeTier && !selectedIsFree;
 
   function handleSubjectChange(nextSubjectId: string) {
     setSubjectId(nextSubjectId);
-    setTopicId(""); // topic list changed — a previously picked id may not exist here
+    const nextTopics = subjects.find((s) => s.id === nextSubjectId)?.topics ?? [];
+    // Topic list changed — a previously picked id may not exist here;
+    // a free account re-lands on that subject's own free topic.
+    setTopicId(isFreeTier ? (nextTopics.find((t) => t.isFree)?.id ?? "") : "");
     setSubtopicId("");
   }
 
@@ -125,10 +148,12 @@ export function StartSubjectPracticeForm({
             onChange={(e) => handleTopicChange(e.target.value)}
             className="h-9 w-full rounded-md border border-input bg-background px-3 text-sm"
           >
-            <option value="">All topics</option>
+            <option value="" disabled={isFreeTier}>
+              {isFreeTier ? "All topics (Premium)" : "All topics"}
+            </option>
             {topics.map((t) => (
-              <option key={t.id} value={t.id}>
-                {t.name}
+              <option key={t.id} value={t.id} disabled={isFreeTier && !t.isFree}>
+                {optionLabel(t.name, t.isFree, isFreeTier)}
               </option>
             ))}
           </select>
@@ -145,8 +170,8 @@ export function StartSubjectPracticeForm({
           >
             <option value="">All of {topics.find((t) => t.id === topicId)?.name}</option>
             {subtopics.map((st) => (
-              <option key={st.id} value={st.id}>
-                {st.name}
+              <option key={st.id} value={st.id} disabled={isFreeTier && !st.isFree}>
+                {optionLabel(st.name, st.isFree, isFreeTier)}
               </option>
             ))}
           </select>
@@ -154,10 +179,19 @@ export function StartSubjectPracticeForm({
       )}
       <Button
         onClick={() => run({ mode: "subject_practice", subjectId, categoryId, questionCount })}
-        disabled={isPending || !subjectId}
+        disabled={isPending || !subjectId || blockedByPlan}
       >
         {isPending ? "Starting…" : "Start practice"}
       </Button>
+      {isFreeTier && (
+        <p className="text-xs text-muted-foreground">
+          Your free account includes one practice series per subject.{" "}
+          <Link href="/contact" className="underline hover:text-foreground">
+            Contact us
+          </Link>{" "}
+          for full access.
+        </p>
+      )}
       {error && (
         <p className="text-sm text-destructive" role="alert">
           {error}
@@ -173,10 +207,22 @@ const DIFFICULTY_PRESETS = [
   { label: "Hard", min: 0.7, max: 1 },
 ] as const;
 
-export function StartDifficultyPracticeForm() {
+export function StartDifficultyPracticeForm({ isFreeTier }: { isFreeTier: boolean }) {
   const { run, isPending, error } = useStartExam();
   const [preset, setPreset] = useState<(typeof DIFFICULTY_PRESETS)[number]>(DIFFICULTY_PRESETS[1]);
   const [questionCount, setQuestionCount] = useState(10);
+
+  if (isFreeTier) {
+    return (
+      <p className="text-sm text-muted-foreground">
+        Practice by difficulty requires Premium access.{" "}
+        <Link href="/contact" className="underline hover:text-foreground">
+          Contact us
+        </Link>{" "}
+        to unlock it.
+      </p>
+    );
+  }
 
   return (
     <div className="space-y-3">

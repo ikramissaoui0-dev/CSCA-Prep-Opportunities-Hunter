@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { FREE_FULL_MOCK_MONTHLY_LIMIT } from "@/lib/exam/plan-limits";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 export const metadata: Metadata = {
@@ -16,19 +15,20 @@ const FAQS = [
   },
   {
     question: "Is there really a free plan?",
-    answer: `Yes. Every account can take ${FREE_FULL_MOCK_MONTHLY_LIMIT} full simulations per month for free, plus unlimited subject practice, difficulty practice, and the daily challenge — no credit card required to sign up.`,
+    answer:
+      "Yes. Every account gets one practice series per subject and the daily challenge for free, no credit card required to sign up. Full practice access and past exam papers require Premium.",
   },
   {
     question: "What do I get if I upgrade?",
     answer:
-      "Premium removes the monthly limit on full simulations and unlocks AI-generated explanations, personalized study recommendations, and advanced statistics. Premium+ adds full access to the course library on top of that.",
+      "Premium unlocks every practice series, past exam papers, detailed explanations, personalized study recommendations, and advanced statistics. Premium+ adds full access to the course library on top of that.",
   },
   {
-    question: "Can I cancel anytime?",
-    answer: "Yes. You can manage or cancel your subscription anytime from your account's billing page — there's no lock-in period.",
+    question: "How do I upgrade?",
+    answer: "Contact our team — we don't run checkout on the site yet, so we set up Premium or Premium+ access on your account directly.",
   },
   {
-    question: "How does the AI explanation feature work?",
+    question: "How does the explanation feature work?",
     answer:
       "After you submit an exam, you can request an explanation for any question you missed. It's generated once per question and reused after that, so it's available instantly the next time anyone asks about that same question.",
   },

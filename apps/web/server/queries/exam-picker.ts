@@ -45,14 +45,21 @@ export async function getPublishedCuratedExams(
   });
 }
 
+export type PracticeSubtopic = { id: string; name: string; isFree: boolean };
+
 export type PracticeTopic = {
   id: string;
   name: string;
+  // Whether a free account can practice this topic — see
+  // 0016_practice_free_preview.sql's required_plan_tier column. Checked
+  // again server-side in startExamCore; this is only for the UI to show
+  // a lock badge and disable the choice up front.
+  isFree: boolean;
   // A topic group's own children (e.g. Functions -> Calculus/Sequences/…).
   // Empty for a standalone topic with no further subdivision (e.g.
   // Probability & Statistics) — the UI shows a second dropdown only when
   // this is non-empty.
-  subtopics: { id: string; name: string }[];
+  subtopics: PracticeSubtopic[];
 };
 
 export type SubjectWithTopics = {
@@ -89,6 +96,7 @@ export async function getSubjectsForPractice(userId: string, role: UserRole): Pr
         categoryId: questionCategories.id,
         categoryName: questionCategories.name,
         categoryParentId: questionCategories.parentId,
+        requiredPlanTier: questionCategories.requiredPlanTier,
       })
       .from(subjects)
       .leftJoin(questionCategories, eq(questionCategories.subjectId, subjects.id))
@@ -96,19 +104,20 @@ export async function getSubjectsForPractice(userId: string, role: UserRole): Pr
 
     const bySubject = new Map<string, SubjectWithTopics>();
     const topicsById = new Map<string, PracticeTopic>();
-    const childRowsByParentId = new Map<string, { id: string; name: string }[]>();
+    const childRowsByParentId = new Map<string, PracticeSubtopic[]>();
 
     for (const row of rows) {
       const entry = bySubject.get(row.subjectId) ?? { id: row.subjectId, name: row.subjectName, slug: row.subjectSlug, topics: [] };
       bySubject.set(row.subjectId, entry);
       if (!row.categoryId || !row.categoryName?.startsWith(PRACTICE_TOPIC_PREFIX)) continue;
 
+      const isFree = row.requiredPlanTier === "free";
       if (row.categoryParentId) {
         const siblings = childRowsByParentId.get(row.categoryParentId) ?? [];
-        siblings.push({ id: row.categoryId, name: stripPracticePrefix(row.categoryName) });
+        siblings.push({ id: row.categoryId, name: stripPracticePrefix(row.categoryName), isFree });
         childRowsByParentId.set(row.categoryParentId, siblings);
       } else {
-        const topic: PracticeTopic = { id: row.categoryId, name: stripPracticePrefix(row.categoryName), subtopics: [] };
+        const topic: PracticeTopic = { id: row.categoryId, name: stripPracticePrefix(row.categoryName), isFree, subtopics: [] };
         entry.topics.push(topic);
         topicsById.set(row.categoryId, topic);
       }

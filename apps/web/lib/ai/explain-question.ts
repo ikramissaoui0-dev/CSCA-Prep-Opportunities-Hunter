@@ -45,7 +45,7 @@ export async function explainQuestionCore(
   // could otherwise call directly regardless of what the button shows.
   const planTier = await getCurrentPlanTier(user.id, user.role);
   if (!planTierAtLeast(planTier, "premium")) {
-    return actionFailure(new AppError("FORBIDDEN", "AI explanations are a Premium feature — upgrade to unlock them."));
+    return actionFailure(new AppError("FORBIDDEN", "Detailed explanations are a Premium feature — contact our team to unlock them."));
   }
 
   const [answer] = await db

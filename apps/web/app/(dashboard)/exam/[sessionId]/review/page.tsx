@@ -31,7 +31,7 @@ export default async function ExamReviewPage({ params }: { params: Promise<{ ses
     <div className="space-y-6">
       <div>
         <h1 className="text-2xl font-semibold tracking-tight">Review answers</h1>
-        <p className="text-muted-foreground">Question-by-question breakdown with AI explanations for anything you missed.</p>
+        <p className="text-muted-foreground">Question-by-question breakdown with detailed explanations for anything you missed.</p>
       </div>
 
       <div className="space-y-4">

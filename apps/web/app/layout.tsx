@@ -18,7 +18,7 @@ const geistMono = Geist_Mono({
 
 const SITE_NAME = "CSCA Prep";
 const SITE_DESCRIPTION =
-  "CSCA Prep by Opportunities Hunter — realistic mock exams, adaptive practice, and AI-powered explanations for the CSCA (Chinese University entrance exam for international students).";
+  "CSCA Prep by Opportunities Hunter — realistic mock exams, adaptive practice, and personalized explanations for the CSCA (Chinese University entrance exam for international students).";
 
 export const metadata: Metadata = {
   metadataBase: new URL(clientEnv.NEXT_PUBLIC_SITE_URL),

@@ -13,6 +13,7 @@ const PUBLIC_ROUTES = [
   // Phase 12 — public marketing site (apps/web/app/(marketing)).
   "/about",
   "/how-it-works",
+  "/exam-guide",
   "/pricing",
   "/faq",
   "/contact",

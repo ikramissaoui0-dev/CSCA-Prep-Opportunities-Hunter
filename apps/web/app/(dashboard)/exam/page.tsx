@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { requireRole } from "@/lib/auth/session";
 import { getPublishedCuratedExams, getSubjectsForPractice, getInProgressSessions } from "@/server/queries/exam-picker";
+import { getCurrentPlanTier } from "@/lib/billing/plan";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -19,11 +20,13 @@ const MODE_LABEL: Record<string, string> = {
 export default async function ExamPickerPage() {
   const user = await requireRole("student", "admin");
 
-  const [{ fullMocks, dailyChallenge }, subjects, inProgress] = await Promise.all([
+  const [{ fullMocks, dailyChallenge }, subjects, inProgress, planTier] = await Promise.all([
     getPublishedCuratedExams(user.id, user.role),
     getSubjectsForPractice(user.id, user.role),
     getInProgressSessions(user.id, user.role),
+    getCurrentPlanTier(user.id, user.role),
   ]);
+  const isFreeTier = planTier === "free";
 
   return (
     <div className="space-y-6">
@@ -58,6 +61,16 @@ export default async function ExamPickerPage() {
           <h2 className="text-lg font-semibold tracking-tight">Past exam papers</h2>
           <p className="text-sm text-muted-foreground">
             Real, past CSCA exams — the exact questions from an actual sitting, timed exactly like exam day.
+            {isFreeTier && (
+              <>
+                {" "}
+                Requires Premium access —{" "}
+                <Link href="/contact" className="underline hover:text-foreground">
+                  contact us
+                </Link>{" "}
+                to unlock it.
+              </>
+            )}
           </p>
         </div>
         <Card>
@@ -72,7 +85,11 @@ export default async function ExamPickerPage() {
                     {exam.description && <p className="text-sm text-muted-foreground">{exam.description}</p>}
                     <p className="text-xs text-muted-foreground">{Math.round(exam.timeLimitSeconds / 60)} minutes</p>
                   </div>
-                  <StartCuratedExamButton examId={exam.id} mode="full_mock" />
+                  {isFreeTier ? (
+                    <Button size="sm" variant="outline" nativeButton={false} render={<Link href="/contact">Contact us</Link>} />
+                  ) : (
+                    <StartCuratedExamButton examId={exam.id} mode="full_mock" />
+                  )}
                 </div>
               ))
             )}
@@ -116,7 +133,7 @@ export default async function ExamPickerPage() {
               <CardDescription>Focus on one subject at a time.</CardDescription>
             </CardHeader>
             <CardContent>
-              <StartSubjectPracticeForm subjects={subjects} />
+              <StartSubjectPracticeForm subjects={subjects} isFreeTier={isFreeTier} />
             </CardContent>
           </Card>
           <Card>
@@ -125,7 +142,7 @@ export default async function ExamPickerPage() {
               <CardDescription>Target easy, medium, or hard questions.</CardDescription>
             </CardHeader>
             <CardContent>
-              <StartDifficultyPracticeForm />
+              <StartDifficultyPracticeForm isFreeTier={isFreeTier} />
             </CardContent>
           </Card>
         </div>

@@ -10,7 +10,7 @@ export function RecommendedActions({ actions }: { actions: RecommendedAction[] }
         <CardTitle>Recommended for you</CardTitle>
         <CardDescription>
           {hasAiGenerated
-            ? "AI-generated suggestions based on your recent performance."
+            ? "Personalized suggestions based on your recent performance."
             : "Suggestions based on your recent performance."}
         </CardDescription>
       </CardHeader>

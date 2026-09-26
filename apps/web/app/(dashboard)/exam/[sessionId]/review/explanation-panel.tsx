@@ -36,7 +36,7 @@ export function ExplanationPanel({
   return (
     <div className="space-y-2">
       <Button type="button" variant="outline" size="sm" onClick={handleClick} disabled={isLoading}>
-        {isLoading ? "Thinking…" : "Get AI explanation"}
+        {isLoading ? "Thinking…" : "Get explanation"}
       </Button>
       {error && (
         <p className="text-sm text-destructive" role="alert">

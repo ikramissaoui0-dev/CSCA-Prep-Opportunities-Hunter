@@ -5,7 +5,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 
 export const metadata: Metadata = {
   title: "How It Works — CSCA Prep",
-  description: "How CSCA Prep's mock exams, AI explanations, and progress tracking work together to help you prepare for the CSCA.",
+  description: "How CSCA Prep's mock exams, personalized explanations, and progress tracking work together to help you prepare for the CSCA.",
   alternates: { canonical: "/how-it-works" },
 };
 
@@ -53,7 +53,7 @@ export default function HowItWorksPage() {
         <h2 className="text-xl font-semibold tracking-tight">3. Review what you missed — with real explanations</h2>
         <p className="text-muted-foreground">
           After submitting, you get your score immediately, broken down by subject. For anything you missed, you can
-          request an AI-generated explanation on the spot: why the correct answer is right, and why yours wasn&apos;t —
+          request a detailed explanation on the spot: why the correct answer is right, and why yours wasn&apos;t —
           not just an answer key.
         </p>
       </section>

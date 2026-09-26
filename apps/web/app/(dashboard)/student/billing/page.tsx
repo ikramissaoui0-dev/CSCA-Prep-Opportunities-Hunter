@@ -1,9 +1,11 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { requireUser } from "@/lib/auth/session";
 import { getBillingOverview } from "@/server/queries/billing";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { UpgradeButton, ManageBillingButton } from "./billing-actions";
+import { Button } from "@/components/ui/button";
+import { ManageBillingButton } from "./billing-actions";
 
 export const metadata: Metadata = { title: "Billing — CSCA Prep" };
 
@@ -35,8 +37,8 @@ export default async function BillingPage() {
         <CardContent className="space-y-2 text-sm text-muted-foreground">
           {billing.planTier === "free" && (
             <p>
-              {billing.fullMockUsedThisMonth} of {billing.fullMockMonthlyLimit} full simulations used this month. Practice and
-              the daily challenge are always unlimited.
+              Your free account includes one practice series per subject and the daily challenge. Past exam papers and
+              full practice access require Premium.
             </p>
           )}
           {billing.subscription && (
@@ -58,8 +60,8 @@ export default async function BillingPage() {
           </CardHeader>
           <CardContent className="space-y-3">
             <ul className="space-y-1.5 text-sm text-muted-foreground">
-              <li>{billing.fullMockMonthlyLimit} full simulations / month</li>
-              <li>Unlimited practice & daily challenge</li>
+              <li>One practice series per subject</li>
+              <li>Daily challenge</li>
               <li>Basic results after each exam</li>
             </ul>
             {billing.planTier === "free" && <Badge variant="secondary">Current plan</Badge>}
@@ -73,8 +75,9 @@ export default async function BillingPage() {
           </CardHeader>
           <CardContent className="space-y-3">
             <ul className="space-y-1.5 text-sm text-muted-foreground">
-              <li>Unlimited full simulations</li>
-              <li>AI explanations & recommendations</li>
+              <li>Every practice series, unlimited</li>
+              <li>Past exam papers</li>
+              <li>Detailed explanations & recommendations</li>
               <li>Advanced statistics & progress tracking</li>
             </ul>
             {billing.planTier === "premium" ? (
@@ -82,7 +85,7 @@ export default async function BillingPage() {
             ) : billing.planTier === "premium_plus" ? (
               <Badge variant="secondary">Included in your plan</Badge>
             ) : (
-              <UpgradeButton plan="premium" label="Upgrade to Premium" />
+              <Button className="w-full" variant="outline" nativeButton={false} render={<Link href="/contact">Contact us to upgrade</Link>} />
             )}
           </CardContent>
         </Card>
@@ -100,11 +103,14 @@ export default async function BillingPage() {
             {billing.planTier === "premium_plus" ? (
               <Badge variant="secondary">Current plan</Badge>
             ) : (
-              <UpgradeButton plan="premium_plus" label="Upgrade to Premium+" />
+              <Button className="w-full" variant="outline" nativeButton={false} render={<Link href="/contact">Contact us to upgrade</Link>} />
             )}
           </CardContent>
         </Card>
       </div>
+      <p className="text-sm text-muted-foreground">
+        Paid access is granted by our team, not by checkout on this site — reach out and we'll set you up.
+      </p>
 
       <Card>
         <CardHeader>

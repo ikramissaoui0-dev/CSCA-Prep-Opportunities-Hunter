@@ -41,8 +41,8 @@ export default function AboutPage() {
             browser before you submit — nothing to peek at mid-exam.
           </li>
           <li>
-            <strong className="text-foreground">Explanations that actually help.</strong> When you miss a question, our
-            AI tutor explains why the right answer is right — and why yours wasn&apos;t — in plain language.
+            <strong className="text-foreground">Explanations that actually help.</strong> When you miss a question, we
+            explain why the right answer is right — and why yours wasn&apos;t — in plain language.
           </li>
           <li>
             <strong className="text-foreground">Honest free access.</strong> You can take real mock exams and see real

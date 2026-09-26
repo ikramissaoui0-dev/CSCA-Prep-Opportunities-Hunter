@@ -19,7 +19,6 @@ import { finalizeSession } from "./finalize";
 import { maybeGenerateRecommendations } from "@/lib/ai/generate-recommendations";
 import { isPastDeadline } from "./timing";
 import { shuffle } from "./random";
-import { countFullMockAttemptsThisMonth, FREE_FULL_MOCK_MONTHLY_LIMIT } from "./plan-limits";
 import { getCurrentPlanTier } from "@/lib/billing/plan";
 import type { StartExamInput, SaveAnswerInput } from "@/lib/validation/exam";
 
@@ -69,23 +68,20 @@ export async function startExamCore(user: SessionUser, data: StartExamInput): Pr
       }
     }
 
-    // Free-tier limit (Phase 9) — only full_mock counts against it;
-    // daily_challenge, subject_practice, and difficulty_practice stay
-    // unlimited on every plan. Resuming an in-progress session above
+    // Phase 1 launch scoping: past exam papers require admin-granted
+    // access from the start — there's no self-serve checkout yet (see
+    // lib/billing/checkout-actions-core.ts's comment), so a free
+    // account can't unlock this by paying on the platform, only by
+    // contacting the team. daily_challenge stays free for everyone, a
+    // small taste of the format. Resuming an in-progress session above
     // already returned before reaching this, so only a genuinely new
     // attempt can be blocked here.
     if (data.mode === "full_mock") {
       const planTier = await getCurrentPlanTier(user.id, user.role);
       if (planTier === "free") {
-        const usedThisMonth = await countFullMockAttemptsThisMonth(db, user.id);
-        if (usedThisMonth >= FREE_FULL_MOCK_MONTHLY_LIMIT) {
-          return actionFailure(
-            new AppError(
-              "FORBIDDEN",
-              `You've used all ${FREE_FULL_MOCK_MONTHLY_LIMIT} free full simulations this month. Upgrade to Premium for unlimited simulations.`,
-            ),
-          );
-        }
+        return actionFailure(
+          new AppError("FORBIDDEN", "Past exam papers require Premium access — contact our team to get access."),
+        );
       }
     }
 
@@ -121,6 +117,23 @@ export async function startExamCore(user: SessionUser, data: StartExamInput): Pr
       return actionFailure(new AppError("NOT_FOUND", "That subject doesn't exist."));
     }
 
+    // Phase 1 launch scoping: a free account's one taste of practice is
+    // exactly one chosen topic per subject (question_categories.required_
+    // plan_tier = 'free', set in 0016_practice_free_preview.sql) — every
+    // other topic, and "every topic in this subject" as a whole (which
+    // would silently include locked ones), requires contacting the team
+    // for access. Checked here, not just hidden in the UI, since this is
+    // the actual security boundary for session creation.
+    const planTier = await getCurrentPlanTier(user.id, user.role);
+    if (planTier === "free" && !data.categoryId) {
+      return actionFailure(
+        new AppError(
+          "FORBIDDEN",
+          "Your free account includes one practice series per subject — pick it from the topic list, or contact our team for full access.",
+        ),
+      );
+    }
+
     // A category (topic group or specific topic) must actually belong to
     // the chosen subject — trusting a client-supplied categoryId without
     // this check would let someone pair a subject with an unrelated
@@ -131,11 +144,16 @@ export async function startExamCore(user: SessionUser, data: StartExamInput): Pr
     let categoryIds: string[] | undefined;
     if (data.categoryId) {
       const [category] = await db
-        .select({ id: questionCategories.id })
+        .select({ id: questionCategories.id, requiredPlanTier: questionCategories.requiredPlanTier })
         .from(questionCategories)
         .where(and(eq(questionCategories.id, data.categoryId), eq(questionCategories.subjectId, data.subjectId)));
       if (!category) {
         return actionFailure(new AppError("VALIDATION_ERROR", "That topic doesn't belong to the selected subject."));
+      }
+      if (planTier === "free" && category.requiredPlanTier !== "free") {
+        return actionFailure(
+          new AppError("FORBIDDEN", "This topic requires Premium access — contact our team to unlock it."),
+        );
       }
       const children = await db.select({ id: questionCategories.id }).from(questionCategories).where(eq(questionCategories.parentId, data.categoryId));
       categoryIds = [data.categoryId, ...children.map((c) => c.id)];
@@ -176,6 +194,16 @@ export async function startExamCore(user: SessionUser, data: StartExamInput): Pr
       .returning({ id: examSessions.id });
 
     return { success: true, data: { sessionId: created!.id } };
+  }
+
+  // difficulty_practice pulls from every subject/category at once, so it
+  // can't be narrowed to "the one free series" the way subject_practice
+  // can — Phase 1 launch scoping makes it Premium-only from the start.
+  const planTier = await getCurrentPlanTier(user.id, user.role);
+  if (planTier === "free") {
+    return actionFailure(
+      new AppError("FORBIDDEN", "Practice by difficulty requires Premium access — contact our team to unlock it."),
+    );
   }
 
   const pool = await db

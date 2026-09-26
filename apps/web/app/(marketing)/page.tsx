@@ -5,9 +5,9 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 
 export const metadata: Metadata = {
-  title: "CSCA Exam Prep — Mock Exams, AI Explanations & Progress Tracking",
+  title: "CSCA Exam Prep — Mock Exams, Personalized Explanations & Progress Tracking",
   description:
-    "Prepare for the CSCA with realistic mock exams, adaptive practice by subject and difficulty, AI-powered explanations, and progress tracking built for international students applying to study in China.",
+    "Prepare for the CSCA with realistic mock exams, adaptive practice by subject and difficulty, personalized explanations, and progress tracking built for international students applying to study in China.",
   alternates: { canonical: "/" },
 };
 
@@ -19,7 +19,7 @@ const FEATURES = [
   },
   {
     icon: Sparkles,
-    title: "AI-powered explanations",
+    title: "Personalized explanations",
     description: "Get a clear, specific explanation the moment you miss a question — not just an answer key.",
   },
   {
@@ -37,28 +37,30 @@ const FEATURES = [
 const STEPS = [
   { title: "Create your free account", description: "Sign up in under a minute — no credit card required to start practicing." },
   { title: "Take a mock exam or practice by subject", description: "Choose a full simulation, target a weak subject, or try the daily challenge." },
-  { title: "Review, learn, and track your progress", description: "Get instant results, AI explanations for what you missed, and a dashboard that shows how you're improving." },
+  { title: "Review, learn, and track your progress", description: "Get instant results, personalized explanations for what you missed, and a dashboard that shows how you're improving." },
 ];
 
 export default function HomePage() {
   return (
     <div>
-      <section className="mx-auto max-w-6xl px-6 py-20 text-center">
-        <p className="text-sm font-medium uppercase tracking-wide text-muted-foreground">Opportunities Hunter</p>
-        <h1 className="mt-3 text-4xl font-semibold tracking-tight sm:text-5xl">
-          Prepare for the CSCA with confidence
-        </h1>
-        <p className="mx-auto mt-4 max-w-2xl text-lg text-muted-foreground">
-          Realistic mock exams, adaptive practice, and AI-powered explanations built specifically for international
-          students preparing for the CSCA and admission to Chinese universities.
-        </p>
-        <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
-          <Button size="lg" nativeButton={false} render={<Link href="/register">Start practicing free</Link>} />
-          <Button size="lg" variant="outline" nativeButton={false} render={<Link href="/pricing">See pricing</Link>} />
+      <section className="border-b bg-linear-to-b from-[oklch(0.9_0.05_255.195)] to-background">
+        <div className="mx-auto max-w-6xl px-6 py-20 text-center">
+          <p className="text-sm font-medium uppercase tracking-wide text-primary">Opportunities Hunter</p>
+          <h1 className="mt-3 text-4xl font-semibold tracking-tight sm:text-5xl">
+            Prepare for the CSCA with confidence
+          </h1>
+          <p className="mx-auto mt-4 max-w-2xl text-lg text-muted-foreground">
+            Realistic mock exams, adaptive practice, and personalized explanations built specifically for international
+            students preparing for the CSCA and admission to Chinese universities.
+          </p>
+          <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
+            <Button size="lg" nativeButton={false} render={<Link href="/register">Start practicing free</Link>} />
+            <Button size="lg" variant="outline" nativeButton={false} render={<Link href="/pricing">See pricing</Link>} />
+          </div>
         </div>
       </section>
 
-      <section className="border-t bg-muted/30 py-16">
+      <section className="bg-muted/30 py-16">
         <div className="mx-auto max-w-6xl px-6">
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
             {FEATURES.map((feature) => (

@@ -242,7 +242,7 @@ export default function ExamGuidePage() {
         </div>
         <p className="text-sm text-muted-foreground">
           In practice: subject and difficulty practice cover the diagnostic and drilling, missed questions get
-          AI-generated explanations instead of a bare answer key, and full timed simulations are what stand in for
+          detailed explanations instead of a bare answer key, and full timed simulations are what stand in for
           exam-day rehearsal. See{" "}
           <Link href="/how-it-works" className="underline hover:text-foreground">
             how it works
@@ -254,7 +254,7 @@ export default function ExamGuidePage() {
       <div className="rounded-lg border bg-muted/30 p-6 text-center">
         <p className="font-medium">Ready to see where you stand?</p>
         <p className="mt-1 text-sm text-muted-foreground">
-          Start with a free subject practice set — no credit card required, unlimited practice on the free plan.
+          Start with a free practice series — no credit card required, one per subject on the free plan.
         </p>
         <div className="mt-4">
           <Button nativeButton={false} render={<Link href="/register">Start practicing free</Link>} />

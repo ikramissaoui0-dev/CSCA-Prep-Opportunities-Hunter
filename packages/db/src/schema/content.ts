@@ -1,5 +1,6 @@
 import { pgTable, pgView, pgEnum, uuid, text, smallint, numeric, boolean, jsonb, timestamp, index, unique, type AnyPgColumn } from "drizzle-orm/pg-core";
 import { profiles } from "./profiles";
+import { planTierEnum } from "./commerce";
 
 // Mirrors supabase/migrations/0002_content_schema.sql.
 export const questionTypeEnum = pgEnum("question_type", ["mcq", "free_response"]);
@@ -28,6 +29,11 @@ export const questionCategories = pgTable(
     slug: text("slug").notNull(),
     description: text("description"),
     displayOrder: smallint("display_order").notNull().default(0),
+    // Phase 1 launch scoping (0016_practice_free_preview.sql): a free
+    // account gets exactly one series per subject at 'free', everything
+    // else defaults 'premium' — checked the same way courses/lessons
+    // gate on required_plan_tier, via plan_tier_rank/current_user_plan_tier().
+    requiredPlanTier: planTierEnum("required_plan_tier").notNull().default("premium"),
     createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
     updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
   },
