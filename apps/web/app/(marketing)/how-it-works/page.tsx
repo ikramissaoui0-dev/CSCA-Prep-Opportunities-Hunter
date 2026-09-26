@@ -9,8 +9,7 @@ export const metadata: Metadata = {
   alternates: { canonical: "/how-it-works" },
 };
 
-const EXAM_MODES = [
-  { title: "Full CSCA simulation", description: "A complete, timed mock exam matching the real format — the closest thing to sitting the actual test." },
+const PRACTICE_EXERCISES = [
   { title: "Practice by subject", description: "Pick a subject and drill it specifically, at a question count you choose." },
   { title: "Practice by difficulty", description: "Target easy, medium, or hard questions when you want to build confidence or push your ceiling." },
   { title: "Daily challenge", description: "A short set of questions, refreshed daily, to build a consistent practice habit." },
@@ -26,17 +25,40 @@ export default function HowItWorksPage() {
 
       <section className="space-y-4">
         <h2 className="text-xl font-semibold tracking-tight">1. Choose how you want to practice</h2>
-        <div className="grid gap-4 sm:grid-cols-2">
-          {EXAM_MODES.map((mode) => (
-            <Card key={mode.title}>
-              <CardHeader>
-                <CardTitle className="text-base">{mode.title}</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <CardDescription>{mode.description}</CardDescription>
-              </CardContent>
-            </Card>
-          ))}
+        <p className="text-muted-foreground">
+          Past exam papers and practice exercises are kept deliberately separate — one is the exact real exam, the
+          other is everyday drilling.
+        </p>
+
+        <div className="space-y-3">
+          <h3 className="text-sm font-medium text-muted-foreground">Past exam papers</h3>
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-base">Full CSCA simulation</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <CardDescription>
+                The exact questions from a real, past CSCA sitting — not a composed approximation — timed exactly like
+                exam day.
+              </CardDescription>
+            </CardContent>
+          </Card>
+        </div>
+
+        <div className="space-y-3">
+          <h3 className="text-sm font-medium text-muted-foreground">Practice exercises</h3>
+          <div className="grid gap-4 sm:grid-cols-3">
+            {PRACTICE_EXERCISES.map((mode) => (
+              <Card key={mode.title}>
+                <CardHeader>
+                  <CardTitle className="text-base">{mode.title}</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <CardDescription>{mode.description}</CardDescription>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
         </div>
       </section>
 

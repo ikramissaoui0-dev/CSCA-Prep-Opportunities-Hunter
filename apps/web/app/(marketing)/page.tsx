@@ -1,21 +1,31 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { BookOpenCheck, Sparkles, BarChart3, Trophy } from "lucide-react";
+import { FileCheck2, BookOpenCheck, Sparkles, BarChart3, Trophy } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 
 export const metadata: Metadata = {
   title: "CSCA Exam Prep — Mock Exams, Personalized Explanations & Progress Tracking",
   description:
-    "Prepare for the CSCA with realistic mock exams, adaptive practice by subject and difficulty, personalized explanations, and progress tracking built for international students applying to study in China.",
+    "Prepare for the CSCA with real past exam papers, everyday practice exercises by subject and difficulty, personalized explanations, and progress tracking built for international students applying to study in China.",
   alternates: { canonical: "/" },
 };
 
+// Deliberately two separate cards, not one merged "mock exams" card —
+// past exam papers (real questions from an actual sitting) and practice
+// exercises (everyday drilling) are a different kind of content and are
+// kept visibly separate everywhere in the app (see /exam), so the
+// marketing page shouldn't blur them into one either.
 const FEATURES = [
   {
+    icon: FileCheck2,
+    title: "Real past exam papers",
+    description: "The exact questions from an actual CSCA sitting, timed exactly like exam day — not a synthetic approximation.",
+  },
+  {
     icon: BookOpenCheck,
-    title: "Realistic mock exams",
-    description: "Full CSCA simulations, subject practice, difficulty-targeted drills, and a daily challenge — all timed like the real thing.",
+    title: "Everyday practice exercises",
+    description: "Drill by subject or difficulty, plus a daily challenge — kept separate from past exam papers, for regular practice.",
   },
   {
     icon: Sparkles,
@@ -50,8 +60,8 @@ export default function HomePage() {
             Prepare for the CSCA with confidence
           </h1>
           <p className="mx-auto mt-4 max-w-2xl text-lg text-muted-foreground">
-            Realistic mock exams, adaptive practice, and personalized explanations built specifically for international
-            students preparing for the CSCA and admission to Chinese universities.
+            Real past exam papers, everyday practice exercises, and personalized explanations built specifically for
+            international students preparing for the CSCA and admission to Chinese universities.
           </p>
           <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
             <Button size="lg" nativeButton={false} render={<Link href="/register">Start practicing free</Link>} />
@@ -62,7 +72,7 @@ export default function HomePage() {
 
       <section className="bg-muted/30 py-16">
         <div className="mx-auto max-w-6xl px-6">
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {FEATURES.map((feature) => (
               <Card key={feature.title}>
                 <CardHeader>
