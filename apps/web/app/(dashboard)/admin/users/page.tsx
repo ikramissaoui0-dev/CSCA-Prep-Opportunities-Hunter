@@ -97,6 +97,7 @@ export default async function AdminUsersPage({
                   <tr className="border-b text-left text-xs text-muted-foreground">
                     <th className="p-3 font-medium">Name</th>
                     <th className="p-3 font-medium">Email</th>
+                    <th className="p-3 font-medium">Phone</th>
                     <th className="p-3 font-medium">Joined</th>
                     <th className="p-3 font-medium">Role</th>
                   </tr>
@@ -106,6 +107,7 @@ export default async function AdminUsersPage({
                     <tr key={row.id} className="border-b last:border-0">
                       <td className="p-3 font-medium">{row.fullName ?? "—"}</td>
                       <td className="p-3 text-muted-foreground">{row.email ?? "—"}</td>
+                      <td className="p-3 text-muted-foreground">{row.phone ?? "—"}</td>
                       <td className="p-3 text-muted-foreground">{row.createdAt.toLocaleDateString()}</td>
                       <td className="p-3">
                         <RoleSelect userId={row.id} role={row.role} isSelf={row.id === user.id} />

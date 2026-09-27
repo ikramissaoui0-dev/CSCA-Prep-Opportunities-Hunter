@@ -27,10 +27,11 @@ export type Profile = typeof profiles.$inferSelect;
 export type NewProfile = typeof profiles.$inferInsert;
 
 // Mirrors the admin_user_directory view from 0010_admin_user_directory.sql
-// (last_sign_in_at added in 0012_student_access_grants.sql) — read-only,
-// and only ever returns rows to an admin caller (the view's own WHERE
-// clause enforces that, not table RLS). `.existing()` tells Drizzle to
-// only ever SELECT from it, never try to create or alter it.
+// (last_sign_in_at added in 0012_student_access_grants.sql, phone added
+// in 0019_admin_user_directory_phone.sql) — read-only, and only ever
+// returns rows to an admin caller (the view's own WHERE clause enforces
+// that, not table RLS). `.existing()` tells Drizzle to only ever SELECT
+// from it, never try to create or alter it.
 export const adminUserDirectoryView = pgView("admin_user_directory", {
   id: uuid("id").notNull(),
   email: text("email"),
@@ -40,4 +41,5 @@ export const adminUserDirectoryView = pgView("admin_user_directory", {
   createdAt: timestamp("created_at", { withTimezone: true }).notNull(),
   updatedAt: timestamp("updated_at", { withTimezone: true }).notNull(),
   lastSignInAt: timestamp("last_sign_in_at", { withTimezone: true }),
+  phone: text("phone"),
 }).existing();

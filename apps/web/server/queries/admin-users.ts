@@ -16,6 +16,7 @@ export type UserListRow = {
   id: string;
   email: string | null;
   fullName: string | null;
+  phone: string | null;
   role: UserRole;
   createdAt: Date;
 };
@@ -50,6 +51,7 @@ export async function listUsers(
           id: adminUserDirectoryView.id,
           email: adminUserDirectoryView.email,
           fullName: adminUserDirectoryView.fullName,
+          phone: adminUserDirectoryView.phone,
           role: adminUserDirectoryView.role,
           createdAt: adminUserDirectoryView.createdAt,
         })
