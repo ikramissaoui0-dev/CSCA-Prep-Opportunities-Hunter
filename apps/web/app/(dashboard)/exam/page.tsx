@@ -56,7 +56,7 @@ export default async function ExamPickerPage() {
         </Card>
       )}
 
-      <section className="space-y-3">
+      <section id="past-exam-papers" className="space-y-3 scroll-mt-20">
         <div>
           <h2 className="text-lg font-semibold tracking-tight">Past exam papers</h2>
           <p className="text-sm text-muted-foreground">
@@ -97,7 +97,7 @@ export default async function ExamPickerPage() {
         </Card>
       </section>
 
-      <section className="space-y-3">
+      <section id="practice-exercises" className="space-y-3 scroll-mt-20">
         <div>
           <h2 className="text-lg font-semibold tracking-tight">Practice exercises</h2>
           <p className="text-sm text-muted-foreground">

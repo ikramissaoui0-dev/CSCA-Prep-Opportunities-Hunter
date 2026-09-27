@@ -16,10 +16,10 @@ export default async function DashboardLayout({ children }: { children: React.Re
 
   const studentNav = [
     { href: "/student", label: "Dashboard" },
-    { href: "/exam", label: "Take an exam" },
+    { href: "/exam#past-exam-papers", label: "Past exam papers" },
+    { href: "/exam#practice-exercises", label: "Practice exercises" },
     { href: "/results", label: "Results" },
     { href: "/exam-guide", label: "Exam guide" },
-    { href: "/student/courses", label: "Courses" },
     { href: "/student/leaderboard", label: "Leaderboard" },
     { href: "/student/billing", label: "Billing" },
   ];
