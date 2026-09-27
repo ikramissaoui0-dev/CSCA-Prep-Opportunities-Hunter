@@ -111,7 +111,17 @@ export function RegisterForm() {
 
           {state && !state.success && (
             <p className="text-sm text-destructive" role="alert">
-              {state.message}
+              {state.message === "An account already exists for this email." ? (
+                <>
+                  An account already exists for this email.{" "}
+                  <Link href="/login" className="underline">
+                    Sign in instead
+                  </Link>
+                  .
+                </>
+              ) : (
+                state.message
+              )}
             </p>
           )}
 

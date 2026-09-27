@@ -36,7 +36,7 @@ export async function signUp(input: SignUpInput): Promise<ActionResult<{ email: 
   const { fullName, email, phone, password } = parsed.data;
 
   const supabase = await createClient();
-  const { error } = await supabase.auth.signUp({
+  const { data, error } = await supabase.auth.signUp({
     email,
     password,
     options: {
@@ -50,6 +50,15 @@ export async function signUp(input: SignUpInput): Promise<ActionResult<{ email: 
     logger.warn({ err: error.message }, "sign_up_failed");
     // Supabase's own message is safe to show (e.g. "User already registered").
     return actionFailure(new AppError("VALIDATION_ERROR", error.message));
+  }
+
+  // For an email that's already registered and confirmed, Supabase
+  // deliberately returns a success-shaped response with no error and no
+  // real email sent (anti-enumeration) — the only signal is an empty
+  // `identities` array. Without this check the student sees "check your
+  // inbox" and waits forever for a link that never comes.
+  if (data.user && data.user.identities && data.user.identities.length === 0) {
+    return actionFailure(new AppError("VALIDATION_ERROR", "An account already exists for this email."));
   }
 
   return { success: true, data: { email } };
