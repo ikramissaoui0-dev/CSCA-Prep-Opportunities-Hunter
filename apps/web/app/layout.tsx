@@ -42,6 +42,9 @@ export const metadata: Metadata = {
     title: `${SITE_NAME} — CSCA Exam Prep by Opportunities Hunter`,
     description: SITE_DESCRIPTION,
   },
+  verification: {
+    google: "o4NhNqr8Gw1Q-_Lv2C6Ed3cnN7EFoqr-RGpBChixECQ",
+  },
 };
 
 // Organization structured data (Phase 12 SEO) — site-wide since every
