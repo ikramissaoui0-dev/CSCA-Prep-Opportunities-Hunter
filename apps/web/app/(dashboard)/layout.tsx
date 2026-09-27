@@ -23,7 +23,13 @@ export default async function DashboardLayout({ children }: { children: React.Re
     { href: "/student/leaderboard", label: "Leaderboard" },
     { href: "/student/billing", label: "Billing" },
   ];
-  const staffNav = [{ href: user.role === "content_manager" ? "/admin/content" : "/admin", label: "Admin" }];
+  const staffNav =
+    user.role === "content_manager"
+      ? [{ href: "/admin/content", label: "Admin" }]
+      : [
+          { href: "/admin", label: "Admin" },
+          { href: "/admin/access", label: "Free Access" },
+        ];
   const navLinks = user.role === "content_manager" ? staffNav : [...studentNav, ...(user.role === "admin" ? staffNav : [])];
 
   return (
