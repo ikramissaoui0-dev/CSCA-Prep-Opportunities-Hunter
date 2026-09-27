@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { requireRole } from "@/lib/auth/session";
-import { getPublishedCuratedExams, getSubjectsForPractice, getInProgressSessions } from "@/server/queries/exam-picker";
+import { getPublishedCuratedExams, getSubjectsForPractice, getInProgressSessions, getUsedFreeSubjectIds } from "@/server/queries/exam-picker";
 import { getCurrentPlanTier } from "@/lib/billing/plan";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -27,6 +27,9 @@ export default async function ExamPickerPage() {
     getCurrentPlanTier(user.id, user.role),
   ]);
   const isFreeTier = planTier === "free";
+  // Only worth querying for a free account — a paid one has no
+  // per-subject limit to check against.
+  const usedSubjectIds = isFreeTier ? await getUsedFreeSubjectIds(user.id, user.role) : new Set<string>();
 
   return (
     <div className="space-y-6">
@@ -133,7 +136,7 @@ export default async function ExamPickerPage() {
               <CardDescription>Focus on one subject at a time.</CardDescription>
             </CardHeader>
             <CardContent>
-              <StartSubjectPracticeForm subjects={subjects} isFreeTier={isFreeTier} />
+              <StartSubjectPracticeForm subjects={subjects} isFreeTier={isFreeTier} usedSubjectIds={[...usedSubjectIds]} />
             </CardContent>
           </Card>
           <Card>

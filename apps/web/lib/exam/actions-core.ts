@@ -117,22 +117,32 @@ export async function startExamCore(user: SessionUser, data: StartExamInput): Pr
       return actionFailure(new AppError("NOT_FOUND", "That subject doesn't exist."));
     }
 
-    // Phase 1 launch scoping: a free account's one taste of practice is
-    // exactly one chosen topic per subject (question_categories.required_
-    // plan_tier = 'free', set in 0016_practice_free_preview.sql) — every
-    // other topic, and "every topic in this subject" as a whole (which
-    // would silently include locked ones), requires contacting the team
-    // for access. Checked here, not just hidden in the UI, since this is
-    // the actual security boundary for session creation.
     const planTier = await getCurrentPlanTier(user.id, user.role);
-    if (planTier === "free" && !data.categoryId) {
-      return actionFailure(
-        new AppError(
-          "FORBIDDEN",
-          "Your free account includes one practice series per subject — pick it from the topic list, or contact our team for full access.",
-        ),
-      );
+
+    // Phase 1 launch scoping: a free account gets exactly one practice
+    // session per subject — a single random mix across every topic
+    // (never scoped to one topic), capped at 48 questions to match the
+    // real exam's length. Once that one session exists, the only way to
+    // practice this subject again is contacting the team for full
+    // access. Checked here, not just hidden in the UI, since this is
+    // the actual security boundary for session creation.
+    if (planTier === "free") {
+      const [priorAttempt] = await db
+        .select({ id: examSessions.id })
+        .from(examSessions)
+        .where(and(eq(examSessions.userId, user.id), eq(examSessions.mode, "subject_practice"), eq(examSessions.subjectId, data.subjectId)))
+        .limit(1);
+      if (priorAttempt) {
+        return actionFailure(
+          new AppError(
+            "FORBIDDEN",
+            "You've already used your free practice session for this subject — contact our team for full access.",
+          ),
+        );
+      }
     }
+    const FREE_SUBJECT_PRACTICE_QUESTION_CAP = 48;
+    const questionCount = planTier === "free" ? Math.min(data.questionCount, FREE_SUBJECT_PRACTICE_QUESTION_CAP) : data.questionCount;
 
     // A category (topic group or specific topic) must actually belong to
     // the chosen subject — trusting a client-supplied categoryId without
@@ -140,20 +150,18 @@ export async function startExamCore(user: SessionUser, data: StartExamInput): Pr
     // category's questions. If it turns out to be a group (has
     // children), practice covers every topic under it, not just
     // questions tagged to the group row itself (which normally has none
-    // — only leaf topics are ever tagged directly on a question).
+    // — only leaf topics are ever tagged directly on a question). Free
+    // accounts never scope to a category at all — their one session is
+    // always the whole subject, mixed — so any categoryId they send is
+    // simply ignored rather than honored or rejected.
     let categoryIds: string[] | undefined;
-    if (data.categoryId) {
+    if (data.categoryId && planTier !== "free") {
       const [category] = await db
-        .select({ id: questionCategories.id, requiredPlanTier: questionCategories.requiredPlanTier })
+        .select({ id: questionCategories.id })
         .from(questionCategories)
         .where(and(eq(questionCategories.id, data.categoryId), eq(questionCategories.subjectId, data.subjectId)));
       if (!category) {
         return actionFailure(new AppError("VALIDATION_ERROR", "That topic doesn't belong to the selected subject."));
-      }
-      if (planTier === "free" && category.requiredPlanTier !== "free") {
-        return actionFailure(
-          new AppError("FORBIDDEN", "This topic requires Premium access — contact our team to unlock it."),
-        );
       }
       const children = await db.select({ id: questionCategories.id }).from(questionCategories).where(eq(questionCategories.parentId, data.categoryId));
       categoryIds = [data.categoryId, ...children.map((c) => c.id)];
@@ -172,7 +180,7 @@ export async function startExamCore(user: SessionUser, data: StartExamInput): Pr
         ),
       )
       .orderBy(sql`random()`)
-      .limit(data.questionCount);
+      .limit(questionCount);
 
     if (pool.length === 0) {
       return actionFailure(

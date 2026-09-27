@@ -9,10 +9,17 @@ const password = z
   .regex(/[A-Z]/, "Password must include an uppercase letter")
   .regex(/[0-9]/, "Password must include a number");
 
+const phone = z
+  .string()
+  .trim()
+  .min(1, "Phone number is required")
+  .regex(/^[0-9+()\-.\s]{6,20}$/, "Enter a valid phone number");
+
 export const signUpSchema = z
   .object({
     fullName: z.string().trim().min(2, "Enter your full name").max(120),
     email,
+    phone,
     password,
     confirmPassword: z.string(),
   })

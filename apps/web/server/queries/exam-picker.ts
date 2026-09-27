@@ -45,20 +45,17 @@ export async function getPublishedCuratedExams(
   });
 }
 
-export type PracticeSubtopic = { id: string; name: string; isFree: boolean };
+export type PracticeSubtopic = { id: string; name: string };
 
 export type PracticeTopic = {
   id: string;
   name: string;
-  // Whether a free account can practice this topic — see
-  // 0016_practice_free_preview.sql's required_plan_tier column. Checked
-  // again server-side in startExamCore; this is only for the UI to show
-  // a lock badge and disable the choice up front.
-  isFree: boolean;
   // A topic group's own children (e.g. Functions -> Calculus/Sequences/…).
   // Empty for a standalone topic with no further subdivision (e.g.
   // Probability & Statistics) — the UI shows a second dropdown only when
-  // this is non-empty.
+  // this is non-empty. Topic-level access no longer varies by plan —
+  // see getUsedFreeSubjectIds below for how the free tier is actually
+  // gated now (one whole-subject session, not one topic).
   subtopics: PracticeSubtopic[];
 };
 
@@ -96,7 +93,6 @@ export async function getSubjectsForPractice(userId: string, role: UserRole): Pr
         categoryId: questionCategories.id,
         categoryName: questionCategories.name,
         categoryParentId: questionCategories.parentId,
-        requiredPlanTier: questionCategories.requiredPlanTier,
       })
       .from(subjects)
       .leftJoin(questionCategories, eq(questionCategories.subjectId, subjects.id))
@@ -111,13 +107,12 @@ export async function getSubjectsForPractice(userId: string, role: UserRole): Pr
       bySubject.set(row.subjectId, entry);
       if (!row.categoryId || !row.categoryName?.startsWith(PRACTICE_TOPIC_PREFIX)) continue;
 
-      const isFree = row.requiredPlanTier === "free";
       if (row.categoryParentId) {
         const siblings = childRowsByParentId.get(row.categoryParentId) ?? [];
-        siblings.push({ id: row.categoryId, name: stripPracticePrefix(row.categoryName), isFree });
+        siblings.push({ id: row.categoryId, name: stripPracticePrefix(row.categoryName) });
         childRowsByParentId.set(row.categoryParentId, siblings);
       } else {
-        const topic: PracticeTopic = { id: row.categoryId, name: stripPracticePrefix(row.categoryName), isFree, subtopics: [] };
+        const topic: PracticeTopic = { id: row.categoryId, name: stripPracticePrefix(row.categoryName), subtopics: [] };
         entry.topics.push(topic);
         topicsById.set(row.categoryId, topic);
       }
@@ -129,6 +124,25 @@ export async function getSubjectsForPractice(userId: string, role: UserRole): Pr
     }
 
     return [...bySubject.values()];
+  });
+}
+
+/**
+ * Which subjects a free account has already spent its one practice
+ * session on (Phase 1 launch scoping — see startExamCore's subject_
+ * practice branch, the actual enforcement point). Powers the picker UI
+ * showing "already used" instead of letting a free student pick a
+ * subject only to be rejected after clicking Start. Irrelevant for a
+ * paid account (unlimited subjects), so callers only need this for a
+ * free-tier viewer.
+ */
+export async function getUsedFreeSubjectIds(userId: string, role: UserRole): Promise<Set<string>> {
+  return withRlsContext(userId, role, async (tx) => {
+    const rows = await tx
+      .selectDistinct({ subjectId: examSessions.subjectId })
+      .from(examSessions)
+      .where(and(eq(examSessions.userId, userId), eq(examSessions.mode, "subject_practice")));
+    return new Set(rows.map((r) => r.subjectId).filter((id): id is string => id !== null));
   });
 }
 

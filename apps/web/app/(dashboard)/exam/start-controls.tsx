@@ -51,34 +51,93 @@ export function StartCuratedExamButton({
   );
 }
 
-type PracticeSubtopic = { id: string; name: string; isFree: boolean };
-type PracticeTopic = { id: string; name: string; isFree: boolean; subtopics: PracticeSubtopic[] };
+type PracticeSubtopic = { id: string; name: string };
+type PracticeTopic = { id: string; name: string; subtopics: PracticeSubtopic[] };
 
-/** A locked option stays visible (so a free account can see what's out
- * there) but can't be selected — disabled options can't fire onChange. */
-function optionLabel(name: string, isFree: boolean, isFreeTier: boolean): string {
-  return isFreeTier && !isFree ? `${name} (Premium)` : name;
-}
+// Matches the real exam's length (48 MCQ per subject) — see
+// startExamCore's FREE_SUBJECT_PRACTICE_QUESTION_CAP, which enforces
+// this server-side regardless of what a client sends.
+const FREE_SUBJECT_PRACTICE_QUESTION_CAP = 48;
 
 export function StartSubjectPracticeForm({
   subjects,
   isFreeTier,
+  usedSubjectIds,
 }: {
   subjects: { id: string; name: string; topics: PracticeTopic[] }[];
   isFreeTier: boolean;
+  /** Subject ids a free account has already spent its one practice
+   * session on — ignored for a paid account. */
+  usedSubjectIds: string[];
 }) {
   const { run, isPending, error } = useStartExam();
-  const firstSubject = subjects[0];
-  const [subjectId, setSubjectId] = useState(firstSubject?.id ?? "");
-  // A free account starts on its one free topic for the selected subject
-  // (never on "all topics", which would reach locked ones too); a paid
-  // account starts on "all topics" as before.
-  const [topicId, setTopicId] = useState(() => (isFreeTier ? (firstSubject?.topics.find((t) => t.isFree)?.id ?? "") : ""));
+  const [subjectId, setSubjectId] = useState(subjects[0]?.id ?? "");
+  const [topicId, setTopicId] = useState("");
   const [subtopicId, setSubtopicId] = useState("");
   const [questionCount, setQuestionCount] = useState(10);
 
   if (subjects.length === 0) {
     return <p className="text-sm text-muted-foreground">No subjects available yet.</p>;
+  }
+
+  const usedSet = new Set(usedSubjectIds);
+  const alreadyUsed = isFreeTier && usedSet.has(subjectId);
+
+  // Free accounts get one whole-subject session (every topic mixed
+  // together, capped at 48 questions) instead of picking a topic — so
+  // this simpler form skips the topic/subtopic pickers entirely.
+  if (isFreeTier) {
+    return (
+      <div className="space-y-3">
+        <div className="space-y-1.5">
+          <Label htmlFor="subject-select">Subject</Label>
+          <select
+            id="subject-select"
+            value={subjectId}
+            onChange={(e) => setSubjectId(e.target.value)}
+            className="h-9 w-full rounded-md border border-input bg-background px-3 text-sm"
+          >
+            {subjects.map((s) => (
+              <option key={s.id} value={s.id}>
+                {s.name}
+                {usedSet.has(s.id) ? " (already used)" : ""}
+              </option>
+            ))}
+          </select>
+        </div>
+        <Button
+          onClick={() => run({ mode: "subject_practice", subjectId, questionCount: FREE_SUBJECT_PRACTICE_QUESTION_CAP })}
+          disabled={isPending || !subjectId || alreadyUsed}
+        >
+          {isPending ? "Starting…" : `Start ${FREE_SUBJECT_PRACTICE_QUESTION_CAP}-question practice`}
+        </Button>
+        <p className="text-xs text-muted-foreground">
+          {alreadyUsed ? (
+            <>
+              You&apos;ve already used your free practice session for this subject.{" "}
+              <Link href="/contact" className="underline hover:text-foreground">
+                Contact us
+              </Link>{" "}
+              for full access.
+            </>
+          ) : (
+            <>
+              Your free account gets one session per subject — {FREE_SUBJECT_PRACTICE_QUESTION_CAP} questions mixed
+              from every topic, same length as the real exam.{" "}
+              <Link href="/contact" className="underline hover:text-foreground">
+                Contact us
+              </Link>{" "}
+              for unlimited access.
+            </>
+          )}
+        </p>
+        {error && (
+          <p className="text-sm text-destructive" role="alert">
+            {error}
+          </p>
+        )}
+      </div>
+    );
   }
 
   const topics = subjects.find((s) => s.id === subjectId)?.topics ?? [];
@@ -87,19 +146,10 @@ export function StartSubjectPracticeForm({
   // the topic itself (which may be a group with no direct questions of
   // its own — startExamCore expands a group to all its subtopics).
   const categoryId = subtopicId || topicId || undefined;
-  const selectedIsFree = subtopicId
-    ? subtopics.find((st) => st.id === subtopicId)?.isFree
-    : topicId
-      ? topics.find((t) => t.id === topicId)?.isFree
-      : false; // "All topics" always reaches locked content
-  const blockedByPlan = isFreeTier && !selectedIsFree;
 
   function handleSubjectChange(nextSubjectId: string) {
     setSubjectId(nextSubjectId);
-    const nextTopics = subjects.find((s) => s.id === nextSubjectId)?.topics ?? [];
-    // Topic list changed — a previously picked id may not exist here;
-    // a free account re-lands on that subject's own free topic.
-    setTopicId(isFreeTier ? (nextTopics.find((t) => t.isFree)?.id ?? "") : "");
+    setTopicId(""); // topic list changed — a previously picked id may not exist here
     setSubtopicId("");
   }
 
@@ -148,12 +198,10 @@ export function StartSubjectPracticeForm({
             onChange={(e) => handleTopicChange(e.target.value)}
             className="h-9 w-full rounded-md border border-input bg-background px-3 text-sm"
           >
-            <option value="" disabled={isFreeTier}>
-              {isFreeTier ? "All topics (Premium)" : "All topics"}
-            </option>
+            <option value="">All topics</option>
             {topics.map((t) => (
-              <option key={t.id} value={t.id} disabled={isFreeTier && !t.isFree}>
-                {optionLabel(t.name, t.isFree, isFreeTier)}
+              <option key={t.id} value={t.id}>
+                {t.name}
               </option>
             ))}
           </select>
@@ -170,28 +218,16 @@ export function StartSubjectPracticeForm({
           >
             <option value="">All of {topics.find((t) => t.id === topicId)?.name}</option>
             {subtopics.map((st) => (
-              <option key={st.id} value={st.id} disabled={isFreeTier && !st.isFree}>
-                {optionLabel(st.name, st.isFree, isFreeTier)}
+              <option key={st.id} value={st.id}>
+                {st.name}
               </option>
             ))}
           </select>
         </div>
       )}
-      <Button
-        onClick={() => run({ mode: "subject_practice", subjectId, categoryId, questionCount })}
-        disabled={isPending || !subjectId || blockedByPlan}
-      >
+      <Button onClick={() => run({ mode: "subject_practice", subjectId, categoryId, questionCount })} disabled={isPending || !subjectId}>
         {isPending ? "Starting…" : "Start practice"}
       </Button>
-      {isFreeTier && (
-        <p className="text-xs text-muted-foreground">
-          Your free account includes one practice series per subject.{" "}
-          <Link href="/contact" className="underline hover:text-foreground">
-            Contact us
-          </Link>{" "}
-          for full access.
-        </p>
-      )}
       {error && (
         <p className="text-sm text-destructive" role="alert">
           {error}

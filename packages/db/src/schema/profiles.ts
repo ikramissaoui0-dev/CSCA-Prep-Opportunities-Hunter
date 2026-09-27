@@ -11,6 +11,10 @@ export const profiles = pgTable(
   {
     id: uuid("id").primaryKey(),
     fullName: text("full_name"),
+    // Collected at signup (lib/validation/auth.ts's signUpSchema makes it
+    // required there) — nullable here so a pre-existing row, or a future
+    // non-password sign-in path with nothing to give, never breaks.
+    phone: text("phone"),
     role: userRoleEnum("role").notNull().default("student"),
     avatarUrl: text("avatar_url"),
     createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),

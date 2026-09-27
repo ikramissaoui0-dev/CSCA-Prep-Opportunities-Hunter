@@ -33,7 +33,7 @@ export async function signUp(input: SignUpInput): Promise<ActionResult<{ email: 
     return actionFailure(new AppError("RATE_LIMITED", `Too many signups from this network. Try again in ${rateLimit.retryAfterSeconds}s.`));
   }
 
-  const { fullName, email, password } = parsed.data;
+  const { fullName, email, phone, password } = parsed.data;
 
   const supabase = await createClient();
   const { error } = await supabase.auth.signUp({
@@ -41,8 +41,8 @@ export async function signUp(input: SignUpInput): Promise<ActionResult<{ email: 
     password,
     options: {
       emailRedirectTo: `${clientEnv.NEXT_PUBLIC_SITE_URL}/auth/callback`,
-      // Read by the handle_new_user trigger (supabase/migrations) to seed profiles.full_name.
-      data: { full_name: fullName },
+      // Read by the handle_new_user trigger (supabase/migrations) to seed profiles.full_name/phone.
+      data: { full_name: fullName, phone },
     },
   });
 

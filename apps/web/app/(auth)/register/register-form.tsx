@@ -25,6 +25,7 @@ async function submitSignUp(_prevState: FormState, formData: FormData): Promise<
   return signUp({
     fullName: String(formData.get("fullName") ?? ""),
     email: String(formData.get("email") ?? ""),
+    phone: String(formData.get("phone") ?? ""),
     password: String(formData.get("password") ?? ""),
     confirmPassword: String(formData.get("confirmPassword") ?? ""),
   });
@@ -55,6 +56,10 @@ export function RegisterForm() {
           <div className="space-y-2">
             <Label htmlFor="email">Email</Label>
             <Input id="email" name="email" type="email" autoComplete="email" required />
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="phone">Phone number</Label>
+            <Input id="phone" name="phone" type="tel" autoComplete="tel" required />
           </div>
           <div className="space-y-2">
             <Label htmlFor="password">Password</Label>
