@@ -1,7 +1,7 @@
 import "server-only";
 
 import { Resend } from "resend";
-import { serverEnv, clientEnv } from "@/lib/env";
+import { serverEnv } from "@/lib/env";
 import { AppError } from "@/lib/errors";
 
 let cachedClient: Resend | undefined;
@@ -19,14 +19,11 @@ function getResendClient(): Resend {
   return cachedClient;
 }
 
-// Resend requires sending "from" a domain verified in its dashboard —
-// derived from the site's own domain rather than hardcoded, but this
-// address still won't deliver until that domain is actually verified in
-// Resend (Dashboard > Domains). Until then, getResendClient's caller
-// gets Resend's own API error, not a silent failure.
+// Sends from the csca.opportunitieshunter.com subdomain — the domain
+// verified in Resend for this app — matching the contact@csca.
+// opportunitieshunter.com address shown everywhere on the site.
 function getFromAddress(): string {
-  const host = new URL(clientEnv.NEXT_PUBLIC_SITE_URL).hostname;
-  return `CSCA Prep <contact@${host}>`;
+  return "CSCA Prep <contact@csca.opportunitieshunter.com>";
 }
 
 export async function sendContactFormEmail(input: { name: string; email: string; message: string }): Promise<void> {

@@ -29,8 +29,8 @@ export default function ContactPage() {
         </p>
         <p className="text-muted-foreground">
           Email:{" "}
-          <a href="mailto:contact@opportunitieshunter.com" className="underline hover:text-foreground">
-            contact@opportunitieshunter.com
+          <a href="mailto:contact@csca.opportunitieshunter.com" className="underline hover:text-foreground">
+            contact@csca.opportunitieshunter.com
           </a>
         </p>
         <p className="text-muted-foreground">3rd floor, Imm Capital Office, 93 Boulevard Abdelmoumen, N° 74, Casablanca 20042</p>

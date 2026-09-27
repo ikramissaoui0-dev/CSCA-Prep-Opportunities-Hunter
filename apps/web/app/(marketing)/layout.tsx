@@ -53,8 +53,8 @@ export default function MarketingLayout({ children }: { children: React.ReactNod
             <a href="tel:+212688051703" className="hover:text-brand-navy-foreground">
               +212 6 88 05 17 03
             </a>
-            <a href="mailto:contact@opportunitieshunter.com" className="hover:text-brand-navy-foreground">
-              contact@opportunitieshunter.com
+            <a href="mailto:contact@csca.opportunitieshunter.com" className="hover:text-brand-navy-foreground">
+              contact@csca.opportunitieshunter.com
             </a>
             <span>3rd floor, Imm Capital Office, 93 Boulevard Abdelmoumen, N° 74, Casablanca 20042</span>
           </div>
