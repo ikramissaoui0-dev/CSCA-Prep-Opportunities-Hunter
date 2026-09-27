@@ -12,19 +12,23 @@ import * as schema from "./schema";
  * statements, and leaving this on causes intermittent "prepared
  * statement already exists" errors under load.
  *
- * `max: 1` — this client is created fresh per serverless function
+ * `max: 5` — this client is created fresh per serverless function
  * instance (Vercel), not shared across a fleet of long-lived servers.
  * postgres.js defaults to a 10-connection pool per client; with many
  * concurrent Lambda instances each opening up to 10, the pooler's own
  * connection ceiling is exhausted fast, surfacing as sporadic
  * "unexpected error" page crashes right after sign-up (a burst of
  * dashboard queries hitting a cold instance is exactly when this bites).
- * One connection per instance, with the platform's own horizontal
+ * A small, capped pool per instance, with the platform's own horizontal
  * scaling providing concurrency instead, is the standard fix for
- * serverless + Postgres per Supabase's own guidance.
+ * serverless + Postgres per Supabase's own guidance — 5 rather than 1
+ * because withRlsContext opens one connection per call (each is its own
+ * transaction), and a page like /student fans out 3 of those
+ * concurrently; max:1 would serialize them and cost real latency for no
+ * extra safety once the per-instance ceiling is already this low.
  */
 export function createDbClient(connectionString: string) {
-  const client = postgres(connectionString, { prepare: false, max: 1 });
+  const client = postgres(connectionString, { prepare: false, max: 5 });
   return drizzle(client, { schema });
 }
 
