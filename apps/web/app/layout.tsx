@@ -36,11 +36,16 @@ export const metadata: Metadata = {
     siteName: SITE_NAME,
     title: `${SITE_NAME} — CSCA Exam Prep by Opportunities Hunter`,
     description: SITE_DESCRIPTION,
+    // logo.png is square (1080x1080), not the usual 1200x630 OG banner
+    // shape — still valid, platforms just center/crop it rather than
+    // filling the whole card.
+    images: [{ url: "/logo.png", width: 1080, height: 1080, alt: SITE_NAME }],
   },
   twitter: {
     card: "summary_large_image",
     title: `${SITE_NAME} — CSCA Exam Prep by Opportunities Hunter`,
     description: SITE_DESCRIPTION,
+    images: ["/logo.png"],
   },
   verification: {
     google: "o4NhNqr8Gw1Q-_Lv2C6Ed3cnN7EFoqr-RGpBChixECQ",
