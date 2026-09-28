@@ -11,6 +11,7 @@ import {
   questionCategories,
   questionOptions,
   subjects,
+  type PlanTier,
 } from "@csca/db";
 import type { SessionUser } from "@/lib/auth/session";
 import { db } from "@/lib/db";
@@ -19,7 +20,19 @@ import { finalizeSession } from "./finalize";
 import { maybeGenerateRecommendations } from "@/lib/ai/generate-recommendations";
 import { isPastDeadline } from "./timing";
 import { shuffle } from "./random";
-import { getCurrentPlanTier } from "@/lib/billing/plan";
+import { getCurrentPlanTier, planTierAtLeast } from "@/lib/billing/plan";
+
+// Every tier a caller at `planTier` is actually allowed to see, per
+// plan_tier_rank — mirrors the questions_read_published RLS policy
+// (0016_practice_free_preview.sql) exactly. Without this, a pool built
+// on the elevated `db` (no RLS) can pick a question whose category the
+// student's own RLS-scoped read of `questions` then silently hides —
+// the question vanishes from the exam-taking page but still counts as
+// "skipped" once finalizeSession scores the full questionOrder.
+const ALL_PLAN_TIERS: PlanTier[] = ["free", "premium", "premium_plus"];
+function visibleCategoryTiers(planTier: PlanTier): PlanTier[] {
+  return ALL_PLAN_TIERS.filter((tier) => planTierAtLeast(planTier, tier));
+}
 import type { StartExamInput, SaveAnswerInput } from "@/lib/validation/exam";
 
 // Ad-hoc practice sessions aren't tied to a curated exams.time_limit_seconds,
@@ -175,6 +188,7 @@ export async function startExamCore(user: SessionUser, data: StartExamInput): Pr
         and(
           eq(questionCategories.subjectId, data.subjectId),
           categoryIds ? inArray(questions.categoryId, categoryIds) : undefined,
+          inArray(questionCategories.requiredPlanTier, visibleCategoryTiers(planTier)),
           eq(questions.isPublished, true),
           gradeableQuestion,
         ),
@@ -217,10 +231,12 @@ export async function startExamCore(user: SessionUser, data: StartExamInput): Pr
   const pool = await db
     .select({ id: questions.id })
     .from(questions)
+    .innerJoin(questionCategories, eq(questionCategories.id, questions.categoryId))
     .where(
       and(
         gte(questions.difficulty, data.difficultyMin),
         lte(questions.difficulty, data.difficultyMax),
+        inArray(questionCategories.requiredPlanTier, visibleCategoryTiers(planTier)),
         eq(questions.isPublished, true),
         gradeableQuestion,
       ),

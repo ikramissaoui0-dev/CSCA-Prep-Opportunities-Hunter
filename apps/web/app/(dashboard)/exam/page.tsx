@@ -59,47 +59,6 @@ export default async function ExamPickerPage() {
         </Card>
       )}
 
-      <section id="past-exam-papers" className="space-y-3 scroll-mt-20">
-        <div>
-          <h2 className="text-lg font-semibold tracking-tight">Past exam papers</h2>
-          <p className="text-sm text-muted-foreground">
-            Real, past CSCA exams — the exact questions from an actual sitting, timed exactly like exam day.
-            {isFreeTier && (
-              <>
-                {" "}
-                Requires Premium access —{" "}
-                <Link href="/contact" className="underline hover:text-foreground">
-                  contact us
-                </Link>{" "}
-                to unlock it.
-              </>
-            )}
-          </p>
-        </div>
-        <Card>
-          <CardContent className="space-y-3">
-            {fullMocks.length === 0 ? (
-              <p className="text-sm text-muted-foreground">No past exam papers are published yet.</p>
-            ) : (
-              fullMocks.map((exam) => (
-                <div key={exam.id} className="flex items-center justify-between gap-4 rounded-lg border p-3">
-                  <div>
-                    <p className="text-sm font-medium">{exam.title}</p>
-                    {exam.description && <p className="text-sm text-muted-foreground">{exam.description}</p>}
-                    <p className="text-xs text-muted-foreground">{Math.round(exam.timeLimitSeconds / 60)} minutes</p>
-                  </div>
-                  {isFreeTier ? (
-                    <Button size="sm" variant="outline" nativeButton={false} render={<Link href="/contact">Contact us</Link>} />
-                  ) : (
-                    <StartCuratedExamButton examId={exam.id} mode="full_mock" />
-                  )}
-                </div>
-              ))
-            )}
-          </CardContent>
-        </Card>
-      </section>
-
       <section id="practice-exercises" className="space-y-3 scroll-mt-20">
         <div>
           <h2 className="text-lg font-semibold tracking-tight">Practice exercises</h2>
@@ -149,6 +108,47 @@ export default async function ExamPickerPage() {
             </CardContent>
           </Card>
         </div>
+      </section>
+
+      <section id="past-exam-papers" className="space-y-3 scroll-mt-20">
+        <div>
+          <h2 className="text-lg font-semibold tracking-tight">Past exam papers</h2>
+          <p className="text-sm text-muted-foreground">
+            Real, past CSCA exams — the exact questions from an actual sitting, timed exactly like exam day.
+            {isFreeTier && (
+              <>
+                {" "}
+                Requires Premium access —{" "}
+                <Link href="/contact" className="underline hover:text-foreground">
+                  contact us
+                </Link>{" "}
+                to unlock it.
+              </>
+            )}
+          </p>
+        </div>
+        <Card>
+          <CardContent className="space-y-3">
+            {fullMocks.length === 0 ? (
+              <p className="text-sm text-muted-foreground">No past exam papers are published yet.</p>
+            ) : (
+              fullMocks.map((exam) => (
+                <div key={exam.id} className="flex items-center justify-between gap-4 rounded-lg border p-3">
+                  <div>
+                    <p className="text-sm font-medium">{exam.title}</p>
+                    {exam.description && <p className="text-sm text-muted-foreground">{exam.description}</p>}
+                    <p className="text-xs text-muted-foreground">{Math.round(exam.timeLimitSeconds / 60)} minutes</p>
+                  </div>
+                  {isFreeTier ? (
+                    <Button size="sm" variant="outline" nativeButton={false} render={<Link href="/contact">Contact us</Link>} />
+                  ) : (
+                    <StartCuratedExamButton examId={exam.id} mode="full_mock" />
+                  )}
+                </div>
+              ))
+            )}
+          </CardContent>
+        </Card>
       </section>
     </div>
   );
