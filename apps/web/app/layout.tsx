@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Toaster } from "@/components/ui/sonner";
+import { ThemeProvider } from "@/components/theme-provider";
 import { clientEnv } from "@/lib/env";
 import "./globals.css";
 
@@ -74,10 +75,17 @@ export default function RootLayout({
     <html
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      // next-themes sets the class/style attributes on <html> after
+      // hydration based on localStorage/system preference — the SSR'd
+      // markup can never know that ahead of time, so a mismatch warning
+      // here is expected and suppressed rather than a real bug.
+      suppressHydrationWarning
     >
       <body className="min-h-full flex flex-col">
-        {children}
-        <Toaster />
+        <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
+          {children}
+          <Toaster />
+        </ThemeProvider>
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd) }} />
         {/* Both are no-ops anywhere but a Vercel deployment — no DSN or
             config needed, they detect the Vercel runtime themselves. */}

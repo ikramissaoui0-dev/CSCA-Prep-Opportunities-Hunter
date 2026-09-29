@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Brand } from "@/components/brand";
 import { Button } from "@/components/ui/button";
+import { ThemeToggle } from "@/components/theme-toggle";
 
 const NAV_LINKS = [
   { href: "/about", label: "About" },
@@ -26,6 +27,7 @@ export default function MarketingLayout({ children }: { children: React.ReactNod
             ))}
           </nav>
           <div className="flex items-center gap-2">
+            <ThemeToggle />
             <Button variant="outline" size="sm" nativeButton={false} render={<Link href="/login">Sign in</Link>} />
             <Button size="sm" nativeButton={false} render={<Link href="/register">Get started</Link>} />
           </div>

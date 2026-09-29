@@ -4,6 +4,7 @@ import { signOut } from "@/app/(auth)/actions";
 import { Brand } from "@/components/brand";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { ThemeToggle } from "@/components/theme-toggle";
 
 const ROLE_LABEL: Record<string, string> = {
   student: "Student",
@@ -48,6 +49,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
         <div className="flex items-center gap-3">
           <span className="text-sm text-muted-foreground">{user.email}</span>
           <Badge variant="secondary">{ROLE_LABEL[user.role] ?? user.role}</Badge>
+          <ThemeToggle />
           <form action={signOut}>
             <Button type="submit" variant="outline" size="sm">
               Sign out
