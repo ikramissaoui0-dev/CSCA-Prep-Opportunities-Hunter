@@ -18,11 +18,17 @@ const SUBJECTS = [
   { subject: "Professional Chinese", language: "Chinese only", duration: "90 min", questions: "80 MCQ" },
 ];
 
-const EXAM_DAY_SCHEDULE = [
-  { subject: "Professional Chinese", time: "12:00 – 13:30" },
-  { subject: "Physics", time: "15:00 – 16:00" },
-  { subject: "Mathematics", time: "18:00 – 19:00" },
-  { subject: "Chemistry", time: "20:30 – 21:30" },
+// Sourced from csca.cn's "CSCA Test Schedule for November 2026 – June
+// 2027" announcement (published 2026-09-24) — the only officially
+// confirmed sessions as of this writing. Update this list once csca.cn
+// publishes the next batch; don't extrapolate future dates.
+const UPCOMING_SESSIONS = [
+  { session: "November 2026", examDates: "Nov 14–15, 2026", registration: "Oct 15–21, 2026", status: "Registration opening soon" },
+  { session: "December 2026", examDates: "Dec 19–20, 2026", registration: null, status: "Registration not yet open" },
+  { session: "January 2027", examDates: "Jan 23–24, 2027", registration: null, status: "Registration not yet open" },
+  { session: "March 2027", examDates: "Mar 13–14, 2027", registration: null, status: "Registration not yet open" },
+  { session: "April 2027", examDates: "Apr 24–25, 2027", registration: null, status: "Registration not yet open" },
+  { session: "June 2027", examDates: "Jun 26–27, 2027", registration: null, status: "Registration not yet open" },
 ];
 
 const SUBJECT_CHOICE = [
@@ -116,70 +122,80 @@ export default function ExamGuidePage() {
           </table>
         </div>
         <p className="text-sm text-muted-foreground">
-          The exam itself is taken remotely — at home, on a computer, or on paper depending on what&apos;s offered for
-          your session and region. It&apos;s not a physical test-center exam the way many other admissions tests are.
+          Professional Chinese actually comes in two versions — Humanities and STEM — and your target university or
+          program decides which one you need, not you. Confirm the right one before you register.
+        </p>
+        <p className="text-sm text-muted-foreground">
+          The exam is mostly taken at home, online, on a computer. Onsite computer-based test centers are gradually
+          being added in key countries and regions — there&apos;s no paper option either way.
         </p>
       </section>
 
       <section className="space-y-4">
         <h2 className="text-xl font-semibold tracking-tight">If you&apos;re sitting more than one subject</h2>
         <p className="text-muted-foreground">
-          Multi-subject candidates don&apos;t take everything back-to-back — the subjects are spread out across the day so
-          you&apos;re not stacking four exams in a row. A typical layout, in Beijing time, looks like this:
+          Each session runs across two days: Professional Chinese and Mathematics are held on Day 1, Physics and
+          Chemistry on Day 2. Depending on the session, the first subject of the day starts at either 08:00 or 14:00
+          Beijing time — csca.cn publishes the exact per-subject start times for each session ahead of registration,
+          and your admission ticket has the final word.
+        </p>
+        <p className="text-sm text-muted-foreground">
+          Home-based online exams and computer-based exams at physical test centers run at the same time, with the
+          same content, duration, and scoring. Do the timezone math early — if you&apos;re testing from outside China,
+          an 08:00 or 14:00 Beijing-time start will likely fall late at night or early morning where you are.
+        </p>
+      </section>
+
+      <section className="space-y-4">
+        <h2 className="text-xl font-semibold tracking-tight">Upcoming sessions and cost</h2>
+        <p className="text-muted-foreground">
+          Every confirmed session through June 2027, straight from csca.cn&apos;s official schedule. Registration for
+          each one typically opens on csca.cn a few weeks ahead — the two exam dates below are the same for both the
+          home-based online exam and computer-based test centers.
         </p>
         <div className="overflow-x-auto rounded-lg border">
-          <table className="w-full min-w-[360px] text-left text-sm">
+          <table className="w-full min-w-[520px] text-left text-sm">
             <thead className="bg-muted/50 text-muted-foreground">
               <tr>
-                <th className="px-4 py-3 font-medium">Subject</th>
-                <th className="px-4 py-3 font-medium">Beijing time</th>
+                <th className="px-4 py-3 font-medium">Session</th>
+                <th className="px-4 py-3 font-medium">Exam dates</th>
+                <th className="px-4 py-3 font-medium">Registration</th>
               </tr>
             </thead>
             <tbody className="divide-y">
-              {EXAM_DAY_SCHEDULE.map((row) => (
-                <tr key={row.subject}>
-                  <td className="px-4 py-3 font-medium">{row.subject}</td>
-                  <td className="px-4 py-3 text-muted-foreground">{row.time}</td>
+              {UPCOMING_SESSIONS.map((row) => (
+                <tr key={row.session}>
+                  <td className="px-4 py-3 font-medium">{row.session}</td>
+                  <td className="px-4 py-3 text-muted-foreground">{row.examDates}</td>
+                  <td className="px-4 py-3 text-muted-foreground">
+                    {row.registration ? `${row.registration} — ${row.status}` : row.status}
+                  </td>
                 </tr>
               ))}
             </tbody>
           </table>
         </div>
         <p className="text-sm text-muted-foreground">
-          Do the timezone math early — if you&apos;re testing from outside China, one of these slots will likely fall late
-          at night or early morning your time. Confirm the actual timing for your session before exam day, since it
-          can shift between sessions.
+          Results are released within 10 working days after the exam. Registration windows for sessions past January
+          2027 haven&apos;t been announced yet — check{" "}
+          <a href="https://csca.cn" target="_blank" rel="noopener noreferrer" className="underline hover:text-foreground">
+            csca.cn
+          </a>{" "}
+          directly as your session approaches.
         </p>
-      </section>
-
-      <section className="space-y-4">
-        <h2 className="text-xl font-semibold tracking-tight">Dates and cost</h2>
-        <div className="grid gap-4 sm:grid-cols-2">
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-base">When it runs</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-2 text-sm text-muted-foreground">
-              <p>Roughly five sessions a year — January, March, April, June, and December.</p>
-              <p>Registration opens on csca.cn a few weeks ahead of each one, so it&apos;s worth checking back regularly if you don&apos;t have a date yet.</p>
-              <p>Results land within about a week for computer-based sittings, or two weeks if you sat on paper.</p>
-            </CardContent>
-          </Card>
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-base">What it costs</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-2 text-sm text-muted-foreground">
-              <p>
-                <span className="font-medium text-foreground">¥450 CNY</span> for one subject.
-              </p>
-              <p>
-                <span className="font-medium text-foreground">¥700 CNY</span> flat if you&apos;re sitting two or more.
-              </p>
-              <p>Alipay, WeChat Pay, and bank transfer are all accepted at registration.</p>
-            </CardContent>
-          </Card>
-        </div>
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-base">What it costs</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-2 text-sm text-muted-foreground">
+            <p>
+              <span className="font-medium text-foreground">¥450 CNY</span> for one subject.
+            </p>
+            <p>
+              <span className="font-medium text-foreground">¥700 CNY</span> flat if you&apos;re sitting two or more.
+            </p>
+          </CardContent>
+        </Card>
       </section>
 
       <section className="space-y-4">
