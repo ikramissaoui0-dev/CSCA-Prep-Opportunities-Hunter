@@ -6,10 +6,14 @@ import { ChartContainer, ChartTooltip, ChartTooltipContent, type ChartConfig } f
 // Status colors, not arbitrary categorical hues — correct/wrong/skipped
 // carry an inherent good/bad/neutral meaning, the same semantic the app
 // already uses for --destructive elsewhere (e.g. form errors).
+// --chart-neutral (not --muted-foreground) for skipped: a text color
+// deliberately inverts lightness between themes for legibility, which
+// would make "skipped" the chart's brightest segment in dark mode —
+// --chart-neutral instead stays visually quiet in both.
 const chartConfig = {
   correct: { label: "Correct", color: "var(--success)" },
   wrong: { label: "Wrong", color: "var(--destructive)" },
-  skipped: { label: "Skipped", color: "var(--muted-foreground)" },
+  skipped: { label: "Skipped", color: "var(--chart-neutral)" },
 } satisfies ChartConfig;
 
 export function CompositionChart({ correct, wrong, skipped }: { correct: number; wrong: number; skipped: number }) {

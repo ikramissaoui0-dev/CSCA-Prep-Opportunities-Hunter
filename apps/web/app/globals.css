@@ -23,6 +23,7 @@
   --color-chart-3: var(--chart-3);
   --color-chart-2: var(--chart-2);
   --color-chart-1: var(--chart-1);
+  --color-chart-neutral: var(--chart-neutral);
   --color-ring: var(--ring);
   --color-input: var(--input);
   --color-border: var(--border);
@@ -96,6 +97,12 @@
   --chart-3: #1baf7a;
   --chart-4: #eda100;
   --chart-5: #e87ba4;
+  /* A "de-emphasized" chart fill (e.g. the composition chart's skipped
+     segment) needs to stay visually quiet in both themes — unlike
+     --muted-foreground, which is deliberately dark-in-light/light-in-
+     dark for text legibility and would invert into the chart's
+     brightest, loudest element the moment dark mode is active. */
+  --chart-neutral: oklch(0.75 0.015 258);
   --radius: 0.625rem;
   --sidebar: oklch(0.99 0.004 255.195);
   --sidebar-foreground: oklch(0.22 0.045 258);
@@ -137,6 +144,7 @@
   --chart-3: #199e70;
   --chart-4: #c98500;
   --chart-5: #d55181;
+  --chart-neutral: oklch(0.38 0.02 258);
   --sidebar: oklch(0.19 0.014 258);
   --sidebar-foreground: oklch(0.985 0 0);
   --sidebar-primary: oklch(0.66 0.143 250.89);
