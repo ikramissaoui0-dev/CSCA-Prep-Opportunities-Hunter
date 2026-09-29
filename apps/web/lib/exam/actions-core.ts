@@ -89,19 +89,24 @@ export async function startExamCore(user: SessionUser, data: StartExamInput): Pr
     // small taste of the format. Resuming an in-progress session above
     // already returned before reaching this, so only a genuinely new
     // attempt can be blocked here.
-    if (data.mode === "full_mock") {
-      const planTier = await getCurrentPlanTier(user.id, user.role);
-      if (planTier === "free") {
-        return actionFailure(
-          new AppError("FORBIDDEN", "Past exam papers require Premium access — contact our team to get access."),
-        );
-      }
+    const planTier = await getCurrentPlanTier(user.id, user.role);
+    if (data.mode === "full_mock" && planTier === "free") {
+      return actionFailure(
+        new AppError("FORBIDDEN", "Past exam papers require Premium access — contact our team to get access."),
+      );
     }
 
+    // Same guard as subject_practice's pool below: a curated exam is
+    // normally all one tier, but nothing stops a future one from mixing
+    // categories, and daily_challenge (free for everyone) is exactly the
+    // path where a stray premium-tier question would otherwise vanish
+    // from the taking page while still scoring as skipped.
     const examQuestionRows = await db
       .select({ questionId: examQuestions.questionId })
       .from(examQuestions)
-      .where(eq(examQuestions.examId, exam.id))
+      .innerJoin(questions, eq(questions.id, examQuestions.questionId))
+      .innerJoin(questionCategories, eq(questionCategories.id, questions.categoryId))
+      .where(and(eq(examQuestions.examId, exam.id), inArray(questionCategories.requiredPlanTier, visibleCategoryTiers(planTier))))
       .orderBy(examQuestions.position);
 
     if (examQuestionRows.length === 0) {
