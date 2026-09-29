@@ -53,7 +53,7 @@ const STEPS = [
 export default function HomePage() {
   return (
     <div>
-      <section className="border-b bg-linear-to-b from-[oklch(0.9_0.05_255.195)] to-background">
+      <section className="border-b bg-linear-to-b from-[oklch(0.8_0.07_255.195)] to-background">
         <div className="mx-auto max-w-6xl px-6 py-20 text-center">
           <p className="text-sm font-medium uppercase tracking-wide text-primary">Opportunities Hunter</p>
           <h1 className="mt-3 text-4xl font-semibold tracking-tight sm:text-5xl">
