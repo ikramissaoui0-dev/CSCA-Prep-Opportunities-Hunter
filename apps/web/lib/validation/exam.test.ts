@@ -7,10 +7,8 @@ describe("startExamSchema", () => {
   it("accepts each of the four valid modes with their own required fields", () => {
     expect(startExamSchema.safeParse({ mode: "full_mock", examId: uuid }).success).toBe(true);
     expect(startExamSchema.safeParse({ mode: "daily_challenge", examId: uuid }).success).toBe(true);
-    expect(startExamSchema.safeParse({ mode: "subject_practice", subjectId: uuid, questionCount: 10 }).success).toBe(true);
-    expect(startExamSchema.safeParse({ mode: "difficulty_practice", difficultyMin: 0.2, difficultyMax: 0.6, questionCount: 10 }).success).toBe(
-      true,
-    );
+    expect(startExamSchema.safeParse({ mode: "subject_practice", subjectId: uuid }).success).toBe(true);
+    expect(startExamSchema.safeParse({ mode: "difficulty_practice", difficultyMin: 0.2, difficultyMax: 0.6 }).success).toBe(true);
   });
 
   it("rejects a curated mode with an ad-hoc field instead of examId", () => {
@@ -19,15 +17,8 @@ describe("startExamSchema", () => {
     expect(startExamSchema.safeParse({ mode: "full_mock", subjectId: uuid }).success).toBe(false);
   });
 
-  it("rejects a question count outside the 5-50 range", () => {
-    expect(startExamSchema.safeParse({ mode: "subject_practice", subjectId: uuid, questionCount: 4 }).success).toBe(false);
-    expect(startExamSchema.safeParse({ mode: "subject_practice", subjectId: uuid, questionCount: 51 }).success).toBe(false);
-  });
-
   it("rejects a difficulty value outside 0-1", () => {
-    expect(
-      startExamSchema.safeParse({ mode: "difficulty_practice", difficultyMin: -0.1, difficultyMax: 0.5, questionCount: 10 }).success,
-    ).toBe(false);
+    expect(startExamSchema.safeParse({ mode: "difficulty_practice", difficultyMin: -0.1, difficultyMax: 0.5 }).success).toBe(false);
   });
 
   it("rejects an unknown mode entirely", () => {
