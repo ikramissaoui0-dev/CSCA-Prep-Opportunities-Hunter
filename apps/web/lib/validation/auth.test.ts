@@ -2,7 +2,13 @@ import { describe, it, expect } from "vitest";
 import { signUpSchema, signInSchema, forgotPasswordSchema, resetPasswordSchema } from "./auth";
 
 describe("signUpSchema", () => {
-  const base = { fullName: "Jane Student", email: "jane@example.com", password: "Str0ngPass!", confirmPassword: "Str0ngPass!" };
+  const base = {
+    fullName: "Jane Student",
+    email: "jane@example.com",
+    phone: "+212 6 12 34 56 78",
+    password: "Str0ngPass!",
+    confirmPassword: "Str0ngPass!",
+  };
 
   it("accepts a valid signup", () => {
     expect(signUpSchema.safeParse(base).success).toBe(true);
@@ -25,6 +31,11 @@ describe("signUpSchema", () => {
 
   it("rejects an invalid email", () => {
     expect(signUpSchema.safeParse({ ...base, email: "not-an-email" }).success).toBe(false);
+  });
+
+  it("rejects a missing or malformed phone number", () => {
+    expect(signUpSchema.safeParse({ ...base, phone: "" }).success).toBe(false);
+    expect(signUpSchema.safeParse({ ...base, phone: "call me maybe" }).success).toBe(false);
   });
 });
 
