@@ -100,12 +100,12 @@ describe.skipIf(!reachable)("exam engine — database operations", () => {
   });
 
   it("starts a subject-practice session with the right question pool", async () => {
-    const result = await startExamCore(user(), { mode: "subject_practice", subjectId, questionCount: 10 });
+    const result = await startExamCore(user(), { mode: "subject_practice", subjectId });
     expect(result.success).toBe(true);
   });
 
   it("grades an MCQ answer correctly and finalizes with the expected score", async () => {
-    const started = await startExamCore(user(), { mode: "subject_practice", subjectId, questionCount: 10 });
+    const started = await startExamCore(user(), { mode: "subject_practice", subjectId });
     if (!started.success) throw new Error("setup failed: could not start session");
     const sessionId = started.data.sessionId;
 
@@ -121,7 +121,7 @@ describe.skipIf(!reachable)("exam engine — database operations", () => {
   });
 
   it("rejects saving an answer to a session that isn't the caller's own", async () => {
-    const started = await startExamCore(user(), { mode: "subject_practice", subjectId, questionCount: 10 });
+    const started = await startExamCore(user(), { mode: "subject_practice", subjectId });
     if (!started.success) throw new Error("setup failed: could not start session");
 
     const otherUser: SessionUser = { id: "00000000-0000-0000-0000-000000000000", email: "other@example.com", role: "student" };

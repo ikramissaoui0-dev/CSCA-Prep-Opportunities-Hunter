@@ -3,7 +3,6 @@
 import { useState, useTransition } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { startExam } from "./actions";
 import type { StartExamInput } from "@/lib/validation/exam";
@@ -54,10 +53,11 @@ export function StartCuratedExamButton({
 type PracticeSubtopic = { id: string; name: string };
 type PracticeTopic = { id: string; name: string; subtopics: PracticeSubtopic[] };
 
-// Matches the real exam's length (48 MCQ per subject) — see
-// startExamCore's FREE_SUBJECT_PRACTICE_QUESTION_CAP, which enforces
-// this server-side regardless of what a client sends.
-const FREE_SUBJECT_PRACTICE_QUESTION_CAP = 48;
+// Matches the real exam's length (48 MCQ) — every practice session is
+// this length now, free or paid; see startExamCore's
+// PRACTICE_SESSION_QUESTION_COUNT, which enforces this server-side
+// regardless of what a client sends.
+const PRACTICE_SESSION_QUESTION_COUNT = 48;
 
 export function StartSubjectPracticeForm({
   subjects,
@@ -74,7 +74,6 @@ export function StartSubjectPracticeForm({
   const [subjectId, setSubjectId] = useState(subjects[0]?.id ?? "");
   const [topicId, setTopicId] = useState("");
   const [subtopicId, setSubtopicId] = useState("");
-  const [questionCount, setQuestionCount] = useState(10);
 
   if (subjects.length === 0) {
     return <p className="text-sm text-muted-foreground">No subjects available yet.</p>;
@@ -106,10 +105,10 @@ export function StartSubjectPracticeForm({
           </select>
         </div>
         <Button
-          onClick={() => run({ mode: "subject_practice", subjectId, questionCount: FREE_SUBJECT_PRACTICE_QUESTION_CAP })}
+          onClick={() => run({ mode: "subject_practice", subjectId })}
           disabled={isPending || !subjectId || alreadyUsed}
         >
-          {isPending ? "Starting…" : `Start ${FREE_SUBJECT_PRACTICE_QUESTION_CAP}-question practice`}
+          {isPending ? "Starting…" : `Start ${PRACTICE_SESSION_QUESTION_COUNT}-question practice`}
         </Button>
         <p className="text-xs text-muted-foreground">
           {alreadyUsed ? (
@@ -122,7 +121,7 @@ export function StartSubjectPracticeForm({
             </>
           ) : (
             <>
-              Your free account gets one session per subject — {FREE_SUBJECT_PRACTICE_QUESTION_CAP} questions mixed
+              Your free account gets one session per subject — {PRACTICE_SESSION_QUESTION_COUNT} questions mixed
               from every topic, same length as the real exam.{" "}
               <Link href="/contact" className="underline hover:text-foreground">
                 Contact us
@@ -160,34 +159,20 @@ export function StartSubjectPracticeForm({
 
   return (
     <div className="space-y-3">
-      <div className="grid gap-3 sm:grid-cols-[1fr_auto]">
-        <div className="space-y-1.5">
-          <Label htmlFor="subject-select">Subject</Label>
-          <select
-            id="subject-select"
-            value={subjectId}
-            onChange={(e) => handleSubjectChange(e.target.value)}
-            className="h-9 w-full rounded-md border border-input bg-background px-3 text-sm"
-          >
-            {subjects.map((s) => (
-              <option key={s.id} value={s.id}>
-                {s.name}
-              </option>
-            ))}
-          </select>
-        </div>
-        <div className="space-y-1.5">
-          <Label htmlFor="subject-count">Questions</Label>
-          <Input
-            id="subject-count"
-            type="number"
-            min={5}
-            max={50}
-            value={questionCount}
-            onChange={(e) => setQuestionCount(Number(e.target.value))}
-            className="w-24"
-          />
-        </div>
+      <div className="space-y-1.5">
+        <Label htmlFor="subject-select">Subject</Label>
+        <select
+          id="subject-select"
+          value={subjectId}
+          onChange={(e) => handleSubjectChange(e.target.value)}
+          className="h-9 w-full rounded-md border border-input bg-background px-3 text-sm"
+        >
+          {subjects.map((s) => (
+            <option key={s.id} value={s.id}>
+              {s.name}
+            </option>
+          ))}
+        </select>
       </div>
       {topics.length > 0 && (
         <div className="space-y-1.5">
@@ -225,8 +210,8 @@ export function StartSubjectPracticeForm({
           </select>
         </div>
       )}
-      <Button onClick={() => run({ mode: "subject_practice", subjectId, categoryId, questionCount })} disabled={isPending || !subjectId}>
-        {isPending ? "Starting…" : "Start practice"}
+      <Button onClick={() => run({ mode: "subject_practice", subjectId, categoryId })} disabled={isPending || !subjectId}>
+        {isPending ? "Starting…" : `Start ${PRACTICE_SESSION_QUESTION_COUNT}-question practice`}
       </Button>
       {error && (
         <p className="text-sm text-destructive" role="alert">
@@ -246,7 +231,6 @@ const DIFFICULTY_PRESETS = [
 export function StartDifficultyPracticeForm({ isFreeTier }: { isFreeTier: boolean }) {
   const { run, isPending, error } = useStartExam();
   const [preset, setPreset] = useState<(typeof DIFFICULTY_PRESETS)[number]>(DIFFICULTY_PRESETS[1]);
-  const [questionCount, setQuestionCount] = useState(10);
 
   if (isFreeTier) {
     return (
@@ -269,23 +253,11 @@ export function StartDifficultyPracticeForm({ isFreeTier }: { isFreeTier: boolea
           </Button>
         ))}
       </div>
-      <div className="space-y-1.5">
-        <Label htmlFor="difficulty-count">Questions</Label>
-        <Input
-          id="difficulty-count"
-          type="number"
-          min={5}
-          max={50}
-          value={questionCount}
-          onChange={(e) => setQuestionCount(Number(e.target.value))}
-          className="w-24"
-        />
-      </div>
       <Button
-        onClick={() => run({ mode: "difficulty_practice", difficultyMin: preset.min, difficultyMax: preset.max, questionCount })}
+        onClick={() => run({ mode: "difficulty_practice", difficultyMin: preset.min, difficultyMax: preset.max })}
         disabled={isPending}
       >
-        {isPending ? "Starting…" : "Start practice"}
+        {isPending ? "Starting…" : `Start ${PRACTICE_SESSION_QUESTION_COUNT}-question practice`}
       </Button>
       {error && (
         <p className="text-sm text-destructive" role="alert">

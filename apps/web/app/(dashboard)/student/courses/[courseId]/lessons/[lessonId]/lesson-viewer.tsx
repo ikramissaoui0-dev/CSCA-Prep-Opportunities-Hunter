@@ -64,7 +64,7 @@ export function LessonViewer({
 
   function handlePracticeSubject(subjectId: string) {
     startTransition(async () => {
-      await startExam({ mode: "subject_practice", subjectId, questionCount: 10 });
+      await startExam({ mode: "subject_practice", subjectId });
     });
   }
 

@@ -21,6 +21,7 @@ import { maybeGenerateRecommendations } from "@/lib/ai/generate-recommendations"
 import { isPastDeadline } from "./timing";
 import { shuffle } from "./random";
 import { getCurrentPlanTier, planTierAtLeast } from "@/lib/billing/plan";
+import type { StartExamInput, SaveAnswerInput } from "@/lib/validation/exam";
 
 // Every tier a caller at `planTier` is actually allowed to see, per
 // plan_tier_rank — mirrors the questions_read_published RLS policy
@@ -33,12 +34,18 @@ const ALL_PLAN_TIERS: PlanTier[] = ["free", "premium", "premium_plus"];
 function visibleCategoryTiers(planTier: PlanTier): PlanTier[] {
   return ALL_PLAN_TIERS.filter((tier) => planTierAtLeast(planTier, tier));
 }
-import type { StartExamInput, SaveAnswerInput } from "@/lib/validation/exam";
 
 // Ad-hoc practice sessions aren't tied to a curated exams.time_limit_seconds,
 // so they get a computed allowance instead — keeps every mode "a timed
 // test" (Phase 4) without needing the picker UI to ask for a duration.
 const SECONDS_PER_PRACTICE_QUESTION = 90;
+
+// Every practice session — subject or difficulty, free or paid — is
+// fixed at the real exam's length (48 MCQ) rather than letting a
+// student pick a shorter one, so practice always happens under the same
+// conditions as the actual test. Server-side, not just the UI, since a
+// client-supplied count was never trustworthy anyway.
+const PRACTICE_SESSION_QUESTION_COUNT = 48;
 
 // A free_response question is only pool-eligible once it has a model
 // answer to grade against — otherwise gradeFreeResponseAnswers has
@@ -159,9 +166,6 @@ export async function startExamCore(user: SessionUser, data: StartExamInput): Pr
         );
       }
     }
-    const FREE_SUBJECT_PRACTICE_QUESTION_CAP = 48;
-    const questionCount = planTier === "free" ? Math.min(data.questionCount, FREE_SUBJECT_PRACTICE_QUESTION_CAP) : data.questionCount;
-
     // A category (topic group or specific topic) must actually belong to
     // the chosen subject — trusting a client-supplied categoryId without
     // this check would let someone pair a subject with an unrelated
@@ -199,7 +203,7 @@ export async function startExamCore(user: SessionUser, data: StartExamInput): Pr
         ),
       )
       .orderBy(sql`random()`)
-      .limit(questionCount);
+      .limit(PRACTICE_SESSION_QUESTION_COUNT);
 
     if (pool.length === 0) {
       return actionFailure(
@@ -247,7 +251,7 @@ export async function startExamCore(user: SessionUser, data: StartExamInput): Pr
       ),
     )
     .orderBy(sql`random()`)
-    .limit(data.questionCount);
+    .limit(PRACTICE_SESSION_QUESTION_COUNT);
 
   if (pool.length === 0) {
     return actionFailure(new AppError("VALIDATION_ERROR", "No published questions match that difficulty range yet."));

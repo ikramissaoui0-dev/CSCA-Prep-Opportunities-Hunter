@@ -10,13 +10,11 @@ export const startExamSchema = z.discriminatedUnion("mode", [
     // Omitted (or undefined) means "every topic in this subject", the
     // original behavior.
     categoryId: z.string().uuid().optional(),
-    questionCount: z.number().int().min(5).max(50),
   }),
   z.object({
     mode: z.literal("difficulty_practice"),
     difficultyMin: z.number().min(0).max(1),
     difficultyMax: z.number().min(0).max(1),
-    questionCount: z.number().int().min(5).max(50),
   }),
 ]);
 export type StartExamInput = z.infer<typeof startExamSchema>;
