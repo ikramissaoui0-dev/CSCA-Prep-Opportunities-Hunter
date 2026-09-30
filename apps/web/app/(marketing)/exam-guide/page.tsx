@@ -3,12 +3,28 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { breadcrumbJsonLd } from "@/lib/seo";
 
 export const metadata: Metadata = {
-  title: "Exam Guide — CSCA Prep",
+  title: "CSCA Exam Guide — Dates, Subjects, Format & Cost",
   description:
-    "A practical breakdown of the CSCA exam: what it tests, how it's structured, when it runs, what it costs, and how to walk in ready.",
+    "Everything about the CSCA exam: upcoming session dates, subjects and scoring (Math, Physics, Chemistry, Professional Chinese), exam format, cost, and how to prepare — sourced from the official CSCA schedule.",
+  keywords: [
+    "CSCA exam",
+    "CSCA exam dates",
+    "CSCA exam guide",
+    "what is the CSCA",
+    "CSCA subjects",
+    "CSCA exam format",
+    "CSCA exam cost",
+  ],
   alternates: { canonical: "/exam-guide" },
+  openGraph: {
+    type: "article",
+    title: "CSCA Exam Guide — Dates, Subjects, Format & Cost",
+    description:
+      "Everything about the CSCA exam: upcoming session dates, subjects and scoring, exam format, cost, and how to prepare — sourced from the official CSCA schedule.",
+  },
 };
 
 const SUBJECTS = [
@@ -74,7 +90,7 @@ export default function ExamGuidePage() {
         <Badge variant="secondary" className="mb-3">
           Exam guide
         </Badge>
-        <h1 className="text-3xl font-semibold tracking-tight">What the CSCA actually involves</h1>
+        <h1 className="text-3xl font-semibold tracking-tight">The complete CSCA exam guide</h1>
         <p className="mt-3 text-muted-foreground">
           The China Scholastic Competency Assessment (CSCA) is how Chinese universities screen international
           applicants for undergraduate admission. It&apos;s the same idea as an SAT or A-Level in other systems: a
@@ -276,6 +292,11 @@ export default function ExamGuidePage() {
           <Button nativeButton={false} render={<Link href="/register">Start practicing free</Link>} />
         </div>
       </div>
+
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd({ name: "Exam Guide", path: "/exam-guide" })) }}
+      />
     </div>
   );
 }

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { ContactForm } from "./contact-form";
+import { breadcrumbJsonLd } from "@/lib/seo";
 
 export const metadata: Metadata = {
   title: "Contact — CSCA Prep",
@@ -37,6 +38,8 @@ export default function ContactPage() {
       </div>
 
       <ContactForm />
+
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd({ name: "Contact", path: "/contact" })) }} />
     </div>
   );
 }

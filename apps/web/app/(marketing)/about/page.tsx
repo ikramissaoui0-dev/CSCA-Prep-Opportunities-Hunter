@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import { breadcrumbJsonLd } from "@/lib/seo";
 
 export const metadata: Metadata = {
   title: "About — CSCA Prep",
@@ -57,6 +58,8 @@ export default function AboutPage() {
           <Button nativeButton={false} render={<Link href="/register">Start practicing free</Link>} />
         </div>
       </div>
+
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd({ name: "About", path: "/about" })) }} />
     </div>
   );
 }

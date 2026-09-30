@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import { blogPosts, getBlogPost } from "@/lib/blog/posts";
 import { clientEnv } from "@/lib/env";
+import { breadcrumbJsonLd } from "@/lib/seo";
 
 export function generateStaticParams() {
   return blogPosts.map((post) => ({ slug: post.slug }));
@@ -60,6 +61,12 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
       </div>
 
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd) }} />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(breadcrumbJsonLd({ name: "Blog", path: "/blog" }, { name: post.title, path: `/blog/${post.slug}` })),
+        }}
+      />
     </article>
   );
 }

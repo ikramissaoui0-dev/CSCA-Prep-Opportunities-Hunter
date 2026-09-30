@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { breadcrumbJsonLd } from "@/lib/seo";
 
 export const metadata: Metadata = {
   title: "Pricing — CSCA Prep",
@@ -74,6 +75,8 @@ export default function PricingPage() {
         Paid access is granted directly by our team — register for free, then contact us to activate Premium or
         Premium+.
       </p>
+
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd({ name: "Pricing", path: "/pricing" })) }} />
     </div>
   );
 }

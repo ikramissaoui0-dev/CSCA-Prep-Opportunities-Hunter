@@ -63,7 +63,14 @@ const organizationJsonLd = {
   name: SITE_NAME,
   description: SITE_DESCRIPTION,
   url: clientEnv.NEXT_PUBLIC_SITE_URL,
+  logo: `${clientEnv.NEXT_PUBLIC_SITE_URL}/logo.png`,
   brand: { "@type": "Brand", name: "Opportunities Hunter" },
+  contactPoint: {
+    "@type": "ContactPoint",
+    contactType: "customer support",
+    email: "contact@csca.opportunitieshunter.com",
+    telephone: "+212621521861",
+  },
 };
 
 export default function RootLayout({

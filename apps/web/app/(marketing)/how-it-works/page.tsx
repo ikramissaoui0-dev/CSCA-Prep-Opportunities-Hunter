@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { breadcrumbJsonLd } from "@/lib/seo";
 
 export const metadata: Metadata = {
   title: "How It Works — CSCA Prep",
@@ -10,7 +11,7 @@ export const metadata: Metadata = {
 };
 
 const PRACTICE_EXERCISES = [
-  { title: "Practice by subject", description: "Pick a subject and drill it specifically, at a question count you choose." },
+  { title: "Practice by subject", description: "Pick a subject and drill it specifically — a fixed 48-question session, the same length as the real exam." },
   { title: "Practice by difficulty", description: "Target easy, medium, or hard questions when you want to build confidence or push your ceiling." },
   { title: "Daily challenge", description: "A short set of questions, refreshed daily, to build a consistent practice habit." },
 ];
@@ -95,6 +96,11 @@ export default function HowItWorksPage() {
           <Button nativeButton={false} render={<Link href="/register">Start practicing free</Link>} />
         </div>
       </div>
+
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd({ name: "How It Works", path: "/how-it-works" })) }}
+      />
     </div>
   );
 }
