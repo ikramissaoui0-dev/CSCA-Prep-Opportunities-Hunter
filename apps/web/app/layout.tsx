@@ -92,7 +92,10 @@ export default function RootLayout({
       <body className="min-h-full flex flex-col">
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
           {children}
-          <Toaster />
+          {/* Sonner's own default is bottom-right, same corner as the
+              WhatsApp button below — top-right avoids the two ever
+              stacking if a toast() call gets added later. */}
+          <Toaster position="top-right" />
           <WhatsAppButton />
         </ThemeProvider>
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd) }} />

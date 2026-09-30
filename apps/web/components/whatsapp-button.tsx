@@ -42,7 +42,12 @@ export function WhatsAppButton() {
   }, [open]);
 
   return (
-    <div ref={containerRef} className="fixed bottom-5 right-5 z-50 flex flex-col items-end gap-2">
+    // z-40, one below dialog/alert-dialog's z-50 (including their
+    // backdrop) — otherwise this floats visibly above an open modal's
+    // scrim and stays clickable, e.g. during the exam submit
+    // confirmation, which is exactly the moment a stray click away
+    // from the page is least wanted.
+    <div ref={containerRef} className="fixed bottom-5 right-5 z-40 flex flex-col items-end gap-2">
       {open && (
         <div className="w-64 rounded-lg border bg-popover p-2 text-popover-foreground shadow-lg">
           <p className="px-2 pb-1.5 pt-1 text-xs font-medium text-muted-foreground">Message us on WhatsApp</p>
