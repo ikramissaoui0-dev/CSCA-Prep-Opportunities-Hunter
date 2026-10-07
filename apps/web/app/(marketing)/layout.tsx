@@ -2,6 +2,9 @@ import Link from "next/link";
 import { Brand } from "@/components/brand";
 import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/theme-toggle";
+import { getCurrentUser } from "@/lib/auth/session";
+import { ROLE_HOME_ROUTE } from "@/lib/auth/roles";
+import { signOut } from "@/app/(auth)/actions";
 
 const NAV_LINKS = [
   { href: "/about", label: "About" },
@@ -13,7 +16,16 @@ const NAV_LINKS = [
   { href: "/contact", label: "Contact" },
 ];
 
-export default function MarketingLayout({ children }: { children: React.ReactNode }) {
+export default async function MarketingLayout({ children }: { children: React.ReactNode }) {
+  // Marketing pages are public (middleware.ts's PUBLIC_ROUTES), so a
+  // logged-in student reaching one — e.g. clicking "Contact us" from the
+  // gated exam picker — never loses their session. But the header used to
+  // always show guest CTAs ("Sign in" / "Get started") regardless, which
+  // made an already-signed-in visitor look and feel logged out even
+  // though they weren't. Check the session here (non-redirecting) so the
+  // header reflects reality either way.
+  const user = await getCurrentUser();
+
   return (
     <div className="flex min-h-svh flex-col">
       <header className="border-b">
@@ -28,8 +40,26 @@ export default function MarketingLayout({ children }: { children: React.ReactNod
           </nav>
           <div className="flex items-center gap-2">
             <ThemeToggle />
-            <Button variant="outline" size="sm" nativeButton={false} render={<Link href="/login">Sign in</Link>} />
-            <Button size="sm" nativeButton={false} render={<Link href="/register">Get started</Link>} />
+            {user ? (
+              <>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  nativeButton={false}
+                  render={<Link href={ROLE_HOME_ROUTE[user.role]}>Dashboard</Link>}
+                />
+                <form action={signOut}>
+                  <Button type="submit" variant="outline" size="sm">
+                    Sign out
+                  </Button>
+                </form>
+              </>
+            ) : (
+              <>
+                <Button variant="outline" size="sm" nativeButton={false} render={<Link href="/login">Sign in</Link>} />
+                <Button size="sm" nativeButton={false} render={<Link href="/register">Get started</Link>} />
+              </>
+            )}
           </div>
         </div>
       </header>
