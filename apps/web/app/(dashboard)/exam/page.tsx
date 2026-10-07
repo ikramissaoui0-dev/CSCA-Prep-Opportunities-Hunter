@@ -155,7 +155,7 @@ export default async function ExamPickerPage() {
         <div>
           <h2 className="text-lg font-semibold tracking-tight">Mock exams</h2>
           <p className="text-sm text-muted-foreground">
-            Full-length, timed simulations built to the real exam's format — not an actual past paper, but realistic
+            Full-length, timed simulations built to the real exam&apos;s format — not an actual past paper, but realistic
             practice under exam conditions.
             {isFreeTier && (
               <>
