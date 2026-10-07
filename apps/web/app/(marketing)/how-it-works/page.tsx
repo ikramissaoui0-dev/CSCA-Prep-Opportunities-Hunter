@@ -3,6 +3,8 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { breadcrumbJsonLd } from "@/lib/seo";
+import { getCurrentUser } from "@/lib/auth/session";
+import { ROLE_HOME_ROUTE } from "@/lib/auth/roles";
 
 export const metadata: Metadata = {
   title: "How It Works — CSCA Prep",
@@ -16,7 +18,11 @@ const PRACTICE_EXERCISES = [
   { title: "Daily challenge", description: "A short set of questions, refreshed daily, to build a consistent practice habit." },
 ];
 
-export default function HowItWorksPage() {
+export default async function HowItWorksPage() {
+  // Same reasoning as the homepage/pricing fix: a signed-in visitor
+  // shouldn't be funneled back through /register.
+  const user = await getCurrentUser();
+
   return (
     <div className="mx-auto max-w-4xl space-y-14 px-6 py-16">
       <div>
@@ -93,7 +99,11 @@ export default function HowItWorksPage() {
       <div className="rounded-lg border bg-muted/30 p-6 text-center">
         <p className="font-medium">See it in action.</p>
         <div className="mt-4">
-          <Button nativeButton={false} render={<Link href="/register">Start practicing free</Link>} />
+          {user ? (
+            <Button nativeButton={false} render={<Link href={ROLE_HOME_ROUTE[user.role]}>Go to your dashboard</Link>} />
+          ) : (
+            <Button nativeButton={false} render={<Link href="/register">Start practicing free</Link>} />
+          )}
         </div>
       </div>
 

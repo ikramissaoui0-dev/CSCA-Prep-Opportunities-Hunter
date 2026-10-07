@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { breadcrumbJsonLd } from "@/lib/seo";
+import { getCurrentUser } from "@/lib/auth/session";
+import { ROLE_HOME_ROUTE } from "@/lib/auth/roles";
 
 export const metadata: Metadata = {
   title: "About — CSCA Prep",
@@ -9,7 +11,11 @@ export const metadata: Metadata = {
   alternates: { canonical: "/about" },
 };
 
-export default function AboutPage() {
+export default async function AboutPage() {
+  // Same reasoning as the homepage/pricing fix: a signed-in visitor
+  // shouldn't be funneled back through /register.
+  const user = await getCurrentUser();
+
   return (
     <div className="mx-auto max-w-3xl space-y-10 px-6 py-16">
       <div>
@@ -55,7 +61,11 @@ export default function AboutPage() {
       <div className="rounded-lg border bg-muted/30 p-6 text-center">
         <p className="font-medium">Ready to see it for yourself?</p>
         <div className="mt-4">
-          <Button nativeButton={false} render={<Link href="/register">Start practicing free</Link>} />
+          {user ? (
+            <Button nativeButton={false} render={<Link href={ROLE_HOME_ROUTE[user.role]}>Go to your dashboard</Link>} />
+          ) : (
+            <Button nativeButton={false} render={<Link href="/register">Start practicing free</Link>} />
+          )}
         </div>
       </div>
 
