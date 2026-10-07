@@ -20,7 +20,7 @@ const MODE_LABEL: Record<string, string> = {
 export default async function ExamPickerPage() {
   const user = await requireRole("student", "admin");
 
-  const [{ fullMocks, dailyChallenge }, subjects, inProgress, planTier] = await Promise.all([
+  const [{ pastExamPapers, mockExams, dailyChallenge }, subjects, inProgress, planTier] = await Promise.all([
     getPublishedCuratedExams(user.id, user.role),
     getSubjectsForPractice(user.id, user.role),
     getInProgressSessions(user.id, user.role),
@@ -129,10 +129,52 @@ export default async function ExamPickerPage() {
         </div>
         <Card>
           <CardContent className="space-y-3">
-            {fullMocks.length === 0 ? (
+            {pastExamPapers.length === 0 ? (
               <p className="text-sm text-muted-foreground">No past exam papers are published yet.</p>
             ) : (
-              fullMocks.map((exam) => (
+              pastExamPapers.map((exam) => (
+                <div key={exam.id} className="flex items-center justify-between gap-4 rounded-lg border p-3">
+                  <div>
+                    <p className="text-sm font-medium">{exam.title}</p>
+                    {exam.description && <p className="text-sm text-muted-foreground">{exam.description}</p>}
+                    <p className="text-xs text-muted-foreground">{Math.round(exam.timeLimitSeconds / 60)} minutes</p>
+                  </div>
+                  {isFreeTier ? (
+                    <Button size="sm" variant="outline" nativeButton={false} render={<Link href="/contact">Contact us</Link>} />
+                  ) : (
+                    <StartCuratedExamButton examId={exam.id} mode="full_mock" />
+                  )}
+                </div>
+              ))
+            )}
+          </CardContent>
+        </Card>
+      </section>
+
+      <section id="mock-exams" className="space-y-3 scroll-mt-20">
+        <div>
+          <h2 className="text-lg font-semibold tracking-tight">Mock exams</h2>
+          <p className="text-sm text-muted-foreground">
+            Full-length, timed simulations built to the real exam's format — not an actual past paper, but realistic
+            practice under exam conditions.
+            {isFreeTier && (
+              <>
+                {" "}
+                Requires Premium access —{" "}
+                <Link href="/contact" className="underline hover:text-foreground">
+                  contact us
+                </Link>{" "}
+                to unlock it.
+              </>
+            )}
+          </p>
+        </div>
+        <Card>
+          <CardContent className="space-y-3">
+            {mockExams.length === 0 ? (
+              <p className="text-sm text-muted-foreground">No mock exams are published yet.</p>
+            ) : (
+              mockExams.map((exam) => (
                 <div key={exam.id} className="flex items-center justify-between gap-4 rounded-lg border p-3">
                   <div>
                     <p className="text-sm font-medium">{exam.title}</p>

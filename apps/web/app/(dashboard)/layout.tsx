@@ -18,6 +18,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
   const studentNav = [
     { href: "/student", label: "Dashboard" },
     { href: "/exam#past-exam-papers", label: "Past exam papers" },
+    { href: "/exam#mock-exams", label: "Mock exams" },
     { href: "/exam#practice-exercises", label: "Practice exercises" },
     { href: "/results", label: "Results" },
     { href: "/exam-guide", label: "Exam guide" },

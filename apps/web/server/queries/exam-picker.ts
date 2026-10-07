@@ -1,7 +1,7 @@
 import "server-only";
 
-import { eq, and, desc } from "drizzle-orm";
-import { exams, examSessions, subjects, questionCategories } from "@csca/db";
+import { eq, and, desc, inArray } from "drizzle-orm";
+import { exams, examQuestions, examSessions, questions, subjects, questionCategories } from "@csca/db";
 import type { UserRole } from "@csca/types";
 import { withRlsContext } from "@/lib/db";
 
@@ -16,7 +16,7 @@ export type CuratedExam = {
 export async function getPublishedCuratedExams(
   userId: string,
   role: UserRole,
-): Promise<{ fullMocks: CuratedExam[]; dailyChallenge: CuratedExam | null }> {
+): Promise<{ pastExamPapers: CuratedExam[]; mockExams: CuratedExam[]; dailyChallenge: CuratedExam | null }> {
   return withRlsContext(userId, role, async (tx) => {
     const rows = await tx
       .select({
@@ -32,15 +32,38 @@ export async function getPublishedCuratedExams(
       .orderBy(desc(exams.createdAt));
 
     const today = new Date().toISOString().slice(0, 10);
+    const fullMockIds = rows.filter((r) => r.mode === "full_mock").map((r) => r.id);
+
+    // full_mock covers both "Past exam papers" and "Mock exams" — there's
+    // no separate exam mode for the two (both are curated, timed, 48-ish
+    // question sets built the same way in /admin/exams), so which bucket
+    // a curated exam belongs to is derived from its questions' category
+    // rather than a stored flag: any exam pulling from the "Mock exams"
+    // question_categories row (slug examens-blancs) is a mock exam,
+    // everything else full_mock is a real past paper.
+    let mockExamIds = new Set<string>();
+    if (fullMockIds.length > 0) {
+      const mockRows = await tx
+        .selectDistinct({ examId: examQuestions.examId })
+        .from(examQuestions)
+        .innerJoin(questions, eq(questions.id, examQuestions.questionId))
+        .innerJoin(questionCategories, eq(questionCategories.id, questions.categoryId))
+        .where(and(inArray(examQuestions.examId, fullMockIds), eq(questionCategories.slug, "examens-blancs")));
+      mockExamIds = new Set(mockRows.map((r) => r.examId));
+    }
+
+    const toCuratedExam = (r: (typeof rows)[number]): CuratedExam => ({
+      id: r.id,
+      title: r.title,
+      description: r.description,
+      timeLimitSeconds: r.timeLimitSeconds,
+      questionCount: null,
+    });
 
     return {
-      fullMocks: rows
-        .filter((r) => r.mode === "full_mock")
-        .map((r) => ({ id: r.id, title: r.title, description: r.description, timeLimitSeconds: r.timeLimitSeconds, questionCount: null })),
-      dailyChallenge:
-        rows
-          .filter((r) => r.mode === "daily_challenge" && r.challengeDate === today)
-          .map((r) => ({ id: r.id, title: r.title, description: r.description, timeLimitSeconds: r.timeLimitSeconds, questionCount: null }))[0] ?? null,
+      pastExamPapers: rows.filter((r) => r.mode === "full_mock" && !mockExamIds.has(r.id)).map(toCuratedExam),
+      mockExams: rows.filter((r) => r.mode === "full_mock" && mockExamIds.has(r.id)).map(toCuratedExam),
+      dailyChallenge: rows.filter((r) => r.mode === "daily_challenge" && r.challengeDate === today).map(toCuratedExam)[0] ?? null,
     };
   });
 }
