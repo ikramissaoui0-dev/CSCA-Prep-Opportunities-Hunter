@@ -3,6 +3,8 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { breadcrumbJsonLd } from "@/lib/seo";
+import { getCurrentUser } from "@/lib/auth/session";
+import { ROLE_HOME_ROUTE } from "@/lib/auth/roles";
 
 export const metadata: Metadata = {
   title: "Pricing — CSCA Prep",
@@ -10,7 +12,12 @@ export const metadata: Metadata = {
   alternates: { canonical: "/pricing" },
 };
 
-export default function PricingPage() {
+export default async function PricingPage() {
+  // A signed-in visitor already has an account, so the Free tier's own
+  // CTA shouldn't send them back through /register — same reasoning as
+  // the marketing layout's header (see its comment).
+  const user = await getCurrentUser();
+
   return (
     <div className="mx-auto max-w-5xl space-y-10 px-6 py-16">
       <div className="text-center">
@@ -34,7 +41,12 @@ export default function PricingPage() {
               <li>Daily challenge</li>
               <li>Basic results after each exam</li>
             </ul>
-            <Button className="w-full" variant="outline" nativeButton={false} render={<Link href="/register">Start free</Link>} />
+            <Button
+              className="w-full"
+              variant="outline"
+              nativeButton={false}
+              render={<Link href={user ? ROLE_HOME_ROUTE[user.role] : "/register"}>{user ? "Go to your dashboard" : "Start free"}</Link>}
+            />
           </CardContent>
         </Card>
 

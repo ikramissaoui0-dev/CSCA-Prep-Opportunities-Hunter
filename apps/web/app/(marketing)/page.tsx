@@ -3,6 +3,8 @@ import Link from "next/link";
 import { FileCheck2, BookOpenCheck, Sparkles, BarChart3, Trophy } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { getCurrentUser } from "@/lib/auth/session";
+import { ROLE_HOME_ROUTE } from "@/lib/auth/roles";
 
 export const metadata: Metadata = {
   title: "CSCA Exam Prep — Mock Exams, Personalized Explanations & Progress Tracking",
@@ -50,7 +52,11 @@ const STEPS = [
   { title: "Review, learn, and track your progress", description: "Get instant results, personalized explanations for what you missed, and a dashboard that shows how you're improving." },
 ];
 
-export default function HomePage() {
+export default async function HomePage() {
+  // A signed-in visitor doesn't need the register/sign-up CTAs — same
+  // reasoning as the marketing layout's header (see its comment).
+  const user = await getCurrentUser();
+
   return (
     <div>
       <section className="border-b bg-linear-to-b from-[oklch(0.8_0.07_255.195)] to-background dark:from-[oklch(0.32_0.08_255.195)]">
@@ -64,7 +70,11 @@ export default function HomePage() {
             international students preparing for the CSCA and admission to Chinese universities.
           </p>
           <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
-            <Button size="lg" nativeButton={false} render={<Link href="/register">Start practicing free</Link>} />
+            {user ? (
+              <Button size="lg" nativeButton={false} render={<Link href={ROLE_HOME_ROUTE[user.role]}>Go to your dashboard</Link>} />
+            ) : (
+              <Button size="lg" nativeButton={false} render={<Link href="/register">Start practicing free</Link>} />
+            )}
             <Button size="lg" variant="outline" nativeButton={false} render={<Link href="/pricing">See pricing</Link>} />
           </div>
         </div>
@@ -110,11 +120,23 @@ export default function HomePage() {
 
       <section className="border-t bg-primary py-16 text-primary-foreground">
         <div className="mx-auto max-w-3xl px-6 text-center">
-          <h2 className="text-2xl font-semibold tracking-tight">Ready to start preparing?</h2>
-          <p className="mt-2 text-primary-foreground/80">Create your free account and take your first mock exam today.</p>
-          <div className="mt-6">
-            <Button size="lg" variant="secondary" nativeButton={false} render={<Link href="/register">Get started free</Link>} />
-          </div>
+          {user ? (
+            <>
+              <h2 className="text-2xl font-semibold tracking-tight">Ready to keep going?</h2>
+              <p className="mt-2 text-primary-foreground/80">Jump back into your dashboard and take your next mock exam.</p>
+              <div className="mt-6">
+                <Button size="lg" variant="secondary" nativeButton={false} render={<Link href={ROLE_HOME_ROUTE[user.role]}>Go to your dashboard</Link>} />
+              </div>
+            </>
+          ) : (
+            <>
+              <h2 className="text-2xl font-semibold tracking-tight">Ready to start preparing?</h2>
+              <p className="mt-2 text-primary-foreground/80">Create your free account and take your first mock exam today.</p>
+              <div className="mt-6">
+                <Button size="lg" variant="secondary" nativeButton={false} render={<Link href="/register">Get started free</Link>} />
+              </div>
+            </>
+          )}
         </div>
       </section>
     </div>
