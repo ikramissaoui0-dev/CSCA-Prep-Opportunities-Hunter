@@ -61,7 +61,7 @@ export default async function HomePage() {
     <div>
       <section className="border-b bg-linear-to-b from-[oklch(0.8_0.07_255.195)] to-background dark:from-[oklch(0.32_0.08_255.195)]">
         <div className="mx-auto max-w-6xl px-6 py-20 text-center">
-          <p className="text-sm font-medium uppercase tracking-wide text-primary">Opportunities Hunter</p>
+          <p className="text-sm font-medium uppercase tracking-wide text-primary">CSCA Prep</p>
           <h1 className="mt-3 text-4xl font-semibold tracking-tight sm:text-5xl">
             Prepare for the CSCA with confidence
           </h1>

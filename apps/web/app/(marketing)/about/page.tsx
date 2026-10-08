@@ -7,7 +7,7 @@ import { ROLE_HOME_ROUTE } from "@/lib/auth/roles";
 
 export const metadata: Metadata = {
   title: "About — CSCA Prep",
-  description: "About CSCA Prep and the CSCA exam — what Opportunities Hunter built this platform to solve.",
+  description: "About CSCA Prep and the CSCA exam — what this platform was built to solve.",
   alternates: { canonical: "/about" },
 };
 
@@ -21,8 +21,8 @@ export default async function AboutPage() {
       <div>
         <h1 className="text-3xl font-semibold tracking-tight">About CSCA Prep</h1>
         <p className="mt-3 text-muted-foreground">
-          CSCA Prep is built by Opportunities Hunter for one specific group of students: international applicants
-          preparing for the CSCA on their way to studying at a Chinese university.
+          CSCA Prep is built for one specific group of students: international applicants preparing for the CSCA on
+          their way to studying at a Chinese university.
         </p>
       </div>
 

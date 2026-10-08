@@ -20,23 +20,23 @@ const geistMono = Geist_Mono({
 
 const SITE_NAME = "CSCA Prep";
 const SITE_DESCRIPTION =
-  "CSCA Prep by Opportunities Hunter — realistic mock exams, adaptive practice, and personalized explanations for the CSCA (Chinese University entrance exam for international students).";
+  "CSCA Prep — realistic mock exams, adaptive practice, and personalized explanations for the CSCA (Chinese University entrance exam for international students).";
 
 export const metadata: Metadata = {
   metadataBase: new URL(clientEnv.NEXT_PUBLIC_SITE_URL),
   title: {
-    default: `${SITE_NAME} — CSCA Exam Prep by Opportunities Hunter`,
+    default: `${SITE_NAME} — CSCA Exam Prep`,
     // Every page's own title already includes "— CSCA Prep" by
     // convention (see e.g. app/(auth)/login/page.tsx) — a template
     // suffix here would double it up, so this stays a no-op template.
     template: "%s",
   },
   description: SITE_DESCRIPTION,
-  keywords: ["CSCA", "CSCA exam", "CSCA prep", "study in China", "Chinese university entrance exam", "Opportunities Hunter"],
+  keywords: ["CSCA", "CSCA exam", "CSCA prep", "study in China", "Chinese university entrance exam"],
   openGraph: {
     type: "website",
     siteName: SITE_NAME,
-    title: `${SITE_NAME} — CSCA Exam Prep by Opportunities Hunter`,
+    title: `${SITE_NAME} — CSCA Exam Prep`,
     description: SITE_DESCRIPTION,
     // logo.png is square (1080x1080), not the usual 1200x630 OG banner
     // shape — still valid, platforms just center/crop it rather than
@@ -45,7 +45,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: `${SITE_NAME} — CSCA Exam Prep by Opportunities Hunter`,
+    title: `${SITE_NAME} — CSCA Exam Prep`,
     description: SITE_DESCRIPTION,
     images: ["/logo.png"],
   },
@@ -65,7 +65,6 @@ const organizationJsonLd = {
   description: SITE_DESCRIPTION,
   url: clientEnv.NEXT_PUBLIC_SITE_URL,
   logo: `${clientEnv.NEXT_PUBLIC_SITE_URL}/logo.png`,
-  brand: { "@type": "Brand", name: "Opportunities Hunter" },
   contactPoint: {
     "@type": "ContactPoint",
     contactType: "customer support",

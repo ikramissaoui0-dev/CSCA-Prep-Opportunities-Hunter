@@ -69,7 +69,7 @@ export default async function MarketingLayout({ children }: { children: React.Re
       <footer className="bg-brand-navy text-brand-navy-foreground">
         <div className="mx-auto max-w-6xl space-y-4 px-6 py-8 text-sm text-brand-navy-foreground/70">
           <div className="flex flex-wrap items-center justify-between gap-4">
-            <p className="text-brand-navy-foreground">© {new Date().getFullYear()} CSCA Prep, by Opportunities Hunter.</p>
+            <p className="text-brand-navy-foreground">© {new Date().getFullYear()} CSCA Prep.</p>
             <nav className="flex flex-wrap gap-4">
               {NAV_LINKS.map((link) => (
                 <Link key={link.href} href={link.href} className="hover:text-brand-navy-foreground">

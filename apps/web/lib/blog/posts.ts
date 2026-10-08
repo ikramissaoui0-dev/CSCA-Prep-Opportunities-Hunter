@@ -20,7 +20,7 @@ export const blogPosts: BlogPost[] = [
     description:
       "A plain-language introduction to the CSCA exam for international students applying to study in China — what it tests, who requires it, and how it's scored.",
     publishedAt: "2026-01-15",
-    author: "Opportunities Hunter Team",
+    author: "CSCA Prep Team",
     content: [
       "The CSCA (Chinese University entrance exam for international students) is the standardized assessment many Chinese universities use to evaluate international applicants before admission. Unlike a general language test, it's designed specifically around the academic readiness of students who didn't grow up in the Chinese education system.",
       "If you're applying to an undergraduate or graduate program in China as an international student, you'll likely encounter some version of this exam — either as a direct admission requirement or as part of a placement process once you arrive.",
@@ -33,7 +33,7 @@ export const blogPosts: BlogPost[] = [
     title: "5 Tips to Get the Most Out of Your CSCA Mock Exam",
     description: "Practical advice for turning a timed mock exam into your most effective study tool, not just a stress test.",
     publishedAt: "2026-02-03",
-    author: "Opportunities Hunter Team",
+    author: "CSCA Prep Team",
     content: [
       "1. Treat the clock as part of the test. Most students lose points not because they don't know the material, but because they run out of time on questions they could have answered correctly with more time. Practicing under the same time pressure you'll face on exam day is the only way to build real pacing instinct.",
       "2. Review every wrong answer, not just your score. A 62% tells you almost nothing about what to study next. Going question-by-question through what you missed — and why — is where the actual learning happens.",
@@ -47,7 +47,7 @@ export const blogPosts: BlogPost[] = [
     title: "How Personalized Explanations Help You Learn Faster",
     description: "Why an instant, specific explanation for a wrong answer is worth more than a generic answer key — and how we keep that affordable at scale.",
     publishedAt: "2026-03-10",
-    author: "Opportunities Hunter Team",
+    author: "CSCA Prep Team",
     content: [
       "A bare answer key tells you what the right answer was. It doesn't tell you why your reasoning went wrong — and that gap is exactly where most students get stuck re-making the same mistake on a different version of the same question.",
       "When you miss a question in your exam review, we generate a short, specific explanation: why the correct answer is right, and briefly why the option you picked wasn't. It reads like a patient tutor sitting next to you, not a wall of text.",

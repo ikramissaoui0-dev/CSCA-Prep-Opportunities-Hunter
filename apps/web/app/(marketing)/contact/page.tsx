@@ -17,7 +17,7 @@ export default function ContactPage() {
       </div>
 
       <div className="space-y-2 rounded-lg border bg-muted/30 p-4 text-sm">
-        <p className="font-medium">CSCA Prep, by Opportunities Hunter</p>
+        <p className="font-medium">CSCA Prep</p>
         <p className="text-muted-foreground">
           Phone:{" "}
           <a href="tel:+212621521861" className="underline hover:text-foreground">
