@@ -6,3 +6,4 @@ export * from "./learning";
 export * from "./gamification";
 export * from "./notifications";
 export * from "./access";
+export * from "./exam-schedule";

@@ -6,6 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { breadcrumbJsonLd } from "@/lib/seo";
 import { getCurrentUser } from "@/lib/auth/session";
 import { ROLE_HOME_ROUTE } from "@/lib/auth/roles";
+import { getUpcomingExamSessions } from "@/server/queries/exam-schedule";
 
 export const metadata: Metadata = {
   title: "CSCA Exam Guide — Dates, Subjects, Format & Cost",
@@ -36,18 +37,6 @@ const SUBJECTS = [
   { subject: "Professional Chinese", language: "Chinese only", duration: "90 min", questions: "80 MCQ" },
 ];
 
-// Sourced from csca.cn's "CSCA Test Schedule for November 2026 – June
-// 2027" announcement (published 2026-09-24) — the only officially
-// confirmed sessions as of this writing. Update this list once csca.cn
-// publishes the next batch; don't extrapolate future dates.
-const UPCOMING_SESSIONS = [
-  { session: "November 2026", examDates: "Nov 14–15, 2026", registration: "Oct 15–21, 2026", status: "Registration opening soon" },
-  { session: "December 2026", examDates: "Dec 19–20, 2026", registration: null, status: "Registration not yet open" },
-  { session: "January 2027", examDates: "Jan 23–24, 2027", registration: null, status: "Registration not yet open" },
-  { session: "March 2027", examDates: "Mar 13–14, 2027", registration: null, status: "Registration not yet open" },
-  { session: "April 2027", examDates: "Apr 24–25, 2027", registration: null, status: "Registration not yet open" },
-  { session: "June 2027", examDates: "Jun 26–27, 2027", registration: null, status: "Registration not yet open" },
-];
 
 const SUBJECT_CHOICE = [
   {
@@ -88,7 +77,7 @@ const PREP_APPROACH = [
 export default async function ExamGuidePage() {
   // Same reasoning as the homepage/pricing fix: a signed-in visitor
   // shouldn't be funneled back through /register.
-  const user = await getCurrentUser();
+  const [user, upcomingSessions] = await Promise.all([getCurrentUser(), getUpcomingExamSessions()]);
 
   return (
     <div className="mx-auto max-w-4xl space-y-16 px-6 py-16">
@@ -185,7 +174,7 @@ export default async function ExamGuidePage() {
               </tr>
             </thead>
             <tbody className="divide-y">
-              {UPCOMING_SESSIONS.map((row) => (
+              {upcomingSessions.map((row) => (
                 <tr key={row.session}>
                   <td className="px-4 py-3 font-medium">{row.session}</td>
                   <td className="px-4 py-3 text-muted-foreground">{row.examDates}</td>
@@ -198,8 +187,8 @@ export default async function ExamGuidePage() {
           </table>
         </div>
         <p className="text-sm text-muted-foreground">
-          Results are released within 10 working days after the exam. Registration windows for sessions past January
-          2027 haven&apos;t been announced yet — check{" "}
+          Results are released within 10 working days after the exam. This schedule is synced automatically from the
+          official CSCA site — for the very latest, check{" "}
           <a href="https://csca.cn" target="_blank" rel="noopener noreferrer" className="underline hover:text-foreground">
             csca.cn
           </a>{" "}

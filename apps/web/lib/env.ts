@@ -33,6 +33,12 @@ const serverEnvSchema = z.object({
   // deploy-blocking requirement; see instrumentation.ts/
   // instrumentation-client.ts, both no-ops when this is unset.
   NEXT_PUBLIC_SENTRY_DSN: z.string().url().optional(),
+  // Phase 16 — exam schedule auto-sync. Verifies that a request to
+  // app/api/cron/sync-exam-schedule really came from Vercel Cron, not
+  // an arbitrary caller — see that route for how it's checked. Optional
+  // the same way the other integration secrets are: unset simply means
+  // the route always rejects, not that the build breaks.
+  CRON_SECRET: z.string().optional(),
 });
 
 const clientEnvSchema = z.object({
