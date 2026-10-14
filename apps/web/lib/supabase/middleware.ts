@@ -29,6 +29,12 @@ function isPublicRoute(pathname: string) {
     PUBLIC_ROUTES.includes(pathname) ||
     PUBLIC_PREFIXES.some((prefix) => pathname.startsWith(prefix)) ||
     pathname.startsWith(AUTH_CALLBACK_PREFIX) ||
+    // API route handlers do their own authorization (e.g. the
+    // CRON_SECRET bearer check in app/api/cron/*) and should answer
+    // with a proper status code, not a 307 redirect to the HTML login
+    // page — the redirect is exactly what was silently breaking Vercel
+    // Cron's calls here before this carve-out existed.
+    pathname.startsWith("/api/") ||
     pathname.startsWith("/_next") ||
     pathname.startsWith("/favicon")
   );
