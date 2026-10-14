@@ -160,9 +160,11 @@ export default async function ExamGuidePage() {
       <section className="space-y-4">
         <h2 className="text-xl font-semibold tracking-tight">Upcoming sessions and cost</h2>
         <p className="text-muted-foreground">
-          Every confirmed session through June 2027, straight from csca.cn&apos;s official schedule. Registration for
-          each one typically opens on csca.cn a few weeks ahead — the two exam dates below are the same for both the
-          home-based online exam and computer-based test centers.
+          {upcomingSessions.length > 0
+            ? `Every confirmed session through ${upcomingSessions[upcomingSessions.length - 1]!.session}, synced automatically from csca.cn's official schedule.`
+            : "Synced automatically from csca.cn's official schedule."}{" "}
+          Registration for each one typically opens on csca.cn a few weeks ahead — the two exam dates below are the
+          same for both the home-based online exam and computer-based test centers.
         </p>
         <div className="overflow-x-auto rounded-lg border">
           <table className="w-full min-w-[520px] text-left text-sm">
