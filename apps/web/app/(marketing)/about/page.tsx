@@ -58,6 +58,11 @@ export default async function AboutPage() {
         </ul>
       </section>
 
+      <section className="space-y-3">
+        <h2 className="text-xl font-semibold tracking-tight">Where we are</h2>
+        <p className="text-muted-foreground">Opportunities Hunter is present in Morocco, France, and China.</p>
+      </section>
+
       <div className="rounded-lg border bg-muted/30 p-6 text-center">
         <p className="font-medium">Ready to see it for yourself?</p>
         <div className="mt-4">
