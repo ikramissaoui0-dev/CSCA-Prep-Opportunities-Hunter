@@ -25,7 +25,7 @@ const SITE_DESCRIPTION =
 export const metadata: Metadata = {
   metadataBase: new URL(clientEnv.NEXT_PUBLIC_SITE_URL),
   title: {
-    default: `${SITE_NAME} — CSCA Exam Prep`,
+    default: `${SITE_NAME} — Mock Exams & Practice for the CSCA`,
     // Every page's own title already includes "— CSCA Prep" by
     // convention (see e.g. app/(auth)/login/page.tsx) — a template
     // suffix here would double it up, so this stays a no-op template.
@@ -36,7 +36,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     siteName: SITE_NAME,
-    title: `${SITE_NAME} — CSCA Exam Prep`,
+    title: `${SITE_NAME} — Mock Exams & Practice for the CSCA`,
     description: SITE_DESCRIPTION,
     // logo.png is square (1080x1080), not the usual 1200x630 OG banner
     // shape — still valid, platforms just center/crop it rather than
@@ -45,7 +45,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: `${SITE_NAME} — CSCA Exam Prep`,
+    title: `${SITE_NAME} — Mock Exams & Practice for the CSCA`,
     description: SITE_DESCRIPTION,
     images: ["/logo.png"],
   },

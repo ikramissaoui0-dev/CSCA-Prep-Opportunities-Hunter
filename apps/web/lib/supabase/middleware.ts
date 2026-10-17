@@ -3,41 +3,19 @@ import { NextResponse, type NextRequest } from "next/server";
 import { clientEnv } from "@/lib/env";
 import { ROLE_HOME_ROUTE, roleCanAccess, type UserRole } from "@/lib/auth/roles";
 
-const PUBLIC_ROUTES = [
-  "/",
-  "/login",
-  "/register",
-  "/forgot-password",
-  "/reset-password",
-  "/verify-email",
-  // Phase 12 — public marketing site (apps/web/app/(marketing)).
-  "/about",
-  "/how-it-works",
-  "/exam-guide",
-  "/pricing",
-  "/faq",
-  "/contact",
-  "/blog",
-  "/sitemap.xml",
-  "/robots.txt",
-];
-const AUTH_CALLBACK_PREFIX = "/auth/callback";
-const PUBLIC_PREFIXES = ["/blog/"]; // blog post detail pages, e.g. /blog/what-is-the-csca
+// Only these areas require a session (they all live in app/(dashboard),
+// whose layout also calls requireUser() as a second line of defense).
+// Everything else — marketing pages, auth pages, /api/* (which authorize
+// themselves, e.g. the CRON_SECRET check), and unknown URLs — passes
+// through. Unknown URLs used to be redirected to /login (a 307), which
+// made every dead link a "soft 404" for search engines instead of a real
+// 404 from app/not-found.tsx.
+const PROTECTED_PREFIXES = ["/student", "/admin", "/exam", "/results"];
 
-function isPublicRoute(pathname: string) {
-  return (
-    PUBLIC_ROUTES.includes(pathname) ||
-    PUBLIC_PREFIXES.some((prefix) => pathname.startsWith(prefix)) ||
-    pathname.startsWith(AUTH_CALLBACK_PREFIX) ||
-    // API route handlers do their own authorization (e.g. the
-    // CRON_SECRET bearer check in app/api/cron/*) and should answer
-    // with a proper status code, not a 307 redirect to the HTML login
-    // page — the redirect is exactly what was silently breaking Vercel
-    // Cron's calls here before this carve-out existed.
-    pathname.startsWith("/api/") ||
-    pathname.startsWith("/_next") ||
-    pathname.startsWith("/favicon")
-  );
+// Segment-aware, not a bare startsWith — "/exam" must not capture the
+// public "/exam-guide".
+function isProtectedRoute(pathname: string) {
+  return PROTECTED_PREFIXES.some((prefix) => pathname === prefix || pathname.startsWith(`${prefix}/`));
 }
 
 /**
@@ -79,7 +57,7 @@ export async function updateSession(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   if (!claims) {
-    if (isPublicRoute(pathname)) {
+    if (!isProtectedRoute(pathname)) {
       return response;
     }
     const loginUrl = new URL("/login", request.url);

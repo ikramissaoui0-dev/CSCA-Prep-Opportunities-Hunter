@@ -7,7 +7,7 @@ import { ROLE_HOME_ROUTE } from "@/lib/auth/roles";
 
 export const metadata: Metadata = {
   title: "About — CSCA Prep",
-  description: "About CSCA Prep and the CSCA exam — what this platform was built to solve.",
+  description: "CSCA Prep helps international students prepare for the CSCA with realistic timed mock exams, past papers, and a clear explanation for every answer.",
   alternates: { canonical: "/about" },
 };
 

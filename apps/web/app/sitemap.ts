@@ -7,6 +7,10 @@ import { blogPosts } from "@/lib/blog/posts";
 // so it gets the same priority as the homepage rather than the
 // generic 0.7 every other static page gets.
 const STATIC_ROUTES = ["/", "/exam-guide", "/about", "/how-it-works", "/pricing", "/faq", "/contact", "/blog"];
+// Static pages deliberately carry no lastModified: there's no real
+// per-page modification date to report, and stamping them all with
+// "now" on every request (as this used to) teaches Google to ignore the
+// field. Blog posts below keep their real publish dates.
 const HIGH_PRIORITY_ROUTES = new Set(["/", "/exam-guide"]);
 
 export default function sitemap(): MetadataRoute.Sitemap {
@@ -14,7 +18,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
   const staticEntries: MetadataRoute.Sitemap = STATIC_ROUTES.map((path) => ({
     url: `${base}${path}`,
-    lastModified: new Date(),
     changeFrequency: path === "/" ? "weekly" : "monthly",
     priority: HIGH_PRIORITY_ROUTES.has(path) ? 1 : 0.7,
   }));

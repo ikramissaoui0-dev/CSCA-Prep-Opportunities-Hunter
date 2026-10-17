@@ -4,7 +4,7 @@ import { breadcrumbJsonLd } from "@/lib/seo";
 
 export const metadata: Metadata = {
   title: "Contact — CSCA Prep",
-  description: "Get in touch with the CSCA Prep team.",
+  description: "Contact the CSCA Prep team about Premium access, billing, or your account — by form, email, phone, or WhatsApp.",
   alternates: { canonical: "/contact" },
 };
 
