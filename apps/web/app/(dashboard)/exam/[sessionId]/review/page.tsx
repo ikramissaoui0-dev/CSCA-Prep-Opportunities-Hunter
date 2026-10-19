@@ -9,7 +9,7 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { ExplanationPanel } from "./explanation-panel";
 
-export const metadata: Metadata = { title: "Review answers — CSCA Prep" };
+export const metadata: Metadata = { title: "Review answers — CSCAprepa" };
 
 const STATUS_LABEL: Record<string, string> = { correct: "Correct", wrong: "Wrong", skipped: "Skipped" };
 const STATUS_CLASS: Record<string, string> = {

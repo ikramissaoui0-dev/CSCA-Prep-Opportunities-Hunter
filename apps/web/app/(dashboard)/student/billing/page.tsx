@@ -7,7 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { ManageBillingButton } from "./billing-actions";
 
-export const metadata: Metadata = { title: "Billing — CSCA Prep" };
+export const metadata: Metadata = { title: "Billing — CSCAprepa" };
 
 const PLAN_LABEL: Record<string, string> = { free: "Free", premium: "Premium", premium_plus: "Premium+" };
 

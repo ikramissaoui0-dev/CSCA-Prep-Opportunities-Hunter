@@ -66,29 +66,29 @@ export default async function MarketingLayout({ children }: { children: React.Re
 
       <main className="flex-1">{children}</main>
 
-      <footer className="bg-brand-navy text-brand-navy-foreground">
-        <div className="mx-auto max-w-6xl space-y-4 px-6 py-8 text-sm text-brand-navy-foreground/70">
+      <footer className="bg-brand-dark text-brand-dark-foreground">
+        <div className="mx-auto max-w-6xl space-y-4 px-6 py-8 text-sm text-brand-dark-foreground/70">
           <div className="flex flex-wrap items-center justify-between gap-4">
             <div>
-              <p className="text-brand-navy-foreground">© {new Date().getFullYear()} CSCA Prep.</p>
+              <p className="text-brand-dark-foreground">© {new Date().getFullYear()} CSCAprepa.</p>
               <p>Opportunities Hunter is present in Morocco, France, and China.</p>
             </div>
             <nav className="flex flex-wrap gap-4">
               {NAV_LINKS.map((link) => (
-                <Link key={link.href} href={link.href} className="hover:text-brand-navy-foreground">
+                <Link key={link.href} href={link.href} className="hover:text-brand-dark-foreground">
                   {link.label}
                 </Link>
               ))}
             </nav>
           </div>
           <div className="flex flex-wrap items-center gap-x-4 gap-y-1 border-t border-white/15 pt-4">
-            <a href="tel:+212621521861" className="hover:text-brand-navy-foreground">
+            <a href="tel:+212621521861" className="hover:text-brand-dark-foreground">
               +212 6 21 52 18 61
             </a>
-            <a href="tel:+212688051703" className="hover:text-brand-navy-foreground">
+            <a href="tel:+212688051703" className="hover:text-brand-dark-foreground">
               +212 6 88 05 17 03
             </a>
-            <a href="mailto:contact@csca.opportunitieshunter.com" className="hover:text-brand-navy-foreground">
+            <a href="mailto:contact@csca.opportunitieshunter.com" className="hover:text-brand-dark-foreground">
               contact@csca.opportunitieshunter.com
             </a>
             <span>3rd floor, Imm Capital Office, 93 Boulevard Abdelmoumen, N° 74, Casablanca 20042</span>

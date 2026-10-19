@@ -3,7 +3,7 @@ import { requireRole } from "@/lib/auth/session";
 import { listTaxonomy } from "@/server/queries/admin-content";
 import { QuestionForm } from "../question-form";
 
-export const metadata: Metadata = { title: "New question — CSCA Prep Admin" };
+export const metadata: Metadata = { title: "New question — CSCAprepa Admin" };
 
 export default async function NewQuestionPage() {
   const user = await requireRole("admin", "content_manager");

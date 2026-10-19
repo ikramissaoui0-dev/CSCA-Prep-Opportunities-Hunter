@@ -3,8 +3,8 @@ import { ContactForm } from "./contact-form";
 import { breadcrumbJsonLd } from "@/lib/seo";
 
 export const metadata: Metadata = {
-  title: "Contact — CSCA Prep",
-  description: "Contact the CSCA Prep team about Premium access, billing, or your account — by form, email, phone, or WhatsApp.",
+  title: "Contact — CSCAprepa",
+  description: "Contact the CSCAprepa team about Premium access, billing, or your account — by form, email, phone, or WhatsApp.",
   alternates: { canonical: "/contact" },
 };
 
@@ -13,11 +13,11 @@ export default function ContactPage() {
     <div className="mx-auto max-w-lg space-y-8 px-6 py-16">
       <div>
         <h1 className="text-3xl font-semibold tracking-tight">Contact us</h1>
-        <p className="mt-3 text-muted-foreground">Questions about CSCA Prep, billing, or your account? Send us a message.</p>
+        <p className="mt-3 text-muted-foreground">Questions about CSCAprepa, billing, or your account? Send us a message.</p>
       </div>
 
       <div className="space-y-2 rounded-lg border bg-muted/30 p-4 text-sm">
-        <p className="font-medium">CSCA Prep</p>
+        <p className="font-medium">CSCAprepa</p>
         <p className="text-muted-foreground">
           Phone:{" "}
           <a href="tel:+212621521861" className="underline hover:text-foreground">

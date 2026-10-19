@@ -18,7 +18,7 @@ export default function GlobalError({ error, reset }: { error: Error & { digest?
   return (
     <html lang="en">
       <body style={{ fontFamily: "system-ui, sans-serif", padding: "4rem 1.5rem", textAlign: "center" }}>
-        <h1 style={{ fontSize: "1.25rem", marginBottom: "0.5rem" }}>CSCA Prep is temporarily unavailable</h1>
+        <h1 style={{ fontSize: "1.25rem", marginBottom: "0.5rem" }}>CSCAprepa is temporarily unavailable</h1>
         <p style={{ color: "#666", marginBottom: "1.5rem" }}>
           We&apos;ve logged the issue and are looking into it. Please try again in a moment.
         </p>

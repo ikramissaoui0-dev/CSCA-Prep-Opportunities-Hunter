@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { ThemeToggle } from "@/components/theme-toggle";
+import { Wordmark } from "@/components/wordmark";
 
 export default function AuthLayout({ children }: { children: React.ReactNode }) {
   return (
@@ -9,8 +10,8 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
         <ThemeToggle />
       </div>
       <Link href="/" className="flex flex-col items-center gap-1 text-center">
-        <Image src="/logo.png" alt="CSCA Prep" width={48} height={48} className="mb-1 h-12 w-12" priority />
-        <span className="text-lg font-semibold tracking-tight">CSCA Prep</span>
+        <Image src="/brand-icon.png" alt="CSCAprepa" width={48} height={48} className="mb-1 h-12 w-12" priority />
+        <Wordmark className="text-xl" />
       </Link>
       <div className="w-full max-w-sm">{children}</div>
     </div>

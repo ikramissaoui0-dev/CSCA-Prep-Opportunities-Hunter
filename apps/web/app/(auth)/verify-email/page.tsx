@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 
-export const metadata: Metadata = { title: "Verify your email — CSCA Prep" };
+export const metadata: Metadata = { title: "Verify your email — CSCAprepa" };
 
 export default async function VerifyEmailPage({
   searchParams,

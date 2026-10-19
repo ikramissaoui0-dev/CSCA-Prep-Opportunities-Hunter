@@ -3,7 +3,7 @@ import { requireRole } from "@/lib/auth/session";
 import { getAdminDashboardMetrics } from "@/server/queries/admin-metrics";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 
-export const metadata: Metadata = { title: "Admin — CSCA Prep" };
+export const metadata: Metadata = { title: "Admin — CSCAprepa" };
 
 function formatUsd(cents: number): string {
   return `$${(cents / 100).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;

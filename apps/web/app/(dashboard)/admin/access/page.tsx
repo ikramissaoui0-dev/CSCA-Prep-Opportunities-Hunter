@@ -10,7 +10,7 @@ import { cn } from "@/lib/utils";
 import { GrantAccessForm } from "./grant-form";
 import { RowActions } from "./row-actions";
 
-export const metadata: Metadata = { title: "Student Free Access — CSCA Prep Admin" };
+export const metadata: Metadata = { title: "Student Free Access — CSCAprepa Admin" };
 
 const PAGE_SIZE = 25;
 

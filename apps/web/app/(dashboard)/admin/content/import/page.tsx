@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { requireRole } from "@/lib/auth/session";
 import { ImportForm } from "./import-form";
 
-export const metadata: Metadata = { title: "Import questions — CSCA Prep Admin" };
+export const metadata: Metadata = { title: "Import questions — CSCAprepa Admin" };
 
 export default async function ImportQuestionsPage() {
   await requireRole("admin", "content_manager");

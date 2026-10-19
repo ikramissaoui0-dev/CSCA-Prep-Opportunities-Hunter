@@ -18,15 +18,15 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-const SITE_NAME = "CSCA Prep";
+const SITE_NAME = "CSCAprepa";
 const SITE_DESCRIPTION =
-  "CSCA Prep — realistic mock exams, adaptive practice, and personalized explanations for the CSCA (Chinese University entrance exam for international students).";
+  "CSCAprepa — realistic mock exams, adaptive practice, and personalized explanations for the CSCA (Chinese University entrance exam for international students).";
 
 export const metadata: Metadata = {
   metadataBase: new URL(clientEnv.NEXT_PUBLIC_SITE_URL),
   title: {
     default: `${SITE_NAME} — Mock Exams & Practice for the CSCA`,
-    // Every page's own title already includes "— CSCA Prep" by
+    // Every page's own title already includes "— CSCAprepa" by
     // convention (see e.g. app/(auth)/login/page.tsx) — a template
     // suffix here would double it up, so this stays a no-op template.
     template: "%s",
@@ -38,16 +38,14 @@ export const metadata: Metadata = {
     siteName: SITE_NAME,
     title: `${SITE_NAME} — Mock Exams & Practice for the CSCA`,
     description: SITE_DESCRIPTION,
-    // logo.png is square (1080x1080), not the usual 1200x630 OG banner
-    // shape — still valid, platforms just center/crop it rather than
-    // filling the whole card.
-    images: [{ url: "/logo.png", width: 1080, height: 1080, alt: SITE_NAME }],
+    // Full logo lockup on a 1200x630 banner (public/og-image.png).
+    images: [{ url: "/og-image.png", width: 1200, height: 630, alt: SITE_NAME }],
   },
   twitter: {
     card: "summary_large_image",
     title: `${SITE_NAME} — Mock Exams & Practice for the CSCA`,
     description: SITE_DESCRIPTION,
-    images: ["/logo.png"],
+    images: ["/og-image.png"],
   },
   verification: {
     google: "o4NhNqr8Gw1Q-_Lv2C6Ed3cnN7EFoqr-RGpBChixECQ",
@@ -64,7 +62,7 @@ const organizationJsonLd = {
   name: SITE_NAME,
   description: SITE_DESCRIPTION,
   url: clientEnv.NEXT_PUBLIC_SITE_URL,
-  logo: `${clientEnv.NEXT_PUBLIC_SITE_URL}/logo.png`,
+  logo: `${clientEnv.NEXT_PUBLIC_SITE_URL}/brand-icon.png`,
   contactPoint: {
     "@type": "ContactPoint",
     contactType: "customer support",

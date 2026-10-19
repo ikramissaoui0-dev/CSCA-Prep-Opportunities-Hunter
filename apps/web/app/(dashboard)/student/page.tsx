@@ -14,7 +14,7 @@ import { LatestResults } from "@/components/dashboard/latest-results";
 import { RecommendedActions } from "@/components/dashboard/recommended-actions";
 import { PremiumUpsell } from "@/components/dashboard/premium-upsell";
 
-export const metadata: Metadata = { title: "Dashboard — CSCA Prep" };
+export const metadata: Metadata = { title: "Dashboard — CSCAprepa" };
 
 export default async function StudentDashboardPage() {
   const user = await requireRole("student", "admin");

@@ -23,7 +23,7 @@ function getResendClient(): Resend {
 // verified in Resend for this app — matching the contact@csca.
 // opportunitieshunter.com address shown everywhere on the site.
 function getFromAddress(): string {
-  return "CSCA Prep <contact@csca.opportunitieshunter.com>";
+  return "CSCAprepa <contact@csca.opportunitieshunter.com>";
 }
 
 export async function sendContactFormEmail(input: { name: string; email: string; message: string }): Promise<void> {

@@ -8,7 +8,7 @@ import Link from "next/link";
 import { USER_ROLES, type UserRole } from "@csca/types";
 import { RoleSelect } from "./role-select";
 
-export const metadata: Metadata = { title: "Users — CSCA Prep Admin" };
+export const metadata: Metadata = { title: "Users — CSCAprepa Admin" };
 
 const PAGE_SIZE = 20;
 const ROLE_LABEL: Record<UserRole, string> = {

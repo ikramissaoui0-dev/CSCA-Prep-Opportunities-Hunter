@@ -7,7 +7,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { CourseForm } from "../course-form";
 import { LessonsManager } from "./lessons-manager";
 
-export const metadata: Metadata = { title: "Edit course — CSCA Prep Admin" };
+export const metadata: Metadata = { title: "Edit course — CSCAprepa Admin" };
 
 export default async function EditCoursePage({ params }: { params: Promise<{ courseId: string }> }) {
   const { courseId } = await params;

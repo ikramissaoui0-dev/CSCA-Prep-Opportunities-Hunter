@@ -10,7 +10,7 @@ import { CompositionChart } from "@/components/exam/composition-chart";
 import { SubjectBarChart } from "@/components/exam/subject-bar-chart";
 import { ComparisonCallout } from "@/components/exam/comparison-callout";
 
-export const metadata: Metadata = { title: "Results — CSCA Prep" };
+export const metadata: Metadata = { title: "Results — CSCAprepa" };
 
 const MODE_LABEL: Record<string, string> = {
   full_mock: "Full simulation",

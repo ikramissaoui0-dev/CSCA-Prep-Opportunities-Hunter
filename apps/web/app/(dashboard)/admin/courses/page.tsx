@@ -8,7 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { RowActions } from "./row-actions";
 
-export const metadata: Metadata = { title: "Courses — CSCA Prep Admin" };
+export const metadata: Metadata = { title: "Courses — CSCAprepa Admin" };
 
 const PAGE_SIZE = 20;
 const PLAN_LABEL: Record<string, string> = { free: "Free", premium: "Premium", premium_plus: "Premium+" };

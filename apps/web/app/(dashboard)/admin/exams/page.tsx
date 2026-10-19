@@ -8,7 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { RowActions } from "./row-actions";
 
-export const metadata: Metadata = { title: "Exams — CSCA Prep Admin" };
+export const metadata: Metadata = { title: "Exams — CSCAprepa Admin" };
 
 const PAGE_SIZE = 20;
 const MODE_LABEL: Record<string, string> = { full_mock: "Full simulation", daily_challenge: "Daily challenge" };

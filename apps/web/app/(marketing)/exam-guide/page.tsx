@@ -255,7 +255,7 @@ export default async function ExamGuidePage() {
         <h2 className="text-xl font-semibold tracking-tight">How we&apos;d approach studying for it</h2>
         <p className="text-muted-foreground">
           There&apos;s no shortage of generic exam advice out there. This is the version we actually built the platform
-          around — each point below maps to something you can do inside CSCA Prep itself.
+          around — each point below maps to something you can do inside CSCAprepa itself.
         </p>
         <div className="grid gap-4 sm:grid-cols-2">
           {PREP_APPROACH.map((item) => (

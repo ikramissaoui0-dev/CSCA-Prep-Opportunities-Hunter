@@ -5,7 +5,7 @@ import { getExamForEdit } from "@/server/queries/admin-exams";
 import { listTaxonomy } from "@/server/queries/admin-content";
 import { ExamForm } from "../exam-form";
 
-export const metadata: Metadata = { title: "Edit exam — CSCA Prep Admin" };
+export const metadata: Metadata = { title: "Edit exam — CSCAprepa Admin" };
 
 export default async function EditExamPage({ params }: { params: Promise<{ examId: string }> }) {
   const { examId } = await params;

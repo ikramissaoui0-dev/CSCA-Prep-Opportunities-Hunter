@@ -6,7 +6,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 
-export const metadata: Metadata = { title: "Courses — CSCA Prep" };
+export const metadata: Metadata = { title: "Courses — CSCAprepa" };
 
 export default async function CoursesCatalogPage() {
   const user = await requireUser();

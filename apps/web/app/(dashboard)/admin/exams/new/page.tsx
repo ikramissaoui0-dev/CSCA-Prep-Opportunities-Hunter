@@ -3,7 +3,7 @@ import { requireRole } from "@/lib/auth/session";
 import { listTaxonomy } from "@/server/queries/admin-content";
 import { ExamForm } from "../exam-form";
 
-export const metadata: Metadata = { title: "New exam — CSCA Prep Admin" };
+export const metadata: Metadata = { title: "New exam — CSCAprepa Admin" };
 
 export default async function NewExamPage() {
   const user = await requireRole("admin", "content_manager");

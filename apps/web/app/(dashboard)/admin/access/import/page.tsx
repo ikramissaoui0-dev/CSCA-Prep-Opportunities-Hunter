@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { requireRole } from "@/lib/auth/session";
 import { AccessGrantImportForm } from "./import-form";
 
-export const metadata: Metadata = { title: "Import Students — CSCA Prep Admin" };
+export const metadata: Metadata = { title: "Import Students — CSCAprepa Admin" };
 
 export default async function ImportAccessGrantsPage() {
   await requireRole("admin");

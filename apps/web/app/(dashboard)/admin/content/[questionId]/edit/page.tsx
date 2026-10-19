@@ -4,7 +4,7 @@ import { requireRole } from "@/lib/auth/session";
 import { listTaxonomy, getQuestionForEdit } from "@/server/queries/admin-content";
 import { QuestionForm } from "../../question-form";
 
-export const metadata: Metadata = { title: "Edit question — CSCA Prep Admin" };
+export const metadata: Metadata = { title: "Edit question — CSCAprepa Admin" };
 
 export default async function EditQuestionPage({ params }: { params: Promise<{ questionId: string }> }) {
   const { questionId } = await params;

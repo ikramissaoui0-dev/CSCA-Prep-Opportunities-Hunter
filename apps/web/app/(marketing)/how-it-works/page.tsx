@@ -7,8 +7,8 @@ import { getCurrentUser } from "@/lib/auth/session";
 import { ROLE_HOME_ROUTE } from "@/lib/auth/roles";
 
 export const metadata: Metadata = {
-  title: "How It Works — CSCA Prep",
-  description: "How CSCA Prep's mock exams, personalized explanations, and progress tracking work together to help you prepare for the CSCA.",
+  title: "How It Works — CSCAprepa",
+  description: "How CSCAprepa's mock exams, personalized explanations, and progress tracking work together to help you prepare for the CSCA.",
   alternates: { canonical: "/how-it-works" },
 };
 

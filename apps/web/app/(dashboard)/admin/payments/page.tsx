@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 
-export const metadata: Metadata = { title: "Payments — CSCA Prep Admin" };
+export const metadata: Metadata = { title: "Payments — CSCAprepa Admin" };
 
 const PAGE_SIZE = 20;
 

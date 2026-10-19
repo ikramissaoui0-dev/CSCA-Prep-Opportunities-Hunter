@@ -42,8 +42,8 @@
   --color-popover: var(--popover);
   --color-card-foreground: var(--card-foreground);
   --color-card: var(--card);
-  --color-brand-navy: var(--brand-navy);
-  --color-brand-navy-foreground: var(--brand-navy-foreground);
+  --color-brand-dark: var(--brand-dark);
+  --color-brand-dark-foreground: var(--brand-dark-foreground);
   --radius-sm: calc(var(--radius) * 0.6);
   --radius-md: calc(var(--radius) * 0.8);
   --radius-lg: var(--radius);
@@ -54,45 +54,44 @@
 }
 
 :root {
-  /* Richer light theme (revised — the original was near-zero-chroma and
-     read as flat/washed out, with background and card almost
-     indistinguishable). Every neutral token still carries the brand
-     blue hue (255.195, sampled from the logo), but with more chroma and
-     a visible lightness gap between --background (tinted, dimmer) and
-     --card (near-white), so cards visibly lift off the page instead of
-     blending into it. Text darkened toward navy instead of flat black
-     for a warmer, less sterile contrast. */
-  --background: oklch(0.94 0.018 255.195);
-  --foreground: oklch(0.22 0.045 258);
-  --card: oklch(0.99 0.004 255.195);
-  --card-foreground: oklch(0.22 0.045 258);
-  --popover: oklch(0.99 0.004 255.195);
-  --popover-foreground: oklch(0.22 0.045 258);
-  /* Opportunities Hunter brand blue, deepened from the logo-sampled
-     value for more punch against the lighter surfaces above. */
-  --primary: oklch(0.48 0.19 258);
+  /* CSCAprepa brand palette (from the 2026 brand sheet): red #B7242A,
+     near-black #1F1F1F, warm off-white #F8F4F2. Every neutral below
+     carries a faint warm (red-brown, hue ~25-50) tint instead of the old
+     blue one, so surfaces and text read as part of the same family as the
+     logo. The page background is deliberately a notch deeper than the
+     brand off-white (#F8F4F2 sits in --muted-ish territory) so white
+     cards keep a visible lift off the page. Contrast checked: white on
+     --primary 6.4:1, --muted-foreground on --background 5.0:1. */
+  --background: oklch(0.944 0.009 52.1);
+  --foreground: oklch(0.239 0 90);
+  --card: oklch(0.989 0.003 48.7);
+  --card-foreground: oklch(0.239 0 90);
+  --popover: oklch(0.989 0.003 48.7);
+  --popover-foreground: oklch(0.239 0 90);
+  --primary: oklch(0.508 0.182 24.9);
   --primary-foreground: oklch(0.99 0 0);
-  --secondary: oklch(0.89 0.022 255.195);
-  --secondary-foreground: oklch(0.22 0.045 258);
-  --muted: oklch(0.89 0.022 255.195);
-  --muted-foreground: oklch(0.42 0.035 258);
-  --accent: oklch(0.87 0.05 255.195);
-  --accent-foreground: oklch(0.24 0.09 259.727);
-  --destructive: oklch(0.55 0.24 27.325);
+  --secondary: oklch(0.91 0.013 48.6);
+  --secondary-foreground: oklch(0.239 0 90);
+  --muted: oklch(0.91 0.013 48.6);
+  --muted-foreground: oklch(0.504 0.012 32.5);
+  --accent: oklch(0.913 0.03 20.3);
+  --accent-foreground: oklch(0.384 0.13 23.4);
+  /* Nudged toward orange-red so an error is not the exact same red as
+     the brand's primary buttons. */
+  --destructive: oklch(0.549 0.189 30.8);
   --success: #059669;
   --success-foreground: #ffffff;
-  --border: oklch(0.8 0.03 255.195);
-  --input: oklch(0.8 0.03 255.195);
-  --ring: oklch(0.48 0.19 258 / 0.5);
-  /* The logo wordmark's dark navy — a fixed brand surface (footer, dark
-     bands) rather than a semantic light/dark-mode token, so it reads the
-     same regardless of the viewer's theme. */
-  --brand-navy: oklch(0.22 0.09 259.727);
-  --brand-navy-foreground: oklch(0.985 0.006 255.195);
-  /* Validated categorical palette (dataviz skill, references/palette.md) —
-     the shadcn default here was pure grayscale (zero chroma), invisible
-     as soon as a chart needs more than one distinguishable series. */
-  --chart-1: #016bd1;
+  --border: oklch(0.849 0.018 44.8);
+  --input: oklch(0.849 0.018 44.8);
+  --ring: oklch(0.508 0.182 24.9 / 0.5);
+  /* The brand's near-black (#1F1F1F) — a fixed surface (footer, dark
+     bands) that reads the same regardless of the viewer's theme. */
+  --brand-dark: oklch(0.239 0 90);
+  --brand-dark-foreground: oklch(0.97 0.005 48.7);
+  /* Validated categorical palette (dataviz skill, references/palette.md);
+     series 1 is the brand red, the rest keep their distinguishable hues.
+     Charts here currently plot a single series (--chart-1). */
+  --chart-1: #b7242a;
   --chart-2: #eb6834;
   --chart-3: #1baf7a;
   --chart-4: #eda100;
@@ -102,57 +101,61 @@
      --muted-foreground, which is deliberately dark-in-light/light-in-
      dark for text legibility and would invert into the chart's
      brightest, loudest element the moment dark mode is active. */
-  --chart-neutral: oklch(0.75 0.015 258);
+  --chart-neutral: oklch(0.77 0.012 45);
   --radius: 0.625rem;
-  --sidebar: oklch(0.99 0.004 255.195);
-  --sidebar-foreground: oklch(0.22 0.045 258);
-  --sidebar-primary: oklch(0.48 0.19 258);
+  --sidebar: oklch(0.989 0.003 48.7);
+  --sidebar-foreground: oklch(0.239 0 90);
+  --sidebar-primary: oklch(0.508 0.182 24.9);
   --sidebar-primary-foreground: oklch(0.99 0 0);
-  --sidebar-accent: oklch(0.87 0.05 255.195);
-  --sidebar-accent-foreground: oklch(0.24 0.09 259.727);
-  --sidebar-border: oklch(0.8 0.03 255.195);
-  --sidebar-ring: oklch(0.48 0.19 258 / 0.5);
+  --sidebar-accent: oklch(0.913 0.03 20.3);
+  --sidebar-accent-foreground: oklch(0.384 0.13 23.4);
+  --sidebar-border: oklch(0.849 0.018 44.8);
+  --sidebar-ring: oklch(0.508 0.182 24.9 / 0.5);
 }
 
 .dark {
-  --background: oklch(0.16 0.012 258);
-  --foreground: oklch(0.985 0 0);
-  --card: oklch(0.22 0.014 258);
-  --card-foreground: oklch(0.985 0 0);
-  --popover: oklch(0.22 0.014 258);
-  --popover-foreground: oklch(0.985 0 0);
-  /* Lightened brand blue for legibility against the dark surface. */
-  --primary: oklch(0.66 0.143 250.89);
-  --primary-foreground: oklch(0.205 0.03 255.195);
-  --secondary: oklch(0.28 0.014 258);
-  --secondary-foreground: oklch(0.985 0 0);
-  --muted: oklch(0.28 0.014 258);
-  --muted-foreground: oklch(0.72 0.015 258);
-  --accent: oklch(0.3 0.08 255.195);
-  --accent-foreground: oklch(0.985 0 0);
-  --destructive: oklch(0.704 0.191 22.216);
+  /* Same palette on the brand near-black: --card is the brand #1F1F1F,
+     --background a step darker so cards still lift. The primary red is
+     lightened (and takes dark text) because the brand red itself is only
+     ~2.4:1 against this surface; lightened it clears 5:1 as link text
+     and for dark-on-red button labels. */
+  --background: oklch(0.197 0.002 17.3);
+  --foreground: oklch(0.97 0.005 48.7);
+  --card: oklch(0.239 0 90);
+  --card-foreground: oklch(0.97 0.005 48.7);
+  --popover: oklch(0.262 0.004 48.6);
+  --popover-foreground: oklch(0.97 0.005 48.7);
+  --primary: oklch(0.644 0.175 22.6);
+  --primary-foreground: oklch(0.2 0.01 20);
+  --secondary: oklch(0.28 0.005 39.4);
+  --secondary-foreground: oklch(0.97 0.005 48.7);
+  --muted: oklch(0.28 0.005 39.4);
+  --muted-foreground: oklch(0.721 0.011 48.6);
+  --accent: oklch(0.33 0.07 22);
+  --accent-foreground: oklch(0.97 0.005 48.7);
+  --destructive: oklch(0.704 0.191 30);
   --success: #34d399;
   --success-foreground: #022c22;
   --border: oklch(1 0 0 / 10%);
   --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.66 0.143 250.89 / 0.5);
-  --brand-navy: oklch(0.285 0.108 259.727);
-  --brand-navy-foreground: oklch(0.985 0.006 255.195);
-  /* Same eight-hue set, dark-surface steps (references/palette.md). */
-  --chart-1: #4696e6;
+  --ring: oklch(0.644 0.175 22.6 / 0.5);
+  --brand-dark: oklch(0.239 0 90);
+  --brand-dark-foreground: oklch(0.97 0.005 48.7);
+  /* Same hue set, dark-surface steps (references/palette.md). */
+  --chart-1: #e4585a;
   --chart-2: #d95926;
   --chart-3: #199e70;
   --chart-4: #c98500;
   --chart-5: #d55181;
-  --chart-neutral: oklch(0.38 0.02 258);
-  --sidebar: oklch(0.19 0.014 258);
-  --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.66 0.143 250.89);
-  --sidebar-primary-foreground: oklch(0.205 0.03 255.195);
-  --sidebar-accent: oklch(0.3 0.08 255.195);
-  --sidebar-accent-foreground: oklch(0.985 0 0);
+  --chart-neutral: oklch(0.38 0.008 40);
+  --sidebar: oklch(0.197 0.002 17.3);
+  --sidebar-foreground: oklch(0.97 0.005 48.7);
+  --sidebar-primary: oklch(0.644 0.175 22.6);
+  --sidebar-primary-foreground: oklch(0.2 0.01 20);
+  --sidebar-accent: oklch(0.33 0.07 22);
+  --sidebar-accent-foreground: oklch(0.97 0.005 48.7);
   --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.66 0.143 250.89 / 0.5);
+  --sidebar-ring: oklch(0.644 0.175 22.6 / 0.5);
 }
 
 @layer base {

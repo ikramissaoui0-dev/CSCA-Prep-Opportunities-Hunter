@@ -1,6 +1,6 @@
 // A curated, non-exhaustive list rather than the full ISO set (~200
 // entries) — Morocco first as the default (Opportunities Hunter's home
-// market), then the countries CSCA Prep's actual audience is most
+// market), then the countries CSCAprepa's actual audience is most
 // likely calling from: Francophone Africa, Europe, and a few common
 // origins for students applying to Chinese universities. "Other" covers
 // everything else with a free-text code instead of bloating this list.

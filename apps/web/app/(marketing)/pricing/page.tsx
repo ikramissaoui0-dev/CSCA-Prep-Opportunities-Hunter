@@ -7,8 +7,8 @@ import { getCurrentUser } from "@/lib/auth/session";
 import { ROLE_HOME_ROUTE } from "@/lib/auth/roles";
 
 export const metadata: Metadata = {
-  title: "Pricing — CSCA Prep",
-  description: "Simple, transparent pricing for CSCA Prep — start free, contact us to unlock unlimited mock exams, detailed explanations, and full course access.",
+  title: "Pricing — CSCAprepa",
+  description: "Simple, transparent pricing for CSCAprepa — start free, contact us to unlock unlimited mock exams, detailed explanations, and full course access.",
   alternates: { canonical: "/pricing" },
 };
 

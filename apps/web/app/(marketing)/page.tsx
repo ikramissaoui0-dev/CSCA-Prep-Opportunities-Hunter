@@ -7,7 +7,7 @@ import { getCurrentUser } from "@/lib/auth/session";
 import { ROLE_HOME_ROUTE } from "@/lib/auth/roles";
 
 export const metadata: Metadata = {
-  title: "CSCA Prep — Mock Exams, Past Papers & Practice",
+  title: "CSCAprepa — Mock Exams, Past Papers & Practice",
   description:
     "Prepare for the CSCA with real past exam papers, everyday practice exercises by subject and difficulty, personalized explanations, and progress tracking built for international students applying to study in China.",
   alternates: { canonical: "/" },
@@ -59,9 +59,9 @@ export default async function HomePage() {
 
   return (
     <div>
-      <section className="border-b bg-linear-to-b from-[oklch(0.8_0.07_255.195)] to-background dark:from-[oklch(0.32_0.08_255.195)]">
+      <section className="border-b bg-linear-to-b from-[oklch(0.9_0.05_24)] to-background dark:from-[oklch(0.3_0.07_24)]">
         <div className="mx-auto max-w-6xl px-6 py-20 text-center">
-          <p className="text-sm font-medium uppercase tracking-wide text-primary">CSCA Prep</p>
+          <p className="text-sm font-medium uppercase tracking-wide text-primary">CSCAprepa</p>
           <h1 className="mt-3 text-4xl font-semibold tracking-tight sm:text-5xl">
             Prepare for the CSCA with confidence
           </h1>

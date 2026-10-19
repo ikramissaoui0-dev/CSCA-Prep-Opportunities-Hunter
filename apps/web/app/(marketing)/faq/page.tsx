@@ -3,8 +3,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { breadcrumbJsonLd } from "@/lib/seo";
 
 export const metadata: Metadata = {
-  title: "FAQ — CSCA Prep",
-  description: "Answers to common questions about the CSCA exam, how CSCA Prep works, billing, and account access.",
+  title: "FAQ — CSCAprepa",
+  description: "Answers to common questions about the CSCA exam, how CSCAprepa works, billing, and account access.",
   alternates: { canonical: "/faq" },
 };
 
@@ -12,7 +12,7 @@ const FAQS = [
   {
     question: "What is the CSCA?",
     answer:
-      "The CSCA is the entrance exam many Chinese universities use to evaluate international student applicants. CSCA Prep gives you realistic, timed mock exams and targeted practice for it.",
+      "The CSCA is the entrance exam many Chinese universities use to evaluate international student applicants. CSCAprepa gives you realistic, timed mock exams and targeted practice for it.",
   },
   {
     question: "Is there really a free plan?",

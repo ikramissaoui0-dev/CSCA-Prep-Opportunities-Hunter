@@ -9,7 +9,7 @@ export type PendingActivationGrant = { id: string; grantedTier: PlanTier };
 
 /**
  * The one thing the student dashboard needs to decide whether to show
- * "Your CSCA Prep access has been activated" — a grant now linked to
+ * "Your CSCAprepa access has been activated" — a grant now linked to
  * this user (the handle_new_user trigger did that at signup) that
  * hasn't shown its one-time message yet. Revoked/expired grants are
  * deliberately excluded: there's nothing to celebrate about access that

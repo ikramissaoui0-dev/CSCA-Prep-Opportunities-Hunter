@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { StartCuratedExamButton, StartSubjectPracticeForm, StartDifficultyPracticeForm } from "./start-controls";
 
-export const metadata: Metadata = { title: "Take an exam — CSCA Prep" };
+export const metadata: Metadata = { title: "Take an exam — CSCAprepa" };
 
 const MODE_LABEL: Record<string, string> = {
   full_mock: "Full simulation",

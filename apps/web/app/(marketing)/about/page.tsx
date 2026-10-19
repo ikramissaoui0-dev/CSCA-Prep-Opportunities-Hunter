@@ -6,8 +6,8 @@ import { getCurrentUser } from "@/lib/auth/session";
 import { ROLE_HOME_ROUTE } from "@/lib/auth/roles";
 
 export const metadata: Metadata = {
-  title: "About — CSCA Prep",
-  description: "CSCA Prep helps international students prepare for the CSCA with realistic timed mock exams, past papers, and a clear explanation for every answer.",
+  title: "About — CSCAprepa",
+  description: "CSCAprepa helps international students prepare for the CSCA with realistic timed mock exams, past papers, and a clear explanation for every answer.",
   alternates: { canonical: "/about" },
 };
 
@@ -19,9 +19,9 @@ export default async function AboutPage() {
   return (
     <div className="mx-auto max-w-3xl space-y-10 px-6 py-16">
       <div>
-        <h1 className="text-3xl font-semibold tracking-tight">About CSCA Prep</h1>
+        <h1 className="text-3xl font-semibold tracking-tight">About CSCAprepa</h1>
         <p className="mt-3 text-muted-foreground">
-          CSCA Prep is built for one specific group of students: international applicants preparing for the CSCA on
+          CSCAprepa is built for one specific group of students: international applicants preparing for the CSCA on
           their way to studying at a Chinese university.
         </p>
       </div>

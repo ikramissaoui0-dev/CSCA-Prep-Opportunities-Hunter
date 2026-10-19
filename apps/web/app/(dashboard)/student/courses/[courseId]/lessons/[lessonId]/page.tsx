@@ -4,7 +4,7 @@ import { requireUser } from "@/lib/auth/session";
 import { getCourseDetail } from "@/server/queries/courses";
 import { LessonViewer } from "./lesson-viewer";
 
-export const metadata: Metadata = { title: "Lesson — CSCA Prep" };
+export const metadata: Metadata = { title: "Lesson — CSCAprepa" };
 
 export default async function LessonPage({ params }: { params: Promise<{ courseId: string; lessonId: string }> }) {
   const { courseId, lessonId } = await params;

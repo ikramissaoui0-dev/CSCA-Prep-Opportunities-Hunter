@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 
-export const metadata: Metadata = { title: "Subscriptions — CSCA Prep Admin" };
+export const metadata: Metadata = { title: "Subscriptions — CSCAprepa Admin" };
 
 const PAGE_SIZE = 20;
 const PLAN_LABEL: Record<string, string> = { free: "Free", premium: "Premium", premium_plus: "Premium+" };

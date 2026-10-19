@@ -7,7 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 
-export const metadata: Metadata = { title: "Results history — CSCA Prep" };
+export const metadata: Metadata = { title: "Results history — CSCAprepa" };
 
 const PAGE_SIZE = 20;
 const MODES: ExamMode[] = ["full_mock", "subject_practice", "difficulty_practice", "daily_challenge"];

@@ -4,7 +4,7 @@ import { requireRole } from "@/lib/auth/session";
 import { getExamSessionForTaking } from "@/server/queries/exam-session";
 import { ExamRunner } from "./exam-runner";
 
-export const metadata: Metadata = { title: "Exam in progress — CSCA Prep" };
+export const metadata: Metadata = { title: "Exam in progress — CSCAprepa" };
 
 export default async function ExamTakingPage({ params }: { params: Promise<{ sessionId: string }> }) {
   const { sessionId } = await params;

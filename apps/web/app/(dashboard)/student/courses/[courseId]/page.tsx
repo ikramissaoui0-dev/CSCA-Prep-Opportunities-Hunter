@@ -7,7 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 
-export const metadata: Metadata = { title: "Course — CSCA Prep" };
+export const metadata: Metadata = { title: "Course — CSCAprepa" };
 
 const CONTENT_TYPE_LABEL: Record<string, string> = { video: "Video", pdf: "PDF", notes: "Notes", exercise: "Exercise" };
 

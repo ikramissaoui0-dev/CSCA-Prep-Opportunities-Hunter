@@ -7,7 +7,7 @@ const WHATSAPP_CONTACTS = [
   { label: "+212 6 88 05 17 03", number: "212688051703" },
 ];
 
-const PREFILLED_MESSAGE = "Hi! I have a question about CSCA Prep.";
+const PREFILLED_MESSAGE = "Hi! I have a question about CSCAprepa.";
 
 function whatsappUrl(number: string) {
   return `https://wa.me/${number}?text=${encodeURIComponent(PREFILLED_MESSAGE)}`;
