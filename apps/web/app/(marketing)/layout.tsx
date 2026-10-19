@@ -71,7 +71,7 @@ export default async function MarketingLayout({ children }: { children: React.Re
           <div className="flex flex-wrap items-center justify-between gap-4">
             <div>
               <p className="text-brand-dark-foreground">© {new Date().getFullYear()} CSCAprepa.</p>
-              <p>Opportunities Hunter is present in Morocco, France, and China.</p>
+              <p>CSCAprepa is present in Morocco, France, and China.</p>
             </div>
             <nav className="flex flex-wrap gap-4">
               {NAV_LINKS.map((link) => (
