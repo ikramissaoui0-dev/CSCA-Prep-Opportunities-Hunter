@@ -5,6 +5,7 @@ import Link from "next/link";
 import { signIn } from "../actions";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { PasswordInput } from "@/components/password-input";
 import { Label } from "@/components/ui/label";
 import {
   Card,
@@ -46,7 +47,7 @@ export function LoginForm() {
                 Forgot password?
               </Link>
             </div>
-            <Input id="password" name="password" type="password" autoComplete="current-password" required />
+            <PasswordInput id="password" name="password" autoComplete="current-password" required />
           </div>
 
           {state && !state.success && (
