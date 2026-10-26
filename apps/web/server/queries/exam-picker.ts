@@ -11,6 +11,9 @@ export type CuratedExam = {
   description: string | null;
   timeLimitSeconds: number;
   questionCount: number | null;
+  // Set for mock exams only — the subject their questions belong to, so
+  // the picker can group them (Mathematics / Physics / Chemistry).
+  subjectName?: string;
 };
 
 export async function getPublishedCuratedExams(
@@ -41,15 +44,18 @@ export async function getPublishedCuratedExams(
     // rather than a stored flag: any exam pulling from the "Mock exams"
     // question_categories row (slug examens-blancs) is a mock exam,
     // everything else full_mock is a real past paper.
-    let mockExamIds = new Set<string>();
+    const mockInfo = new Map<string, { subjectName: string; subjectOrder: number }>();
     if (fullMockIds.length > 0) {
       const mockRows = await tx
-        .selectDistinct({ examId: examQuestions.examId })
+        .selectDistinct({ examId: examQuestions.examId, subjectName: subjects.name, subjectOrder: subjects.displayOrder })
         .from(examQuestions)
         .innerJoin(questions, eq(questions.id, examQuestions.questionId))
         .innerJoin(questionCategories, eq(questionCategories.id, questions.categoryId))
+        .innerJoin(subjects, eq(subjects.id, questionCategories.subjectId))
         .where(and(inArray(examQuestions.examId, fullMockIds), eq(questionCategories.slug, "examens-blancs")));
-      mockExamIds = new Set(mockRows.map((r) => r.examId));
+      // An exam is built from one subject's questions; if one ever mixed
+      // subjects, the first row wins rather than listing it twice.
+      for (const r of mockRows) if (!mockInfo.has(r.examId)) mockInfo.set(r.examId, r);
     }
 
     const toCuratedExam = (r: (typeof rows)[number]): CuratedExam => ({
@@ -60,9 +66,18 @@ export async function getPublishedCuratedExams(
       questionCount: null,
     });
 
+    // rows arrive newest-first; mock exams are numbered in creation order,
+    // so reversing before the (stable) subject sort lists "Mock Exam 1, 2,
+    // 3…" within each subject instead of 16, 15, 14….
+    const mockExams = rows
+      .filter((r) => r.mode === "full_mock" && mockInfo.has(r.id))
+      .reverse()
+      .sort((a, b) => mockInfo.get(a.id)!.subjectOrder - mockInfo.get(b.id)!.subjectOrder)
+      .map((r) => ({ ...toCuratedExam(r), subjectName: mockInfo.get(r.id)!.subjectName }));
+
     return {
-      pastExamPapers: rows.filter((r) => r.mode === "full_mock" && !mockExamIds.has(r.id)).map(toCuratedExam),
-      mockExams: rows.filter((r) => r.mode === "full_mock" && mockExamIds.has(r.id)).map(toCuratedExam),
+      pastExamPapers: rows.filter((r) => r.mode === "full_mock" && !mockInfo.has(r.id)).map(toCuratedExam),
+      mockExams,
       dailyChallenge: rows.filter((r) => r.mode === "daily_challenge" && r.challengeDate === today).map(toCuratedExam)[0] ?? null,
     };
   });

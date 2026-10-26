@@ -27,6 +27,15 @@ export default async function ExamPickerPage() {
     getCurrentPlanTier(user.id, user.role),
   ]);
   const isFreeTier = planTier === "free";
+  // mockExams arrive already ordered by subject then exam number; this just
+  // splits that sequence into one labelled group per subject.
+  const mockExamGroups: { subjectName: string; exams: typeof mockExams }[] = [];
+  for (const exam of mockExams) {
+    const name = exam.subjectName ?? "Other";
+    const last = mockExamGroups[mockExamGroups.length - 1];
+    if (last && last.subjectName === name) last.exams.push(exam);
+    else mockExamGroups.push({ subjectName: name, exams: [exam] });
+  }
   // Only worth querying for a free account — a paid one has no
   // per-subject limit to check against.
   const usedSubjectIds = isFreeTier ? await getUsedFreeSubjectIds(user.id, user.role) : new Set<string>();
@@ -174,18 +183,23 @@ export default async function ExamPickerPage() {
             {mockExams.length === 0 ? (
               <p className="text-sm text-muted-foreground">No mock exams are published yet.</p>
             ) : (
-              mockExams.map((exam) => (
-                <div key={exam.id} className="flex items-center justify-between gap-4 rounded-lg border p-3">
-                  <div>
-                    <p className="text-sm font-medium">{exam.title}</p>
-                    {exam.description && <p className="text-sm text-muted-foreground">{exam.description}</p>}
-                    <p className="text-xs text-muted-foreground">{Math.round(exam.timeLimitSeconds / 60)} minutes</p>
-                  </div>
-                  {isFreeTier ? (
-                    <Button size="sm" variant="outline" nativeButton={false} render={<Link href="/contact">Contact us</Link>} />
-                  ) : (
-                    <StartCuratedExamButton examId={exam.id} mode="full_mock" />
-                  )}
+              mockExamGroups.map((group) => (
+                <div key={group.subjectName} className="space-y-2">
+                  <h3 className="text-sm font-semibold tracking-tight text-muted-foreground">{group.subjectName}</h3>
+                  {group.exams.map((exam) => (
+                    <div key={exam.id} className="flex items-center justify-between gap-4 rounded-lg border p-3">
+                      <div>
+                        <p className="text-sm font-medium">{exam.title}</p>
+                        {exam.description && <p className="text-sm text-muted-foreground">{exam.description}</p>}
+                        <p className="text-xs text-muted-foreground">{Math.round(exam.timeLimitSeconds / 60)} minutes</p>
+                      </div>
+                      {isFreeTier ? (
+                        <Button size="sm" variant="outline" nativeButton={false} render={<Link href="/contact">Contact us</Link>} />
+                      ) : (
+                        <StartCuratedExamButton examId={exam.id} mode="full_mock" />
+                      )}
+                    </div>
+                  ))}
                 </div>
               ))
             )}

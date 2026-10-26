@@ -1,7 +1,7 @@
 import "server-only";
 
 import { after } from "next/server";
-import { eq, and, or, gte, lte, isNotNull, inArray, sql } from "drizzle-orm";
+import { eq, and, or, gte, lte, isNotNull, inArray, notInArray, sql } from "drizzle-orm";
 import {
   exams,
   examQuestions,
@@ -46,6 +46,16 @@ const SECONDS_PER_PRACTICE_QUESTION = 90;
 // conditions as the actual test. Server-side, not just the UI, since a
 // client-supplied count was never trustworthy anyway.
 const PRACTICE_SESSION_QUESTION_COUNT = 48;
+
+// "Past exam papers" and "Mock exams" are curated, timed exams (the
+// exams table), not practice material. Both are premium-tier, so a free
+// account's pool never touched them — but a Premium account's random
+// practice pool did, and once these categories grew to most of a
+// subject's question bank (e.g. ~80% of Mathematics) practice sessions
+// were mostly the very questions a student is meant to meet fresh in the
+// exams. Excluded by slug (stable across the English renames) from every
+// random pool; the exams themselves read their fixed question list.
+const CURATED_ONLY_CATEGORY_SLUGS = ["annales", "examens-blancs"];
 
 // A free_response question is only pool-eligible once it has a model
 // answer to grade against — otherwise gradeFreeResponseAnswers has
@@ -198,6 +208,7 @@ export async function startExamCore(user: SessionUser, data: StartExamInput): Pr
           eq(questionCategories.subjectId, data.subjectId),
           categoryIds ? inArray(questions.categoryId, categoryIds) : undefined,
           inArray(questionCategories.requiredPlanTier, visibleCategoryTiers(planTier)),
+          notInArray(questionCategories.slug, CURATED_ONLY_CATEGORY_SLUGS),
           eq(questions.isPublished, true),
           gradeableQuestion,
         ),
@@ -246,6 +257,7 @@ export async function startExamCore(user: SessionUser, data: StartExamInput): Pr
         gte(questions.difficulty, data.difficultyMin),
         lte(questions.difficulty, data.difficultyMax),
         inArray(questionCategories.requiredPlanTier, visibleCategoryTiers(planTier)),
+        notInArray(questionCategories.slug, CURATED_ONLY_CATEGORY_SLUGS),
         eq(questions.isPublished, true),
         gradeableQuestion,
       ),
