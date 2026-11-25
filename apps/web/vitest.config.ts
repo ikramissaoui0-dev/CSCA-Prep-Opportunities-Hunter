@@ -28,7 +28,10 @@ export default defineConfig({
     // here so the fast unit suite (`npm test`) never depends on one being
     // reachable.
     include: ["**/*.test.ts"],
-    exclude: ["node_modules/**", ".next/**", "**/*.integration.test.ts"],
+    // components/**/*.test.ts run under vitest.components.config.ts instead
+    // (they need React with hooks; this config resolves the "react-server"
+    // condition, under which React has none).
+    exclude: ["node_modules/**", ".next/**", "**/*.integration.test.ts", "components/**"],
     setupFiles: ["./vitest.setup.ts"],
     // Running test files across worker threads intermittently produced
     // spurious ETIMEDOUT failures on module import in this sandbox — not

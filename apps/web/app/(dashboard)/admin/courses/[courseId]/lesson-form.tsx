@@ -110,10 +110,14 @@ export function LessonForm({
             id="notesBody"
             value={notesBody}
             onChange={(e) => setNotesBody(e.target.value)}
-            rows={4}
+            rows={8}
             required
-            className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
+            className="w-full rounded-md border border-input bg-background px-3 py-2 font-mono text-sm"
           />
+          <p className="text-xs text-muted-foreground">
+            Markdown (## titres, listes, tableaux) et formules LaTeX : <code>$x^2+1$</code> dans une phrase. Pour une formule centrée, mets{" "}
+            <code>$$</code> seul sur une ligne, la formule sur la suivante, puis <code>$$</code> seul sur une dernière ligne.
+          </p>
         </div>
       )}
       {contentType === "exercise" && (

@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState, useTransition } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import { MathContent } from "@/components/math-content";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { recordLessonAccess, addLessonTimeSpent, setLessonCompleted } from "../../../actions";
 import { startExam } from "@/app/(dashboard)/exam/actions";
@@ -101,9 +102,7 @@ export function LessonViewer({
             </div>
           )}
 
-          {lesson.contentType === "notes" && lesson.notesBody && (
-            <div className="whitespace-pre-wrap text-sm leading-relaxed">{lesson.notesBody}</div>
-          )}
+          {lesson.contentType === "notes" && lesson.notesBody && <MathContent>{lesson.notesBody}</MathContent>}
 
           {lesson.contentType === "exercise" && lesson.exercise && (
             <div className="space-y-3">

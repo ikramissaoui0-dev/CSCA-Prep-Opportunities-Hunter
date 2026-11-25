@@ -1,0 +1,115 @@
+{
+  "subjects": [
+    {
+      "slug": "mathematiques",
+      "courses": [
+        {
+          "slug": "math-sets",
+          "dir": "sets-inequalities",
+          "title": "Math 1 — Sets & Inequalities",
+          "description": "Set theory, operations, Venn counting, and linear, quadratic, absolute-value and rational inequalities."
+        },
+        {
+          "slug": "math-functions",
+          "dir": "functions",
+          "title": "Math 2 — Functions",
+          "description": "Domain, range, parity, inverse and composite functions, exponentials, logarithms, sequences and trigonometric functions."
+        },
+        {
+          "slug": "math-geometry",
+          "dir": "geometry-trigonometry",
+          "title": "Math 3 — Geometry & Trigonometry",
+          "description": "Lines, circles, conics, trigonometry, vectors, complex numbers and solid geometry."
+        },
+        {
+          "slug": "math-calculus",
+          "dir": "calculus-statistics",
+          "title": "Math 4 — Calculus & Statistics",
+          "description": "Limits, derivatives, integrals, counting, probability and statistics."
+        }
+      ],
+      "subjectSlugs": [
+        "mathematiques",
+        "mathematics"
+      ]
+    },
+    {
+      "slug": "physique",
+      "courses": [
+        {
+          "slug": "physics-mechanics",
+          "dir": "mechanics",
+          "title": "Physics 1 — Mechanics",
+          "description": "Kinematics, Newton's laws, work and energy, momentum, circular motion and gravitation."
+        },
+        {
+          "slug": "physics-thermo",
+          "dir": "thermodynamics",
+          "title": "Physics 2 — Thermodynamics",
+          "description": "Heat, calorimetry, ideal gases, the laws of thermodynamics and kinetic theory."
+        },
+        {
+          "slug": "physics-em",
+          "dir": "electromagnetism",
+          "title": "Physics 3 — Electromagnetism",
+          "description": "Electrostatics, circuits, magnetism, induction and AC."
+        },
+        {
+          "slug": "physics-optics",
+          "dir": "optics-waves",
+          "title": "Physics 4 — Optics & Waves",
+          "description": "Reflection, refraction, lenses, interference, diffraction, standing waves and oscillations."
+        },
+        {
+          "slug": "physics-modern",
+          "dir": "modern-physics",
+          "title": "Physics 5 — Modern Physics",
+          "description": "Photoelectric effect, atomic models, radioactivity and nuclear energy."
+        }
+      ],
+      "subjectSlugs": [
+        "physique",
+        "physics"
+      ]
+    },
+    {
+      "slug": "chimie",
+      "courses": [
+        {
+          "slug": "chem-atomic",
+          "dir": "atomic-structure",
+          "title": "Chemistry 1 — Atomic Structure",
+          "description": "Atoms, isotopes, electron configuration, the periodic table, bonding and the mole."
+        },
+        {
+          "slug": "chem-reactions",
+          "dir": "chemical-reactions",
+          "title": "Chemistry 2 — Chemical Reactions",
+          "description": "Equations, acids and bases, energetics, rates, equilibrium, electrolysis and redox."
+        },
+        {
+          "slug": "chem-organic",
+          "dir": "organic-chemistry",
+          "title": "Chemistry 3 — Organic Chemistry",
+          "description": "Hydrocarbons, alcohols, acids, polymers, isomers and reaction types."
+        },
+        {
+          "slug": "chem-inorganic",
+          "dir": "inorganic-chemistry",
+          "title": "Chemistry 4 — Inorganic Chemistry",
+          "description": "Bonding and structure, quantitative chemistry, thermochemistry, electrochemistry and the main elements."
+        },
+        {
+          "slug": "chem-lab",
+          "dir": "experiments-applications",
+          "title": "Chemistry 5 — Experiments & Applications",
+          "description": "Laboratory technique, gas preparation, separation, ion tests and industrial processes."
+        }
+      ],
+      "subjectSlugs": [
+        "chimie",
+        "chemistry"
+      ]
+    }
+  ]
+}
