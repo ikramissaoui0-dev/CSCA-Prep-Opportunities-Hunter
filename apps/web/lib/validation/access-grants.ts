@@ -21,6 +21,13 @@ export type ExpirationOptionInput = z.infer<typeof expirationOptionSchema>;
 export const grantAccessSchema = z
   .object({
     email: z.string().trim().email("Enter a valid email address"),
+    // Captured mainly so a still-unregistered student has a name to show
+    // in the admin table — never used to find or match an account.
+    firstName: z.string().trim().max(200).optional(),
+    lastName: z.string().trim().max(200).optional(),
+    // Informational only — never used to find or match the student's
+    // account (email is the sole identity key for that).
+    phone: z.string().trim().max(40).optional(),
     grantedTier: grantedTierSchema,
     expirationOption: expirationOptionSchema,
     customExpiresAt: z.string().datetime().optional(),
@@ -61,6 +68,7 @@ export const accessGrantImportRowSchema = z.object({
   first_name: z.string().trim().max(200).default(""),
   last_name: z.string().trim().max(200).default(""),
   email: z.string().trim().email("Enter a valid email address"),
+  phone: z.string().trim().max(40).default(""),
   expiration_date: z.string().trim().default(""),
 });
 export type AccessGrantImportRow = z.infer<typeof accessGrantImportRowSchema>;

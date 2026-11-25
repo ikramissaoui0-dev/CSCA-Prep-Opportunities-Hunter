@@ -79,6 +79,9 @@ export async function grantFreeAccessCore(
           .set({
             grantedTier: input.grantedTier,
             expiresAt,
+            firstName: input.firstName ?? existing.firstName,
+            lastName: input.lastName ?? existing.lastName,
+            phone: input.phone ?? existing.phone,
             adminNote: input.adminNote ?? existing.adminNote,
             userId: existing.userId ?? matchedUserId,
             updatedAt: new Date(),
@@ -101,6 +104,9 @@ export async function grantFreeAccessCore(
         .insert(studentAccessGrants)
         .values({
           email,
+          firstName: input.firstName || null,
+          lastName: input.lastName || null,
+          phone: input.phone || null,
           userId: matchedUserId,
           grantedTier: input.grantedTier,
           grantedBy: admin.id,
@@ -135,7 +141,16 @@ export async function grantFreeAccessCore(
  */
 export async function updateAccessGrantCore(
   admin: SessionUser,
-  input: { grantId: string; grantedTier?: PlanTier; expirationOption?: ExpirationOptionInput; customExpiresAt?: string; adminNote?: string },
+  input: {
+    grantId: string;
+    grantedTier?: PlanTier;
+    expirationOption?: ExpirationOptionInput;
+    customExpiresAt?: string;
+    firstName?: string;
+    lastName?: string;
+    phone?: string;
+    adminNote?: string;
+  },
 ): Promise<ActionResult<null>> {
   try {
     await db.transaction(async (tx) => {
@@ -156,6 +171,9 @@ export async function updateAccessGrantCore(
         .set({
           grantedTier: input.grantedTier ?? existing.grantedTier,
           expiresAt: nextExpiresAt,
+          firstName: input.firstName ?? existing.firstName,
+          lastName: input.lastName ?? existing.lastName,
+          phone: input.phone ?? existing.phone,
           adminNote: input.adminNote ?? existing.adminNote,
           updatedAt: new Date(),
         })
@@ -200,6 +218,32 @@ export async function revokeAccessGrantCore(admin: SessionUser, grantId: string)
       });
     });
 
+    return { success: true, data: null };
+  } catch (error) {
+    return actionFailure(error);
+  }
+}
+
+/**
+ * Only meaningful for a still-unregistered grant — email is the
+ * activation path for someone who has no account and no other way to
+ * discover access was already granted to them.
+ */
+export async function sendAccessInvitationCore(_admin: SessionUser, grantId: string): Promise<ActionResult<null>> {
+  const [grant] = await db.select().from(studentAccessGrants).where(eq(studentAccessGrants.id, grantId));
+  if (!grant) {
+    return actionFailure(new AppError("NOT_FOUND", "This access grant doesn't exist."));
+  }
+  if (grant.userId) {
+    return actionFailure(new AppError("VALIDATION_ERROR", "This student already has an account — no invitation needed."));
+  }
+  if (grant.revokedAt) {
+    return actionFailure(new AppError("VALIDATION_ERROR", "This access has been revoked."));
+  }
+
+  try {
+    const { sendAccessInvitationEmail } = await import("@/lib/email/access-invitation");
+    await sendAccessInvitationEmail({ email: grant.email, grantedTier: grant.grantedTier });
     return { success: true, data: null };
   } catch (error) {
     return actionFailure(error);

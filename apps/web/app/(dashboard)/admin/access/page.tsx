@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { requireRole } from "@/lib/auth/session";
 import { listAccessGrants, getAccessGrantStatusCounts, type AccessGrantStatus } from "@/server/queries/admin-access-grants";
+import { isEmailConfigured } from "@/lib/email/resend-client";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -40,6 +41,7 @@ export default async function AdminAccessGrantsPage({
 }) {
   const sp = await searchParams;
   const admin = await requireRole("admin");
+  const emailConfigured = isEmailConfigured();
 
   const statusKeys = Object.keys(STATUS_LABEL) as ("all" | AccessGrantStatus)[];
   const status = statusKeys.includes(sp.status as (typeof statusKeys)[number]) ? (sp.status as "all" | AccessGrantStatus) : "all";
@@ -114,6 +116,7 @@ export default async function AdminAccessGrantsPage({
                   <tr className="border-b text-left text-xs text-muted-foreground">
                     <th className="p-3 font-medium">Student</th>
                     <th className="p-3 font-medium">Email</th>
+                    <th className="p-3 font-medium">Phone</th>
                     <th className="p-3 font-medium">Account Status</th>
                     <th className="p-3 font-medium">Access Status</th>
                     <th className="p-3 font-medium">Granted Date</th>
@@ -125,11 +128,12 @@ export default async function AdminAccessGrantsPage({
                 <tbody>
                   {rows.map((grant) => (
                     <tr key={grant.id} className="border-b last:border-0 align-top">
-                      <td className="p-3 font-medium">{grant.fullName ?? "—"}</td>
+                      <td className="p-3 font-medium">{grant.displayName ?? "—"}</td>
                       <td className="p-3 text-muted-foreground">
                         {grant.email}
                         {grant.adminNote && <p className="mt-0.5 text-xs italic">{grant.adminNote}</p>}
                       </td>
+                      <td className="p-3 text-muted-foreground">{grant.phone ?? "—"}</td>
                       <td className="p-3">
                         <Badge variant={grant.userId ? "default" : "secondary"}>{grant.userId ? "Has account" : "No account yet"}</Badge>
                       </td>
@@ -143,7 +147,7 @@ export default async function AdminAccessGrantsPage({
                       <td className="p-3 text-muted-foreground">{grant.expiresAt ? grant.expiresAt.toLocaleDateString() : "Permanent"}</td>
                       <td className="p-3 text-muted-foreground">{grant.lastSignInAt ? grant.lastSignInAt.toLocaleDateString() : "Never"}</td>
                       <td className="p-3">
-                        <RowActions grant={grant} />
+                        <RowActions grant={grant} emailConfigured={emailConfigured} />
                       </td>
                     </tr>
                   ))}

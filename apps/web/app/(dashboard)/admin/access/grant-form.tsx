@@ -44,6 +44,9 @@ export function GrantAccessForm({
   const [error, setError] = useState<string | null>(null);
 
   const [email, setEmail] = useState(existingGrant?.email ?? "");
+  const [firstName, setFirstName] = useState(existingGrant?.firstName ?? "");
+  const [lastName, setLastName] = useState(existingGrant?.lastName ?? "");
+  const [phone, setPhone] = useState(existingGrant?.phone ?? "");
   const [grantedTier, setGrantedTier] = useState<GrantedTierInput>(existingGrant?.grantedTier ?? "premium_plus");
   const [expirationOption, setExpirationOption] = useState<ExpirationOptionInput>("12m");
   const [customExpiresAt, setCustomExpiresAt] = useState("");
@@ -60,10 +63,16 @@ export function GrantAccessForm({
             grantedTier,
             expirationOption,
             customExpiresAt: expirationOption === "custom" ? new Date(customExpiresAt).toISOString() : undefined,
+            firstName,
+            lastName,
+            phone,
             adminNote,
           })
         : await grantAccess({
             email,
+            firstName,
+            lastName,
+            phone,
             grantedTier,
             expirationOption,
             customExpiresAt: expirationOption === "custom" ? new Date(customExpiresAt).toISOString() : undefined,
@@ -93,6 +102,17 @@ export function GrantAccessForm({
             </DialogDescription>
           </DialogHeader>
 
+          <div className="grid gap-4 sm:grid-cols-2">
+            <div className="space-y-1.5">
+              <Label htmlFor="firstName">First name (optional)</Label>
+              <Input id="firstName" value={firstName} onChange={(e) => setFirstName(e.target.value)} />
+            </div>
+            <div className="space-y-1.5">
+              <Label htmlFor="lastName">Last name (optional)</Label>
+              <Input id="lastName" value={lastName} onChange={(e) => setLastName(e.target.value)} />
+            </div>
+          </div>
+
           <div className="space-y-1.5">
             <Label htmlFor="email">Student email</Label>
             <Input
@@ -102,6 +122,17 @@ export function GrantAccessForm({
               onChange={(e) => setEmail(e.target.value)}
               required
               disabled={!!existingGrant}
+            />
+          </div>
+
+          <div className="space-y-1.5">
+            <Label htmlFor="phone">Phone number (optional)</Label>
+            <Input
+              id="phone"
+              type="tel"
+              value={phone}
+              onChange={(e) => setPhone(e.target.value)}
+              placeholder="+216 12 345 678"
             />
           </div>
 

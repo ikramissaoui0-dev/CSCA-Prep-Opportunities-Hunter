@@ -119,7 +119,9 @@ export function AccessGrantImportForm() {
       <Card>
         <CardHeader>
           <CardTitle className="text-base">Upload file</CardTitle>
-          <CardDescription>Columns: first_name, last_name, email, expiration_date (optional, e.g. 2027-01-31).</CardDescription>
+          <CardDescription>
+            Columns: first_name, last_name, email, phone (optional), expiration_date (optional, e.g. 2027-01-31).
+          </CardDescription>
         </CardHeader>
         <CardContent>
           <input
@@ -170,6 +172,7 @@ export function AccessGrantImportForm() {
                     <th className="p-2">Row</th>
                     <th className="p-2">Name</th>
                     <th className="p-2">Email</th>
+                    <th className="p-2">Phone</th>
                     <th className="p-2">Account</th>
                     <th className="p-2">Status</th>
                   </tr>
@@ -182,6 +185,7 @@ export function AccessGrantImportForm() {
                         {r.status === "valid" ? `${r.data.first_name} ${r.data.last_name}`.trim() || "—" : (r.raw.first_name ?? "—")}
                       </td>
                       <td className="p-2">{r.status === "valid" ? r.data.email : (r.raw.email ?? "—")}</td>
+                      <td className="p-2 text-muted-foreground">{r.status === "valid" ? r.data.phone || "—" : (r.raw.phone ?? "—")}</td>
                       <td className="p-2 text-muted-foreground">
                         {r.status === "valid" ? (r.accountStatus === "existing" ? "Existing account" : "No account yet") : "—"}
                       </td>

@@ -14,14 +14,15 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { revokeAccessGrant } from "./actions";
+import { revokeAccessGrant, sendInvitationEmail } from "./actions";
 import { GrantAccessForm } from "./grant-form";
 import type { AccessGrantRow } from "@/server/queries/admin-access-grants";
 
-export function RowActions({ grant }: { grant: AccessGrantRow }) {
+export function RowActions({ grant, emailConfigured }: { grant: AccessGrantRow; emailConfigured: boolean }) {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
   const [error, setError] = useState<string | null>(null);
+  const [invited, setInvited] = useState(false);
 
   function handleRevoke() {
     setError(null);
@@ -35,11 +36,29 @@ export function RowActions({ grant }: { grant: AccessGrantRow }) {
     });
   }
 
+  function handleSendInvitation() {
+    setError(null);
+    startTransition(async () => {
+      const result = await sendInvitationEmail(grant.id);
+      if (!result.success) {
+        setError(result.message);
+        return;
+      }
+      setInvited(true);
+    });
+  }
+
   const isRevoked = grant.status === "revoked";
+  const canInvite = emailConfigured && grant.status === "pending_registration";
 
   return (
     <div className="flex flex-col items-end gap-1">
       <div className="flex gap-2">
+        {canInvite && (
+          <Button size="sm" variant="outline" onClick={handleSendInvitation} disabled={isPending || invited}>
+            {invited ? "Invitation sent" : "Send invitation email"}
+          </Button>
+        )}
         <GrantAccessForm existingGrant={grant} trigger={<Button size="sm" variant="outline" disabled={isRevoked}>Edit</Button>} />
         <AlertDialog>
           <AlertDialogTrigger render={<Button size="sm" variant="outline" disabled={isPending || isRevoked}>Revoke</Button>} />

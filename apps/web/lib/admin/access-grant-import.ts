@@ -111,6 +111,9 @@ export async function commitAccessGrantImportCore(
 
     const result = await grantFreeAccessCore(admin, {
       email,
+      firstName: parsed.data.first_name || undefined,
+      lastName: parsed.data.last_name || undefined,
+      phone: parsed.data.phone || undefined,
       grantedTier: defaultGrantedTier,
       expirationOption: option,
       customExpiresAt,

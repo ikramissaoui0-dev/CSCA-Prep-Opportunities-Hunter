@@ -20,6 +20,16 @@ create table public.student_access_grants (
   -- import, the registration trigger below) normalizes before touching
   -- this column, so a plain unique index is enough; no citext needed.
   email text not null,
+  -- Captured by the admin at grant time, mainly so a still-unregistered
+  -- (PENDING_REGISTRATION) student has a name to show in the admin
+  -- table at all — once the account links, the student's own
+  -- profiles.full_name is preferred for display (see AccessGrantRow's
+  -- displayName in admin-access-grants.ts).
+  first_name text,
+  last_name text,
+  -- Informational contact detail only — never used for matching/linking
+  -- (email is the sole identity key for that, per handle_new_user below).
+  phone text,
   user_id uuid references public.profiles (id) on delete set null,
   granted_tier public.plan_tier not null,
   granted_by uuid not null references public.profiles (id) on delete restrict,

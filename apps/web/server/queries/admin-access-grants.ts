@@ -12,8 +12,16 @@ export type AccessGrantStatus = "active" | "expiring_soon" | "expired" | "pendin
 export type AccessGrantRow = {
   id: string;
   email: string;
+  firstName: string | null;
+  lastName: string | null;
+  phone: string | null;
   userId: string | null;
+  /** The linked account's own profile name — only set once registered. */
   fullName: string | null;
+  /** fullName when linked, otherwise the admin-entered first/last name —
+   * so a still-unregistered (PENDING_REGISTRATION) grant has a name to
+   * show instead of "—". */
+  displayName: string | null;
   lastSignInAt: Date | null;
   // Narrower than the DB column's PlanTier (which also allows 'free') —
   // student_access_grants_tier_is_paid's check constraint guarantees a
@@ -33,7 +41,7 @@ export type AccessGrantRow = {
  * (an active grant within EXPIRING_SOON_WINDOW_DAYS of expiring), not a
  * fifth real state.
  */
-function deriveStatus(row: { userId: string | null; expiresAt: Date | null; revokedAt: Date | null }): AccessGrantStatus {
+export function deriveStatus(row: { userId: string | null; expiresAt: Date | null; revokedAt: Date | null }): AccessGrantStatus {
   if (row.revokedAt) return "revoked";
   if (row.expiresAt && row.expiresAt.getTime() <= Date.now()) return "expired";
   if (row.userId === null) return "pending_registration";
@@ -60,7 +68,14 @@ export async function listAccessGrants(
     const conditions: SQL[] = [];
     if (filters.search) {
       const pattern = `%${filters.search}%`;
-      conditions.push(or(ilike(studentAccessGrants.email, pattern), ilike(adminUserDirectoryView.fullName, pattern))!);
+      conditions.push(
+        or(
+          ilike(studentAccessGrants.email, pattern),
+          ilike(adminUserDirectoryView.fullName, pattern),
+          ilike(studentAccessGrants.firstName, pattern),
+          ilike(studentAccessGrants.lastName, pattern),
+        )!,
+      );
     }
     const where = conditions.length > 0 ? and(...conditions) : undefined;
 
@@ -73,6 +88,9 @@ export async function listAccessGrants(
       .select({
         id: studentAccessGrants.id,
         email: studentAccessGrants.email,
+        firstName: studentAccessGrants.firstName,
+        lastName: studentAccessGrants.lastName,
+        phone: studentAccessGrants.phone,
         userId: studentAccessGrants.userId,
         fullName: adminUserDirectoryView.fullName,
         lastSignInAt: adminUserDirectoryView.lastSignInAt,
@@ -93,6 +111,7 @@ export async function listAccessGrants(
       // to premium/premium_plus even though the column's base type
       // (shared with subscriptions.plan_tier) also allows 'free'.
       grantedTier: row.grantedTier as GrantedTierInput,
+      displayName: row.fullName ?? ([row.firstName, row.lastName].filter(Boolean).join(" ") || null),
       status: deriveStatus(row),
     }));
     const filtered =

@@ -7,6 +7,7 @@ import {
   grantFreeAccessCore,
   updateAccessGrantCore,
   revokeAccessGrantCore,
+  sendAccessInvitationCore,
 } from "@/lib/admin/access-grants-actions-core";
 import { parseAccessGrantImportFile, commitAccessGrantImportCore, type AccessGrantImportPreviewRow } from "@/lib/admin/access-grant-import";
 import {
@@ -35,6 +36,9 @@ const updateAccessGrantInputSchema = z.object({
   grantedTier: grantedTierSchema.optional(),
   expirationOption: expirationOptionSchema.optional(),
   customExpiresAt: z.string().datetime().optional(),
+  firstName: z.string().trim().max(200).optional(),
+  lastName: z.string().trim().max(200).optional(),
+  phone: z.string().trim().max(40).optional(),
   adminNote: z.string().trim().max(2000).optional(),
 });
 
@@ -111,4 +115,13 @@ export async function commitAccessGrantImport(
   const result = await commitAccessGrantImportCore(admin, validatedRows, parsed.data.defaultGrantedTier, parsed.data.defaultExpirationOption);
   if (result.success) revalidatePath("/admin/access");
   return result;
+}
+
+export async function sendInvitationEmail(grantId: string): Promise<ActionResult<null>> {
+  const parsed = z.string().uuid().safeParse(grantId);
+  if (!parsed.success) {
+    return actionFailure(new AppError("VALIDATION_ERROR"));
+  }
+  const admin = await requireRole("admin");
+  return sendAccessInvitationCore(admin, parsed.data);
 }

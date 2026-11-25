@@ -14,6 +14,9 @@ export const studentAccessGrants = pgTable(
   {
     id: uuid("id").primaryKey().defaultRandom(),
     email: text("email").notNull(),
+    firstName: text("first_name"),
+    lastName: text("last_name"),
+    phone: text("phone"),
     userId: uuid("user_id").references(() => profiles.id, { onDelete: "set null" }),
     grantedTier: planTierEnum("granted_tier").notNull(),
     grantedBy: uuid("granted_by").notNull().references(() => profiles.id, { onDelete: "restrict" }),

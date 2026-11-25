@@ -4,7 +4,9 @@ import { withRlsContext } from "@/lib/db";
 import { getStudentDashboardData } from "@/server/queries/dashboard";
 import { getCurrentPlanTier, planTierAtLeast } from "@/lib/billing/plan";
 import { getGamificationSummary } from "@/server/queries/gamification";
+import { getPendingActivationGrant } from "@/server/queries/access-activation";
 import { WelcomeHeader } from "@/components/dashboard/welcome-header";
+import { ActivationBanner } from "@/components/dashboard/activation-banner";
 import { PointsCard } from "@/components/dashboard/points-card";
 import { ProfileCard } from "@/components/dashboard/profile-card";
 import { StatCards } from "@/components/dashboard/stat-cards";
@@ -18,15 +20,17 @@ export const metadata: Metadata = { title: "Dashboard — CSCAprepa" };
 
 export default async function StudentDashboardPage() {
   const user = await requireRole("student", "admin");
-  const [data, planTier, gamification] = await Promise.all([
+  const [data, planTier, gamification, pendingActivation] = await Promise.all([
     withRlsContext(user.id, user.role, (tx) => getStudentDashboardData(tx, user.id)),
     getCurrentPlanTier(user.id, user.role),
     getGamificationSummary(user.id, user.role),
+    getPendingActivationGrant(user.id, user.role),
   ]);
   const hasAdvancedStats = planTierAtLeast(planTier, "premium");
 
   return (
     <div className="space-y-6">
+      {pendingActivation && <ActivationBanner grantId={pendingActivation.id} grantedTier={pendingActivation.grantedTier} />}
       <WelcomeHeader fullName={data.profile.fullName} />
       <ProfileCard fullName={data.profile.fullName} avatarUrl={data.profile.avatarUrl} email={user.email} role={user.role} />
       <StatCards completedTests={data.stats.completedTests} averageScore={data.stats.averageScore} />
