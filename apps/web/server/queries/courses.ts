@@ -1,6 +1,6 @@
 import "server-only";
 
-import { eq, asc } from "drizzle-orm";
+import { eq, asc, count } from "drizzle-orm";
 import { courses, lessons, lessonProgress, courseProgressView, subjects, questionCategories } from "@csca/db";
 import type { UserRole } from "@csca/types";
 import { withRlsContext } from "@/lib/db";
@@ -37,8 +37,20 @@ export async function listAccessibleCourses(userId: string, role: UserRole): Pro
       .leftJoin(subjects, eq(subjects.id, courses.subjectId))
       .orderBy(asc(courses.displayOrder));
 
+    // The course_progress view only has a row for a course the student has
+    // already touched (it is built from lesson_progress), so it cannot be the
+    // source of "how many lessons does this course have" — a course nobody
+    // started would show 0. Count the lessons directly; RLS already limits
+    // them to the published lessons of the courses this student can read.
+    const lessonCountRows = await tx
+      .select({ courseId: lessons.courseId, total: count() })
+      .from(lessons)
+      .where(eq(lessons.isPublished, true))
+      .groupBy(lessons.courseId);
+    const totalByCourseId = new Map(lessonCountRows.map((r) => [r.courseId, Number(r.total)]));
+
     const progressRows = await tx
-      .select({ courseId: courseProgressView.courseId, completedLessons: courseProgressView.completedLessons, totalLessons: courseProgressView.totalLessons })
+      .select({ courseId: courseProgressView.courseId, completedLessons: courseProgressView.completedLessons })
       .from(courseProgressView)
       .where(eq(courseProgressView.userId, userId));
     const progressByCourseId = new Map(progressRows.map((p) => [p.courseId, p]));
@@ -51,8 +63,8 @@ export async function listAccessibleCourses(userId: string, role: UserRole): Pro
         description: c.description,
         coverImageUrl: c.coverImageUrl,
         subjectName: c.subjectName,
-        totalLessons: progress?.totalLessons ?? 0,
-        completedLessons: progress?.completedLessons ?? 0,
+        totalLessons: totalByCourseId.get(c.id) ?? 0,
+        completedLessons: Number(progress?.completedLessons ?? 0),
       };
     });
   });

@@ -25,9 +25,9 @@ begin
 end
 $$;
 
--- Math 1 — Sets & Inequalities
+-- Module 1 — Sets & Inequalities
 insert into public.courses (subject_id, title, slug, description, required_plan_tier, is_published, display_order)
-select s.id, 'Math 1 — Sets & Inequalities', 'math-sets', 'Set theory, operations, Venn counting, and linear, quadratic, absolute-value and rational inequalities.', 'premium_plus', true, 11
+select s.id, 'Module 1 — Sets & Inequalities', 'math-sets', 'Set theory, operations, Venn counting, and linear, quadratic, absolute-value and rational inequalities.', 'premium_plus', true, 11
 from public.subjects s where s.slug in ('mathematiques', 'mathematics') order by s.display_order limit 1
 on conflict (slug) do update set
   subject_id = excluded.subject_id,
@@ -883,9 +883,9 @@ on conflict (course_id, position) do update set
   duration_seconds = excluded.duration_seconds,
   is_published = true;
 
--- Math 2 — Functions
+-- Module 2 — Functions
 insert into public.courses (subject_id, title, slug, description, required_plan_tier, is_published, display_order)
-select s.id, 'Math 2 — Functions', 'math-functions', 'Domain, range, parity, inverse and composite functions, exponentials, logarithms, sequences and trigonometric functions.', 'premium_plus', true, 12
+select s.id, 'Module 2 — Functions', 'math-functions', 'Domain, range, parity, inverse and composite functions, exponentials, logarithms, sequences and trigonometric functions.', 'premium_plus', true, 12
 from public.subjects s where s.slug in ('mathematiques', 'mathematics') order by s.display_order limit 1
 on conflict (slug) do update set
   subject_id = excluded.subject_id,
@@ -2026,9 +2026,9 @@ on conflict (course_id, position) do update set
   duration_seconds = excluded.duration_seconds,
   is_published = true;
 
--- Math 3 — Geometry & Trigonometry
+-- Module 3 — Geometry & Trigonometry
 insert into public.courses (subject_id, title, slug, description, required_plan_tier, is_published, display_order)
-select s.id, 'Math 3 — Geometry & Trigonometry', 'math-geometry', 'Lines, circles, conics, trigonometry, vectors, complex numbers and solid geometry.', 'premium_plus', true, 13
+select s.id, 'Module 3 — Geometry & Trigonometry', 'math-geometry', 'Lines, circles, conics, trigonometry, vectors, complex numbers and solid geometry.', 'premium_plus', true, 13
 from public.subjects s where s.slug in ('mathematiques', 'mathematics') order by s.display_order limit 1
 on conflict (slug) do update set
   subject_id = excluded.subject_id,
@@ -3104,9 +3104,9 @@ on conflict (course_id, position) do update set
   duration_seconds = excluded.duration_seconds,
   is_published = true;
 
--- Math 4 — Calculus & Statistics
+-- Module 4 — Calculus & Statistics
 insert into public.courses (subject_id, title, slug, description, required_plan_tier, is_published, display_order)
-select s.id, 'Math 4 — Calculus & Statistics', 'math-calculus', 'Limits, derivatives, integrals, counting, probability and statistics.', 'premium_plus', true, 14
+select s.id, 'Module 4 — Calculus & Statistics', 'math-calculus', 'Limits, derivatives, integrals, counting, probability and statistics.', 'premium_plus', true, 14
 from public.subjects s where s.slug in ('mathematiques', 'mathematics') order by s.display_order limit 1
 on conflict (slug) do update set
   subject_id = excluded.subject_id,
@@ -3908,9 +3908,9 @@ on conflict (course_id, position) do update set
   duration_seconds = excluded.duration_seconds,
   is_published = true;
 
--- Physics 1 — Mechanics
+-- Module 1 — Mechanics
 insert into public.courses (subject_id, title, slug, description, required_plan_tier, is_published, display_order)
-select s.id, 'Physics 1 — Mechanics', 'physics-mechanics', 'Kinematics, Newton''s laws, work and energy, momentum, circular motion and gravitation.', 'premium_plus', true, 21
+select s.id, 'Module 1 — Mechanics', 'physics-mechanics', 'Kinematics, Newton''s laws, work and energy, momentum, circular motion and gravitation.', 'premium_plus', true, 21
 from public.subjects s where s.slug in ('physique', 'physics') order by s.display_order limit 1
 on conflict (slug) do update set
   subject_id = excluded.subject_id,
@@ -4693,9 +4693,9 @@ on conflict (course_id, position) do update set
   duration_seconds = excluded.duration_seconds,
   is_published = true;
 
--- Physics 2 — Thermodynamics
+-- Module 2 — Thermodynamics
 insert into public.courses (subject_id, title, slug, description, required_plan_tier, is_published, display_order)
-select s.id, 'Physics 2 — Thermodynamics', 'physics-thermo', 'Heat, calorimetry, ideal gases, the laws of thermodynamics and kinetic theory.', 'premium_plus', true, 22
+select s.id, 'Module 2 — Thermodynamics', 'physics-thermo', 'Heat, calorimetry, ideal gases, the laws of thermodynamics and kinetic theory.', 'premium_plus', true, 22
 from public.subjects s where s.slug in ('physique', 'physics') order by s.display_order limit 1
 on conflict (slug) do update set
   subject_id = excluded.subject_id,
@@ -5575,9 +5575,9 @@ on conflict (course_id, position) do update set
   duration_seconds = excluded.duration_seconds,
   is_published = true;
 
--- Physics 3 — Electromagnetism
+-- Module 3 — Electromagnetism
 insert into public.courses (subject_id, title, slug, description, required_plan_tier, is_published, display_order)
-select s.id, 'Physics 3 — Electromagnetism', 'physics-em', 'Electrostatics, circuits, magnetism, induction and AC.', 'premium_plus', true, 23
+select s.id, 'Module 3 — Electromagnetism', 'physics-em', 'Electrostatics, circuits, magnetism, induction and AC.', 'premium_plus', true, 23
 from public.subjects s where s.slug in ('physique', 'physics') order by s.display_order limit 1
 on conflict (slug) do update set
   subject_id = excluded.subject_id,
@@ -6347,9 +6347,9 @@ on conflict (course_id, position) do update set
   duration_seconds = excluded.duration_seconds,
   is_published = true;
 
--- Physics 4 — Optics & Waves
+-- Module 4 — Optics & Waves
 insert into public.courses (subject_id, title, slug, description, required_plan_tier, is_published, display_order)
-select s.id, 'Physics 4 — Optics & Waves', 'physics-optics', 'Reflection, refraction, lenses, interference, diffraction, standing waves and oscillations.', 'premium_plus', true, 24
+select s.id, 'Module 4 — Optics & Waves', 'physics-optics', 'Reflection, refraction, lenses, interference, diffraction, standing waves and oscillations.', 'premium_plus', true, 24
 from public.subjects s where s.slug in ('physique', 'physics') order by s.display_order limit 1
 on conflict (slug) do update set
   subject_id = excluded.subject_id,
@@ -6958,9 +6958,9 @@ on conflict (course_id, position) do update set
   duration_seconds = excluded.duration_seconds,
   is_published = true;
 
--- Physics 5 — Modern Physics
+-- Module 5 — Modern Physics
 insert into public.courses (subject_id, title, slug, description, required_plan_tier, is_published, display_order)
-select s.id, 'Physics 5 — Modern Physics', 'physics-modern', 'Photoelectric effect, atomic models, radioactivity and nuclear energy.', 'premium_plus', true, 25
+select s.id, 'Module 5 — Modern Physics', 'physics-modern', 'Photoelectric effect, atomic models, radioactivity and nuclear energy.', 'premium_plus', true, 25
 from public.subjects s where s.slug in ('physique', 'physics') order by s.display_order limit 1
 on conflict (slug) do update set
   subject_id = excluded.subject_id,
@@ -7621,9 +7621,9 @@ on conflict (course_id, position) do update set
   duration_seconds = excluded.duration_seconds,
   is_published = true;
 
--- Chemistry 1 — Atomic Structure
+-- Module 1 — Atomic Structure
 insert into public.courses (subject_id, title, slug, description, required_plan_tier, is_published, display_order)
-select s.id, 'Chemistry 1 — Atomic Structure', 'chem-atomic', 'Atoms, isotopes, electron configuration, the periodic table, bonding and the mole.', 'premium_plus', true, 31
+select s.id, 'Module 1 — Atomic Structure', 'chem-atomic', 'Atoms, isotopes, electron configuration, the periodic table, bonding and the mole.', 'premium_plus', true, 31
 from public.subjects s where s.slug in ('chimie', 'chemistry') order by s.display_order limit 1
 on conflict (slug) do update set
   subject_id = excluded.subject_id,
@@ -8511,9 +8511,9 @@ on conflict (course_id, position) do update set
   duration_seconds = excluded.duration_seconds,
   is_published = true;
 
--- Chemistry 2 — Chemical Reactions
+-- Module 2 — Chemical Reactions
 insert into public.courses (subject_id, title, slug, description, required_plan_tier, is_published, display_order)
-select s.id, 'Chemistry 2 — Chemical Reactions', 'chem-reactions', 'Equations, acids and bases, energetics, rates, equilibrium, electrolysis and redox.', 'premium_plus', true, 32
+select s.id, 'Module 2 — Chemical Reactions', 'chem-reactions', 'Equations, acids and bases, energetics, rates, equilibrium, electrolysis and redox.', 'premium_plus', true, 32
 from public.subjects s where s.slug in ('chimie', 'chemistry') order by s.display_order limit 1
 on conflict (slug) do update set
   subject_id = excluded.subject_id,
@@ -9424,9 +9424,9 @@ on conflict (course_id, position) do update set
   duration_seconds = excluded.duration_seconds,
   is_published = true;
 
--- Chemistry 3 — Organic Chemistry
+-- Module 3 — Organic Chemistry
 insert into public.courses (subject_id, title, slug, description, required_plan_tier, is_published, display_order)
-select s.id, 'Chemistry 3 — Organic Chemistry', 'chem-organic', 'Hydrocarbons, alcohols, acids, polymers, isomers and reaction types.', 'premium_plus', true, 33
+select s.id, 'Module 3 — Organic Chemistry', 'chem-organic', 'Hydrocarbons, alcohols, acids, polymers, isomers and reaction types.', 'premium_plus', true, 33
 from public.subjects s where s.slug in ('chimie', 'chemistry') order by s.display_order limit 1
 on conflict (slug) do update set
   subject_id = excluded.subject_id,
@@ -10202,9 +10202,9 @@ on conflict (course_id, position) do update set
   duration_seconds = excluded.duration_seconds,
   is_published = true;
 
--- Chemistry 4 — Inorganic Chemistry
+-- Module 4 — Inorganic Chemistry
 insert into public.courses (subject_id, title, slug, description, required_plan_tier, is_published, display_order)
-select s.id, 'Chemistry 4 — Inorganic Chemistry', 'chem-inorganic', 'Bonding and structure, quantitative chemistry, thermochemistry, electrochemistry and the main elements.', 'premium_plus', true, 34
+select s.id, 'Module 4 — Inorganic Chemistry', 'chem-inorganic', 'Bonding and structure, quantitative chemistry, thermochemistry, electrochemistry and the main elements.', 'premium_plus', true, 34
 from public.subjects s where s.slug in ('chimie', 'chemistry') order by s.display_order limit 1
 on conflict (slug) do update set
   subject_id = excluded.subject_id,
@@ -11328,9 +11328,9 @@ on conflict (course_id, position) do update set
   duration_seconds = excluded.duration_seconds,
   is_published = true;
 
--- Chemistry 5 — Experiments & Applications
+-- Module 5 — Experiments & Applications
 insert into public.courses (subject_id, title, slug, description, required_plan_tier, is_published, display_order)
-select s.id, 'Chemistry 5 — Experiments & Applications', 'chem-lab', 'Laboratory technique, gas preparation, separation, ion tests and industrial processes.', 'premium_plus', true, 35
+select s.id, 'Module 5 — Experiments & Applications', 'chem-lab', 'Laboratory technique, gas preparation, separation, ion tests and industrial processes.', 'premium_plus', true, 35
 from public.subjects s where s.slug in ('chimie', 'chemistry') order by s.display_order limit 1
 on conflict (slug) do update set
   subject_id = excluded.subject_id,
